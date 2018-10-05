@@ -1,0 +1,47 @@
+{
+    "name": "Tarot",
+    "version": "0.0.2",
+    "license": "UNLICENSED",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Teepo/Tarot"
+    },
+    "scripts": {
+        "start": "yarn run build:dev && node_modules/electron/cli.js ./src/js/index.js",
+        "clean": "rm -Rf node_modules/",
+        "clean-css": "rm -Rf public/css/*",
+        "jsdoc": "node_modules/jsdoc/jsdoc.js -c jsdoc.json",
+        "build-css-autoprefixer": "./node_modules/postcss-cli/bin/postcss public/css/*.css --use autoprefixer -d ./public/css",
+        "build:dev": "yarn run build-js:dev",
+        "build:prod": "yarn run build-js:prod",
+        "build-js:dev": "node_modules/webpack/bin/webpack.js --env.dev --display-modules",
+        "build-js:prod": "node_modules/webpack/bin/webpack.js --env.prod --display-modules",
+        "build-css:dev": "yarn run clean-css && mkdir -p public/css && ./scripts/build-sass.js --env dev --input ./src/scss/app.scss",
+        "build-css:prod": "yarn run clean-css && mkdir -p public/css && ./scripts/build-sass.js --env prod --input ./src/scss/app.scss"
+    },
+    "devDependencies": {
+        "@babel/core": "^7.1.0",
+        "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+        "@babel/plugin-transform-runtime": "^7.1.0",
+        "@babel/preset-env": "^7.1.0",
+        "@babel/runtime": "^7.0.0",
+        "autoprefixer": "^9.1.5",
+        "babel-eslint": "^9.0.0",
+        "babel-loader": "^8.0.2",
+        "docdash": "^1.0.0",
+        "eslint": "^5.6.0",
+        "eslint-loader": "^2.1.1",
+        "html-minifier": "^3.5.10",
+        "jsdoc": "^3.5.5",
+        "node-sass": "^4.7.2",
+        "postcss-cli": "^6.0.0",
+        "webpack": "^4.19.1",
+        "webpack-cli": "^3.1.1"
+    },
+    "dependencies": {
+        "delegate": "^3.2.0",
+        "electron": "^2.0.9",
+        "handlebars": "^4.0.12",
+        "html-loader": "^0.5.5"
+    }
+}

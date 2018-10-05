@@ -1,0 +1,11 @@
+<div id="playerChooseGameType" class="card" role="dialog">
+    <div class="card-header">
+        <h4 class="card-title">Choisissez votre contrat - {{ player.name }}</h4>
+    </div>
+    <div class="card-body">
+        {{#each gameTypeAvailable}}
+            <button type="button" data-type="{{@key}}" class="btn btn-block btn-primary">{{this}}</button>
+        {{/each}}
+    </div>
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Je passe</button>
+</div>
