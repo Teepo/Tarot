@@ -61,11 +61,16 @@ const gameTypeLoop = async () => {
 
 (async () => {
 
-	await gameTypeLoop();
+	// await gameTypeLoop();
+
+	round.setGameType(1);
+	round.addAttackerPlayer(player1);
 
 	// Un joueur a pris, on commence la partie
 	game.addRound(round);
 
 	// on cache la modal
-	document.querySelector('.modal').remove();
+	// document.querySelector('.modal').remove();
+
+	game.displayBoard();
 })();

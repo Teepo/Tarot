@@ -1,4 +1,8 @@
+const gameBoardTemplate = require('./templates/game_board.handlebars');
+
 import { Deck } from './deck';
+
+import { View } from './modules/view';
 
 export class Game {
 
@@ -80,5 +84,12 @@ export class Game {
 
             playerIndex++;
         }
+    }
+
+    displayBoard() {
+
+        View.render(require('handlebars').compile(gameBoardTemplate)({
+            players : this.players
+        }));
     }
 }

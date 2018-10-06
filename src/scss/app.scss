@@ -7,3 +7,61 @@ body {
 
     background-image: radial-gradient(circle, #00a184, #019377, #02856a, #01775d, #006a51);
 }
+
+.gameboard {
+
+    &-player {
+
+        position: absolute;
+
+        &__0 {
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+
+            .card {
+                display: inline-block;
+            }
+        }
+
+        &__1 {
+            top: 15vw;
+            left: 0;
+        }
+
+        &__2 {
+
+            top: 0;
+            left: 0;
+
+            .card {
+                display: inline-block;
+            }
+        }
+
+        &__3 {
+            top: 0;
+            right: 0;
+
+            .card {
+                display: inline-block;
+            }
+        }
+
+        &__4 {
+            top: 15vw;
+            right: 0;
+        }
+    }
+}
+
+[class*="card__♥"], [class*="card__♦"] {
+    color: tomato;
+}
+
+[class*="card__"] {
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+}

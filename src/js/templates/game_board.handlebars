@@ -1,0 +1,13 @@
+<div class="gameboard">
+    {{#each players}}
+
+        <div class="gameboard-player gameboard-player__{{@index}}">
+
+            <div class="gameboard-player-cards">
+                {{#each this.cards}}
+                    <div class="card card__{{this.value}}">{{this.value}}</div>
+                {{/each}}
+            </div>
+        </div>
+    {{/each}}
+</div>
