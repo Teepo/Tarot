@@ -9,8 +9,8 @@ module.exports = {
     output: {
         filename      : '[name].js',
         chunkFilename : '[name].[hash].chunk.js',
-        publicPath    : __dirname + '/src/views/js/',
-        path          : __dirname + '/src/views/js/',
+        publicPath    : __dirname + '/public/',
+        path          : __dirname + '/public/js/',
         libraryTarget : 'window'
     },
 
