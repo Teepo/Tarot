@@ -1,7 +1,5 @@
 const template = require('./templates/modals/player_game_type.handlebars');
 
-import { gameTypeList } from './config/gameTypeList';
-
 import { View } from './modules/view';
 
 export class Player {

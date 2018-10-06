@@ -12,7 +12,8 @@
         "jsdoc": "node_modules/jsdoc/jsdoc.js -c jsdoc.json",
         "install-bootstrap": "cd public/css/ && rm -Rf bootstrap && git clone https://github.com/twbs/bootstrap.git --branch v4.1.3",
         "install-vendor": "yarn run install-bootstrap",
-        "build": "yarn run build-js",
+        "build": "yarn run build-css && yarn run build-js",
+        "build-css": "./node_modules/node-sass/bin/node-sass src/scss/app.scss --output ./public/css/",
         "build-js": "node_modules/webpack/bin/webpack.js --display-modules",
         "postinstall": "yarn run install-vendor"
     },
@@ -30,7 +31,6 @@
         "html-minifier": "^3.5.10",
         "jsdoc": "^3.5.5",
         "node-sass": "^4.7.2",
-        "postcss-cli": "^6.0.0",
         "serve": "^10.0.2",
         "webpack": "^4.19.1",
         "webpack-cli": "^3.1.1"

@@ -65,4 +65,7 @@ const gameTypeLoop = async () => {
 
 	// Un joueur a pris, on commence la partie
 	game.addRound(round);
+
+	// on cache la modal
+	document.querySelector('.modal').remove();
 })();
