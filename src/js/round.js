@@ -1,21 +1,26 @@
+import { cardsList } from './config/cardList';
 import { gameTypeList } from './config/gameTypeList';
 
 export class Round {
 
     constructor() {
 
-        this.deadPlayers = [];
+        this.players         = [];
         this.attackerPlayers = [];
         this.defenderPlayers = [];
 
         this.attackerPoints = 0;
         this.defenderPoints = 0;
 
+        this.playerWhoGiveCards = null;
+
+        this.calledKing = null;
+
         this.gameType = undefined;
     }
 
     /**
-     * @description Retourne la liste des choix de game type restant
+     * @description En fonction du gameType déjà choisis, retourne la liste des choix restants.
      *
      * @return {object}
      */
@@ -53,11 +58,80 @@ export class Round {
             return parseInt(a) === type;
         });
 
+        // Type de jeu non présent dans la configuration
         if (!isRegularType) {
             throw new Error('[ROUND] setGameType() > type must be an integer');
         }
 
         this.gameType = type;
+    }
+
+    /**
+     * @param {Card} card
+     *
+     */
+    setCalledKing(card) {
+
+        const isRegularCard = Object.keys(cardsList).find(a => {
+            return parseInt(a) === card.index;
+        });
+
+        // Carte non présente dans la configuration
+        if (!isRegularCard) {
+            throw new Error('[ROUND] setCalledKing() > Invalid card');
+        }
+
+        if ([36, 50, 64, 78].indexOf(card.index) < 0) {
+            throw new Error('[ROUND] setCalledKing() > Invalid card, this is not a king');
+        }
+
+        this.calledKing = card;
+    }
+
+    /**
+     *
+     * @return {Card}
+     */
+    getCalledKing() {
+        return this.calledKing;
+    }
+
+    /**
+     * @description En fonction du roi appellé, retourne le second attaquant ( s'il y en a réellement un ).
+     *
+     * @return {Player}
+     */
+    findPartner() {
+
+        return this.players.find(player => {
+            return player.getCards().find(card => {
+                return card.index === this.getCalledKing().index;
+            });
+        });
+    }
+
+    /**
+     *
+     * @return {Player}
+     */
+    getPlayerWhoGiveCards() {
+        return this.playerWhoGiveCards;
+    }
+
+    /**
+     * @param {array<Player>} players
+     *
+     */
+    setPlayers(players) {
+        this.players = players;
+    }
+
+    /**
+     * @param {Player} player
+     *
+     */
+    setPlayerWhoGiveCards(player) {
+        this.playerWhoGiveCards = player;
     }
 
     /**
@@ -77,12 +151,10 @@ export class Round {
     }
 
     /**
-     * @param {array<Player>} players
-     *
+     * @param {array<Player>}
      */
-    setDeadPlayers(players) {
-
-        this.deadPlayers = players;
+    getAttackerPlayers() {
+        return this.attackerPlayers;
     }
 
     /**
@@ -107,6 +179,20 @@ export class Round {
      */
     setDefenderPlayers(players) {
         this.defenderPlayers = players;
+    }
+
+    /**
+     * @description En fonction des attaquants, retourne les défenseurs
+     *
+     * @return {array<Player>} players
+     */
+    findDefenderPlayers() {
+
+        return this.players.filter(p => {
+            return this.getAttackerPlayers().filter(ap => {
+                return !Object.is(p, ap);
+            });
+        });
     }
 
     /**

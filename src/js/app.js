@@ -3,6 +3,7 @@ import { asyncMap } from './utils';
 import { Player } from './player';
 import { Game   } from './game';
 import { Round  } from './round';
+import { Card   } from './card';
 
 // Setup player
 
@@ -63,8 +64,18 @@ const gameTypeLoop = async () => {
 
 	// await gameTypeLoop();
 
+	round.setPlayers(game.getPlayers());
+
+	round.setPlayerWhoGiveCards(player4);
+
 	round.setGameType(1);
-	round.addAttackerPlayer(player1);
+	round.addAttackerPlayer(player2);
+
+	round.setCalledKing(new Card(64)); // Roi de Coeur
+
+	round.addAttackerPlayer(round.findPartner());
+
+	round.setDefenderPlayers(round.findDefenderPlayers());
 
 	// Un joueur a pris, on commence la partie
 	game.addRound(round);
@@ -73,4 +84,6 @@ const gameTypeLoop = async () => {
 	// document.querySelector('.modal').remove();
 
 	game.displayBoard();
+
+	console.log(round);
 })();

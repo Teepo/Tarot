@@ -20,7 +20,7 @@ body {
             right: 0;
             text-align: center;
 
-            .card {
+            .carte {
                 display: inline-block;
             }
         }
@@ -35,7 +35,7 @@ body {
             top: 0;
             left: 0;
 
-            .card {
+            .carte {
                 display: inline-block;
             }
         }
@@ -44,7 +44,7 @@ body {
             top: 0;
             right: 0;
 
-            .card {
+            .carte {
                 display: inline-block;
             }
         }
@@ -56,11 +56,17 @@ body {
     }
 }
 
-[class*="card__♥"], [class*="card__♦"] {
+.carte {
+    background-color: #fff;
+    border: 1px solid rgba(#000, .2);
+    border-radius: .25rem;
+}
+
+[class*="carte__♥"], [class*="carte__♦"] {
     color: tomato;
 }
 
-[class*="card__"] {
+[class*="carte__"] {
     font-size: 1.1rem;
     font-weight: 700;
     text-align: center;

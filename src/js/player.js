@@ -27,6 +27,14 @@ export class Player {
     }
 
     /**
+     *
+     * @return {array<Card>}
+     */
+    getCards() {
+        return this.cards;
+    }
+
+    /**
      * @param {Event} event
      *
      */
