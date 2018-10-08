@@ -75,6 +75,9 @@ const askPlayersCard= async () => {
 
 	const turn = round.getCurrentTurn();
 
+	turn.setRound(round);
+	turn.buildPlayersQueue();
+
 	await asyncMap(round.getPlayers(), async player => {
 
 		await player.askCard(round);
@@ -87,7 +90,7 @@ const askPlayersCard= async () => {
 
 	round.setPlayers(game.getPlayers());
 
-	round.setPlayerWhoGiveCards(player4);
+	round.setPlayerWhoGiveCards(player2);
 
 	round.setGameType(1);
 	round.addAttackerPlayer(player2);
