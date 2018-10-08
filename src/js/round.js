@@ -17,6 +17,25 @@ export class Round {
         this.calledKing = null;
 
         this.gameType = undefined;
+
+        this.turnCounter = 0;
+
+        this.turns = [];
+    }
+
+    /**
+     * @param {Turn} turn
+     */
+    addTurn(turn) {
+        this.turns.push(turn);
+    }
+
+    /**
+     *
+     * @return {Boolean}
+     */
+    isFinished() {
+        return this.turnCounter >= 15;
     }
 
     /**

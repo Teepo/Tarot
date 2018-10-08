@@ -3,6 +3,7 @@ import { asyncMap } from './utils';
 import { Player } from './player';
 import { Game   } from './game';
 import { Round  } from './round';
+import { Turn   } from './turn';
 import { Card   } from './card';
 
 // Setup player
@@ -60,6 +61,24 @@ const gameTypeLoop = async () => {
 	}
 };
 
+const gameLoop = async () => {
+
+	while (!round.isFinished()) {
+
+		round.addTurn(new Turn);
+
+		await askPlayersCard();
+	}
+};
+
+const askPlayersCard= async () => {
+
+	await asyncMap(game.getPlayers(), async player => {
+
+		await player.askCard(round);
+	});
+};
+
 (async () => {
 
 	// await gameTypeLoop();
@@ -85,5 +104,5 @@ const gameTypeLoop = async () => {
 
 	game.displayBoard();
 
-	console.log(round);
+	await gameLoop();
 })();

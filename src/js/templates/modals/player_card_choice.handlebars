@@ -1,0 +1,17 @@
+<div class="modal" id="playerCardChoice" tabindex="-1" role="dialog" style="display:block;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="card-title">Choisissez une carte - {{ player.name }}</h4>
+            </div>
+
+            <div class="modal-body">
+                {{#each cards}}
+                    <button type="button" data-id="{{@key}}" class="btn btn-block btn-primary">{{this.value}}</button>
+                {{/each}}
+            </div>
+
+        </div>
+    </div>
+</div>
