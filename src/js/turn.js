@@ -4,7 +4,17 @@ export class Turn {
 
         this.playersQueue = [];
 
+        this.winner = false;
+
         this.cards = [];
+    }
+
+    /**
+     *
+     * @return {Player}
+     */
+    getWinner() {
+        return this.winner;
     }
 
     /**

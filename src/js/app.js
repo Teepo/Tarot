@@ -104,5 +104,7 @@ const askPlayersCard= async () => {
 
 	game.displayBoard();
 
+	console.log(round);
+
 	await gameLoop();
 })();

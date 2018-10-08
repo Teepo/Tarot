@@ -18,8 +18,6 @@ export class Round {
 
         this.gameType = undefined;
 
-        this.turnCounter = 0;
-
         this.turns = [];
     }
 
@@ -32,10 +30,27 @@ export class Round {
 
     /**
      *
+     * @return {array<Turn>}
+     */
+    getTurns() {
+        return this.turns;
+    }
+
+    /**
+     * @description Retourne le dernier élément de getTurns(), donc le courant.
+     *
+     * @return {Turn}
+     */
+    getCurrentTurn() {
+        return this.getTurns().slice(-1)[0];
+    }
+
+    /**
+     *
      * @return {Boolean}
      */
     isFinished() {
-        return this.turnCounter >= 15;
+        return this.getTurns().length >= 15;
     }
 
     /**
