@@ -69,6 +69,7 @@ export class Turn {
             firstPlayerToBegin = this.getRound().getPreviousTurn().getWinner();
         }
 
+        // Don't ask ...
         if (typeof firstPlayerToBegin !== "undefined") {
             this.addPlayerInQueue(firstPlayerToBegin);
         }
@@ -79,16 +80,19 @@ export class Turn {
 
         let indexAnchor = this.getNextPlayerIndexToGiver(firstPlayerToBegin);
 
-        // Tant qu'on a pas vidé la liste des joueurs restants
-        // on va construite la queue.
+        // 1. Tant qu'on a pas vidé la liste des joueurs restants
+        //    on va construite la queue.
         while (!!playersWithoutTheBeginner.length) {
 
+            // 1.1 Le joueur qui commence est en milieu de liste,
+            //     on se positionne dans le tableau et on boucle.
             if (indexAnchor > 0) {
 
                 for (let i = 0; i <= playersWithoutTheBeginner.length; i++) {
 
                     let a = playersWithoutTheBeginner.splice(indexAnchor, 1)[0];
 
+                    // Don't ask too ...
                     if (typeof a === "undefined") {
                         continue;
                     }
@@ -99,6 +103,9 @@ export class Turn {
                 indexAnchor = 0;
             }
             else {
+
+                // 1.2 On est ( ou revenu ) au début du tableau.
+                //     On balance le reste.
                 this.addPlayerInQueue(playersWithoutTheBeginner.splice(0, 1)[0]);
             }
         }
