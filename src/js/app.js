@@ -73,7 +73,7 @@ const gameTypeLoop = async () => {
 
 	round.setCalledKing(new Card(64)); // Roi de Coeur
 
-	round.addAttackerPlayer(round.findPartner());
+	round.addAttackerPlayer(round.findPartnerByCards());
 
 	round.setDefenderPlayers(round.findDefenderPlayers());
 

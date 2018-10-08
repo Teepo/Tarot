@@ -101,13 +101,28 @@ export class Round {
      *
      * @return {Player}
      */
-    findPartner() {
+    findPartnerByCards() {
 
-        return this.players.find(player => {
+        const partner = this.players.find(player => {
             return player.getCards().find(card => {
                 return card.index === this.getCalledKing().index;
             });
         });
+
+        // Si la partner trouvé est soi même, on ne retourne rien.
+        if (this.getAttackerPlayers().includes(partner)) {
+            return false;
+        }
+
+        return partner;
+    }
+
+    /**
+     *
+     * @return {array<Player>}
+     */
+    getPlayers() {
+        return this.players;
     }
 
     /**
@@ -161,7 +176,13 @@ export class Round {
      * @param {Player} player
      *
      */
-    addAttackerPlayer(player) {
+    addAttackerPlayer(player = false) {
+
+        // L'attaquant est seul ! Bonne chance petit !
+        if (!player) {
+            return;
+        }
+
         this.attackerPlayers.push(player);
     }
 
@@ -188,10 +209,10 @@ export class Round {
      */
     findDefenderPlayers() {
 
-        return this.players.filter(p => {
-            return this.getAttackerPlayers().filter(ap => {
-                return !Object.is(p, ap);
-            });
+        return this.getPlayers().filter(player => {
+            return this.getAttackerPlayers().filter(aplayer => {
+                return Object.is(player, aplayer);
+            }).length <= 0;
         });
     }
 
