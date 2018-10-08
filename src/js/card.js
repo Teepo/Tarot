@@ -15,6 +15,14 @@ export class Card {
      *
      * @return {Boolean}
      */
+    isAtout() {
+        return this.value.slice(0, 1) === 'A';
+    }
+
+    /**
+     *
+     * @return {Boolean}
+     */
     isBout() {
         return (this.index === 1 || this.index === 21 || this.index === 22);
     }
@@ -25,5 +33,22 @@ export class Card {
      */
     isExcuse() {
         return this.index === 22;
+    }
+
+    /**
+     * @getter
+     *
+     * @return {String}
+     */
+    get sign() {
+
+        if (this.isAtout()) {
+            return 'A';
+        }
+        else if (this.isExcuse()) {
+            return 'E';
+        }
+
+        return this.value.slice(0, 1);
     }
 }

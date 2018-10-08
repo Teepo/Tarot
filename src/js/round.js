@@ -46,6 +46,15 @@ export class Round {
     }
 
     /**
+     * @description Retourne l'avant dernier élément de getTurns(), donc le précédent.
+     *
+     * @return {Turn}
+     */
+    getPreviousTurn() {
+        return this.getTurns().slice(-2, -1)[0];
+    }
+
+    /**
      *
      * @return {Boolean}
      */
