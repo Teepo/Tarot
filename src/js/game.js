@@ -88,8 +88,11 @@ export class Game {
 
     displayBoard() {
 
-        View.render(require('handlebars').compile(gameBoardTemplate)({
-            players : this.players
-        }));
+        View.render(
+            require('handlebars').compile(gameBoardTemplate)({
+                players : this.players
+            }),
+            document.getElementById('dashboard')
+        );
     }
 }

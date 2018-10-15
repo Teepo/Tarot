@@ -3,7 +3,10 @@
 
         <div class="gameboard-player gameboard-player__{{@index}}">
 
+            <span class="gameboard-player-name">{{this.name}}</span>
+
             <div class="gameboard-player-cards">
+
                 {{#each this.cards}}
                     <div class="carte carte__{{this.value}}">{{this.value}}</div>
                 {{/each}}

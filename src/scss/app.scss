@@ -12,9 +12,21 @@ body {
 
     &-player {
 
+        $root: &;
+
         position: absolute;
 
+        &-name {
+
+            position: absolute;
+
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
         &__0 {
+
             bottom: 0;
             left: 0;
             right: 0;
@@ -23,11 +35,20 @@ body {
             .carte {
                 display: inline-block;
             }
+
+            #{$root}-name {
+                top: -50px;
+            }
         }
 
         &__1 {
+
             top: 15vw;
             left: 0;
+
+            #{$root}-name {
+                top: -50px;
+            }
         }
 
         &__2 {
@@ -38,20 +59,34 @@ body {
             .carte {
                 display: inline-block;
             }
+
+            #{$root}-name {
+                bottom: -50px;
+            }
         }
 
         &__3 {
+
             top: 0;
             right: 0;
 
             .carte {
                 display: inline-block;
             }
+
+            #{$root}-name {
+                bottom: -50px;
+            }
         }
 
         &__4 {
+
             top: 15vw;
             right: 0;
+
+            #{$root}-name {
+                top: -50px;
+            }
         }
     }
 }

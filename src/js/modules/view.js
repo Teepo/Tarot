@@ -4,10 +4,13 @@ export class View {
      * @static
      *
      * @param {string} html
+     * @param {Node}   node
      *
      */
-    static render(html) {
+    static render(html, node = false) {
 
-        document.getElementById('app').innerHTML = html.trim();
+        node = node || document.getElementById('app');
+
+        node.insertAdjacentHTML('beforeend', html.trim());
     }
 }
