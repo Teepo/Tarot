@@ -36,6 +36,15 @@ export class Card {
     }
 
     /**
+     * @description Caution, call a magical getter.
+     *
+     * @return {String}
+     */
+    getSign() {
+        return this.sign;
+    }
+
+    /**
      * @getter
      *
      * @return {String}

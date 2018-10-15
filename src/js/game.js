@@ -90,7 +90,7 @@ export class Game {
 
         const dashboard = document.getElementById('dashboard');
 
-        View.empty(dashboard)
+        View.empty(dashboard);
 
         View.render(
             require('handlebars').compile(gameBoardTemplate)({
@@ -98,5 +98,26 @@ export class Game {
             }),
             dashboard
         );
+    }
+
+    /**
+     * @description API qui indique si une carte a le droit d'être joué.
+     *
+     * @param {Turn} turn
+     * @param {Card} card
+     *
+     * @return {Boolean}
+     */
+    static isOkToPlayThisCard(turn, card) {
+
+        // On est le 1er a joué. C'est nous qui décidons du signe.
+        if (turn.getCards().length <= 0) {
+            return true;
+        }
+
+        // On prend la dernière carte joué dans le Turn
+        const lastCard = turn.getCards().slice(-1)[0];
+
+        return card.getSign() === lastCard.getSign();
     }
 }

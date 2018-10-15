@@ -7,6 +7,11 @@
             </div>
 
             <div class="modal-body text-center">
+
+                {{#if hasError}}
+                    <div class="alert alert-danger">La carte que vous avec choisi n'est pas valide</div>
+                {{/if}}
+
                 {{#each cards}}
                     <button type="button" data-id="{{@key}}" class="col-3 btn btn-light carte__{{this.sign}}">{{this.value}}</button>
                 {{/each}}

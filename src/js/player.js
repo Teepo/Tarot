@@ -3,6 +3,8 @@ const templatePlayerCardChoice = require('./templates/modals/player_card_choice.
 
 import { View } from './modules/view';
 
+import { Game } from './game.js';
+
 export class Player {
 
     constructor() {
@@ -90,33 +92,39 @@ export class Player {
 
         const cardId = parseInt(event.target.dataset.id);
 
-        // 1. On check si la Card a le droit d'etre joué
+        // 1. On supprime la modal
+        document.getElementById('playerCardChoice').remove();
 
-        // 2. On supprime la Card du deck du joueur
-        const card = this.removeCard(cardId)[0];
-
-        // 3. On ajoute la Card dans la liste des Card du tour
-        turn.addCard(card);
-
-        // 4. On ajoute au Player la Card joué
-        this.setCurrentCard(card);
-
-        // 5. On supprime la delegation de la vue
+        // 2. On supprime la delegation de la vue
         this.onClickCardChoiceButtonEvent.destroy();
 
-        // 6. On supprime la modal
-        document.getElementById('playerCardChoice').remove();
+        // 3. On check si la Card a le droit d'etre joué
+        if (!Game.isOkToPlayThisCard(turn, this.getCards().slice(cardId, cardId+1)[0])) {
+
+            this.askCard(turn, true);
+            return;
+        }
+
+        // 4. On supprime la Card du deck du joueur
+        const card = this.removeCard(cardId)[0];
+
+        // 5. On ajoute la Card dans la liste des Card du tour
+        turn.addCard(card);
+
+        // 6. On ajoute au Player la Card joué
+        this.setCurrentCard(card);
 
         // 7. On passe à la suite
         this.cardChoiceResolver(event.target.dataset.type);
     }
 
     /**
-     * @param {Turn} turn
+     * @param {Turn}    turn
+     * @param {Boolean} hasError
      *
      * @return {Promise}
      */
-    askCard(turn) {
+    askCard(turn, hasError = false) {
 
         return new Promise(resolve => {
 
@@ -128,8 +136,9 @@ export class Player {
 
             // 3. On render la template
             View.render(require('handlebars').compile(templatePlayerCardChoice)({
-                player : this,
-                cards  : this.getCards()
+                player   : this,
+                cards    : this.getCards(),
+                hasError : hasError
             }));
         });
     }

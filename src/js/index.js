@@ -14,8 +14,6 @@ const createWindow = () => {
         slashes: true
     });
 
-    console.log(startURL);
-
     window.setMenu(null);
     window.loadURL(startURL);
 

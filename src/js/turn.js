@@ -109,8 +109,6 @@ export class Turn {
                 this.addPlayerInQueue(playersWithoutTheBeginner.splice(0, 1)[0]);
             }
         }
-
-        console.log('queue', this.getPlayersQueue());
     }
 
     /**
