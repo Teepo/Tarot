@@ -13,6 +13,14 @@ export class Card {
 
     /**
      *
+     * @return {int}
+     */
+    getindex() {
+        return this.index;
+    }
+
+    /**
+     *
      * @return {Boolean}
      */
     isAtout() {

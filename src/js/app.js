@@ -71,7 +71,7 @@ const gameLoop = async () => {
 	}
 };
 
-const askPlayersCard= async () => {
+const askPlayersCard = async () => {
 
 	const turn = round.getCurrentTurn();
 
@@ -79,6 +79,8 @@ const askPlayersCard= async () => {
 	turn.buildPlayersQueue();
 
 	await asyncMap(turn.getPlayersQueue(), async player => {
+
+		console.log('askPlayersCard', player);
 
 		await player.askCard(turn);
 

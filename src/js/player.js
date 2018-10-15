@@ -71,6 +71,18 @@ export class Player {
     }
 
     /**
+     * @param {String} sign
+     *
+     * @return {Boolean}
+     */
+    hasCardOfThisSignInHisDeck(sign) {
+
+        return this.getCards().filter(card => {
+            return card.getSign() === sign;
+        }).length > 0;
+    }
+
+    /**
      * @param {Event} event
      *
      */
@@ -99,7 +111,7 @@ export class Player {
         this.onClickCardChoiceButtonEvent.destroy();
 
         // 3. On check si la Card a le droit d'etre joué
-        if (!Game.isOkToPlayThisCard(turn, this.getCards().slice(cardId, cardId+1)[0])) {
+        if (!Game.isOkToPlayThisCard(turn, this, this.getCards().slice(cardId, cardId+1)[0])) {
 
             this.askCard(turn, true);
             return;
