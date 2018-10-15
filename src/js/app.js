@@ -78,7 +78,7 @@ const askPlayersCard= async () => {
 	turn.setRound(round);
 	turn.buildPlayersQueue();
 
-	await asyncMap(round.getPlayers(), async player => {
+	await asyncMap(turn.getPlayersQueue(), async player => {
 
 		await player.askCard(turn);
 
