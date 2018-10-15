@@ -2,12 +2,19 @@ export class Turn {
 
     constructor() {
 
+        /* @var Round */
         this.round = null;
 
+        /* @var array<Player> */
+        this.players = [];
+
+        /* @var array<Player> */
         this.playersQueue = [];
 
+        /* @var Player */
         this.winner = false;
 
+        /* @var array<Player> */
         this.cards = [];
     }
 
@@ -25,6 +32,22 @@ export class Turn {
      */
     setRound(round) {
         this.round = round;
+    }
+
+    /**
+     *
+     * @return {Players}
+     */
+    getPlayers() {
+        return this.players;
+    }
+
+    /**
+     * @param {players} players
+     *
+     */
+    setPlayers(players) {
+        this.players = players;
     }
 
     /**
@@ -109,6 +132,21 @@ export class Turn {
                 this.addPlayerInQueue(playersWithoutTheBeginner.splice(0, 1)[0]);
             }
         }
+    }
+
+    determineTheWinner() {
+
+        let winner = false;
+
+        this.getPlayersQueue().map(player => {
+
+            if (!winner) {
+                winner = player;
+            }
+
+        });
+
+        this.setWinner(winner);
     }
 
     /**

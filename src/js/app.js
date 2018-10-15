@@ -76,6 +76,7 @@ const askPlayersCard = async () => {
 	const turn = round.getCurrentTurn();
 
 	turn.setRound(round);
+	turn.setPlayers(round.getPlayers());
 	turn.buildPlayersQueue();
 
 	await asyncMap(turn.getPlayersQueue(), async player => {
@@ -86,6 +87,9 @@ const askPlayersCard = async () => {
 
 		game.displayBoard();
 	});
+
+	// Fin du tour
+	turn.determineTheWinner();
 };
 
 (async () => {
