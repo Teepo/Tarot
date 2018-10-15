@@ -129,7 +129,8 @@ export class Player {
         return new Promise(resolve => {
 
             // 1. La function qui fera passer à la suite
-            this.cardChoiceResolver = resolve;
+            //    En cas d'erreur, on se change pas le précédent resolver
+            !hasError && (this.cardChoiceResolver = resolve);
 
             // 2. On stocke la delegation pour la détruite une fois la Promise résolut
             this.onClickCardChoiceButtonEvent = require('delegate')(document.body, '#playerCardChoice button', 'click', this.onClickCardChoiceButton.bind(this, turn));
