@@ -80,7 +80,7 @@ const askPlayersCard= async () => {
 
 	await asyncMap(round.getPlayers(), async player => {
 
-		await player.askCard(round);
+		await player.askCard(turn);
 	});
 };
 

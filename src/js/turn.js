@@ -136,7 +136,19 @@ export class Turn {
         this.playersQueue.push(player);
     }
 
+    /**
+     *
+     * @return {array<Card>}
+     */
     getCards() {
         return this.cards;
+    }
+
+    /**
+     * @param {Card} card
+     *
+     */
+    addCard(card) {
+        this.cards.push(card);
     }
 }
