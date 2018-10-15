@@ -23,6 +23,22 @@ export class Player {
     }
 
     /**
+     *
+     * @return {Card}
+     */
+    getCurrentCard() {
+        return this.currentCard;
+    }
+
+    /**
+     * @param {Card} card
+     *
+     */
+    setCurrentCard(card) {
+        this.currentCard = card;
+    }
+
+    /**
      * @param {array<Card>} cards
      *
      */
@@ -77,15 +93,21 @@ export class Player {
         // 1. On check si la Card a le droit d'etre joué
 
         // 2. On supprime la Card du deck du joueur
-        const removedCard = this.removeCard(cardId);
+        const card = this.removeCard(cardId)[0];
 
         // 3. On ajoute la Card dans la liste des Card du tour
-        turn.addCard(removedCard[0]);
+        turn.addCard(card);
 
-        // 4. On supprime la delegation de la vue
+        // 4. On ajoute au Player la Card joué
+        this.setCurrentCard(card);
+
+        // 5. On supprime la delegation de la vue
         this.onClickCardChoiceButtonEvent.destroy();
 
-        // 5. On passe à la suite
+        // 6. On supprime la modal
+        document.getElementById('playerCardChoice').remove();
+
+        // 7. On passe à la suite
         this.cardChoiceResolver(event.target.dataset.type);
     }
 

@@ -3,6 +3,16 @@ export class View {
     /**
      * @static
      *
+     * @param {Node} node
+     *
+     */
+    static empty(node) {
+        node.innerHTML = "";
+    }
+
+    /**
+     * @static
+     *
      * @param {string} html
      * @param {Node}   node
      *

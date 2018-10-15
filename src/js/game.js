@@ -88,11 +88,15 @@ export class Game {
 
     displayBoard() {
 
+        const dashboard = document.getElementById('dashboard');
+
+        View.empty(dashboard)
+
         View.render(
             require('handlebars').compile(gameBoardTemplate)({
                 players : this.players
             }),
-            document.getElementById('dashboard')
+            dashboard
         );
     }
 }

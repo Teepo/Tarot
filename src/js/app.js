@@ -81,6 +81,8 @@ const askPlayersCard= async () => {
 	await asyncMap(round.getPlayers(), async player => {
 
 		await player.askCard(turn);
+
+		game.displayBoard();
 	});
 };
 
