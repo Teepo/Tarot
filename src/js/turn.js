@@ -142,8 +142,37 @@ export class Turn {
 
             if (!winner) {
                 winner = player;
+                return;
             }
 
+            // L'excuse peut pas gagner
+            if (player.getCurrentCard().isExcuse()) {
+                return;
+            }
+
+            // Le 21 gagne tout le temps
+            if (player.getCurrentCard().getIndex() === 21) {
+                winner = player;
+                return;
+            }
+
+            // Si le joueur a mis un atout et l'autre un signe
+            // Il gagne
+            if (player.getCurrentCard().isAtout() && !winner.getCurrentCard().isAtout()) {
+                winner = player;
+                return;
+            }
+
+            // Si les cartes sont de même signe, on va juste comparé les index
+            // ici on trust à fond le fait qu'une fausse carte
+            // ne soit pas dans la liste
+            if (player.getCurrentCard().getSign() === winner.getCurrentCard().getSign()) {
+
+                if (player.getCurrentCard().getIndex() > winner.getCurrentCard().getIndex()) {
+                    winner = player;
+                    return;
+                }
+            }
         });
 
         this.setWinner(winner);
@@ -155,6 +184,14 @@ export class Turn {
      */
     getWinner() {
         return this.winner;
+    }
+
+    /**
+     * @param {Player}
+     *
+     */
+    setWinner(player) {
+        this.winner = player;
     }
 
     /**

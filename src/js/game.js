@@ -135,7 +135,7 @@ export class Game {
             return false;
         }
 
-        if (lastCard.isAtout() && card.getindex() <= lastCard.getindex()) {
+        if (lastCard.isAtout() && card.getIndex() <= lastCard.getIndex()) {
 
             console.log('atout pas assez fort');
 

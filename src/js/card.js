@@ -15,7 +15,7 @@ export class Card {
      *
      * @return {int}
      */
-    getindex() {
+    getIndex() {
         return this.index;
     }
 
