@@ -188,6 +188,13 @@ export class Turn {
         this.getRound().addAttackerStackCards(this.getCards()) : this.getRound().addDefenderStackCards(this.getCards());
     }
 
+    resetPlayersCurrentCard() {
+
+        this.getPlayers().map(player => {
+            player.setCurrentCard(null);
+        });
+    }
+
     /**
      *
      * @return {Player}

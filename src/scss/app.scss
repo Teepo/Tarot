@@ -25,19 +25,33 @@ body {
             font-weight: 700;
         }
 
+        &-card {
+            position: absolute;
+        }
+
         &__0 {
 
             bottom: 0;
             left: 0;
             right: 0;
             text-align: center;
+            width: 450px;
+            margin: 0 auto;
 
             .carte {
                 display: inline-block;
             }
 
-            #{$root}-name {
-                top: -50px;
+            #{$root} {
+
+                &-name {
+                    top: -50px;
+                }
+
+                &-card {
+                    bottom: 40px;
+                    right: 150px;
+                }
             }
         }
 
@@ -46,8 +60,16 @@ body {
             top: 15vw;
             left: 0;
 
-            #{$root}-name {
-                top: -50px;
+            #{$root} {
+
+                &-name {
+                    top: -50px;
+                }
+
+                &-card {
+                    top: 130px;
+                    left: 60px;
+                }
             }
         }
 
@@ -60,8 +82,16 @@ body {
                 display: inline-block;
             }
 
-            #{$root}-name {
-                bottom: -50px;
+            #{$root} {
+
+                &-name {
+                    bottom: -50px;
+                }
+
+                &-card {
+                    top: 50px;
+                    left: 150px;
+                }
             }
         }
 
@@ -74,8 +104,16 @@ body {
                 display: inline-block;
             }
 
-            #{$root}-name {
-                bottom: -50px;
+            #{$root} {
+
+                &-name {
+                    bottom: -50px;
+                }
+
+                &-card {
+                    top: 50px;
+                    right: 150px;
+                }
             }
         }
 
@@ -84,8 +122,16 @@ body {
             top: 15vw;
             right: 0;
 
-            #{$root}-name {
-                top: -50px;
+            #{$root} {
+
+                &-name {
+                    top: -50px;
+                }
+
+                &-card {
+                    top: 130px;
+                    right: 60px;
+                }
             }
         }
     }

@@ -100,6 +100,12 @@ const askPlayersCard = async () => {
 	// Les gagnants prennent les Card
 	turn.pickUpCards();
 
+	// On reset les current card des Player
+	turn.resetPlayersCurrentCard();
+
+	// On refresh la vue
+	game.displayBoard();
+
 	console.log('Fin du Turn', turn);
 };
 
