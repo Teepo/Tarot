@@ -83,6 +83,18 @@ export class Player {
     }
 
     /**
+     * @param {int} index L'index d'une carte
+     *
+     * @return {Boolean}
+     */
+    hasCardStrongerInHisDeck(index) {
+
+        return this.getCards().filter(card => {
+            return card.isAtout() && card.getIndex() >= index;
+        }).length > 0;
+    }
+
+    /**
      * @param {Event} event
      *
      */

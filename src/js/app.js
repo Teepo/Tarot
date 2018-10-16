@@ -81,8 +81,6 @@ const askPlayersCard = async () => {
 
 	await asyncMap(turn.getPlayersQueue(), async player => {
 
-		console.log('askPlayersCard', player);
-
 		await player.askCard(turn);
 
 		game.displayBoard();

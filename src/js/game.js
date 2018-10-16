@@ -116,6 +116,7 @@ export class Game {
             return true;
         }
 
+        // C'est toujours OK de jouer l'excuse
         if (card.isExcuse()) {
             return true;
         }
@@ -124,29 +125,24 @@ export class Game {
         const lastCard  = turn.getCards().slice(-1)[0];
 
         // Meme signe, même combat
-        if (card.getSign() === firstCard.getSign()) {
+        if (card.getSign() === firstCard.getSign() && !firstCard.isAtout()) {
             return true;
         }
 
         // Les signes sont différents.
         // S'il tente de jouer autre chose que le signe alors qu'il en a.
-        if (player.hasCardOfThisSignInHisDeck(firstCard.getSign())) {
-            console.log('try to play atout with sign in deck');
+        if (card.getSign() !== firstCard.getSign() && player.hasCardOfThisSignInHisDeck(firstCard.getSign())) {
             return false;
         }
 
         if (lastCard.isAtout() && card.getIndex() <= lastCard.getIndex()) {
 
-            console.log('atout pas assez fort');
-
             // Si la carte joué est de l'atout ainsi que la précédente
             // la carte joué doit être supérieur ( si possible )
-            return false;
+            return !player.hasCardStrongerInHisDeck(lastCard.getIndex());
         }
 
-        console.log('pisse !');
-
-        // Donc ca veut dire que tu pisses sale !
+        // Donc ici soit tu as monté, soit tu pisses !
         return true;
     }
 }
