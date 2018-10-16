@@ -72,6 +72,11 @@ const gameLoop = async () => {
 
 	// Fin de la partie
 	round.determineTheWinner();
+
+	// On compte les points
+	round.setPoints();
+
+	console.log('Fin du round', round);
 };
 
 const askPlayersCard = async () => {
@@ -95,7 +100,7 @@ const askPlayersCard = async () => {
 	// Les gagnants prennent les Card
 	turn.pickUpCards();
 
-	console.log('Fin du round', round);
+	console.log('Fin du Turn', turn);
 };
 
 (async () => {

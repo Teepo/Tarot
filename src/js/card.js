@@ -21,6 +21,14 @@ export class Card {
 
     /**
      *
+     * @return {String}
+     */
+    getValue() {
+        return this.value;
+    }
+
+    /**
+     *
      * @return {Boolean}
      */
     isAtout() {

@@ -1,5 +1,6 @@
-import { cardsList } from './config/cardList';
+import { cardsList    } from './config/cardList';
 import { gameTypeList } from './config/gameTypeList';
+import { pointByCard  } from './config/pointByCard';
 
 export class Round {
 
@@ -211,12 +212,42 @@ export class Round {
         this.defenderPoints = points;
     }
 
+    setPoints() {
+
+        this.getAttackerStackCards().map(card => {
+            this.attackerPoints += pointByCard[card.getValue()];
+        });
+
+        this.getDefenderStackCards().map(card => {
+            this.defenderPoints += pointByCard[card.getValue()];
+        });
+    }
+
+    /**
+     *
+     * @return {array<Card>}
+     */
+    getAttackerStackCards() {
+        return this.attackerStackCards;
+    }
+
+    /**
+     *
+     * @return {array<Card>}
+     */
+    getDefenderStackCards() {
+        return this.defenderStackCards;
+    }
+
     /**
      * @param {array<Card>} cards
      *
      */
     addAttackerStackCards(cards) {
-        this.attackerStackCards.push(cards);
+
+        cards.map(card => {
+            this.attackerStackCards.push(card);
+        });
     }
 
     /**
@@ -224,7 +255,10 @@ export class Round {
      *
      */
     addDefenderStackCards(cards) {
-        this.defenderStackCards.push(cards);
+
+        cards.map(card => {
+            this.defenderStackCards.push(card);
+        });
     }
 
     /**
