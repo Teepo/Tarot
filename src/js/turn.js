@@ -179,6 +179,16 @@ export class Turn {
     }
 
     /**
+     * @description Le gagnant récupère les cartes
+     *
+     */
+    pickUpCards() {
+
+        this.getRound().getAttackerPlayers().includes(this.getWinner()) ?
+        this.getRound().addAttackerStackCards(this.getCards()) : this.getRound().addDefenderStackCards(this.getCards());
+    }
+
+    /**
      *
      * @return {Player}
      */

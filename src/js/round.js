@@ -9,6 +9,9 @@ export class Round {
         this.attackerPlayers = [];
         this.defenderPlayers = [];
 
+        this.attackerStackCards = [];
+        this.defenderStackCards = [];
+
         this.attackerPoints = 0;
         this.defenderPoints = 0;
 
@@ -209,10 +212,33 @@ export class Round {
     }
 
     /**
+     * @param {array<Card>} cards
+     *
+     */
+    addAttackerStackCards(cards) {
+        this.attackerStackCards.push(cards);
+    }
+
+    /**
+     * @param {array<Card>} cards
+     *
+     */
+    addDefenderStackCards(cards) {
+        this.defenderStackCards.push(cards);
+    }
+
+    /**
      * @param {array<Player>}
      */
     getAttackerPlayers() {
         return this.attackerPlayers;
+    }
+
+    /**
+     * @param {array<Player>}
+     */
+    getDefenderPlayers() {
+        return this.defenderPlayers;
     }
 
     /**
@@ -265,5 +291,9 @@ export class Round {
      */
     gameTypeIsChoosen() {
         return typeof this.gameType !== 'undefined';
+    }
+
+
+    determineTheWinner() {
     }
 }

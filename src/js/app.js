@@ -69,6 +69,9 @@ const gameLoop = async () => {
 
 		await askPlayersCard();
 	}
+
+	// Fin de la partie
+	round.determineTheWinner();
 };
 
 const askPlayersCard = async () => {
@@ -88,6 +91,11 @@ const askPlayersCard = async () => {
 
 	// Fin du tour
 	turn.determineTheWinner();
+
+	// Les gagnants prennent les Card
+	turn.pickUpCards();
+
+	console.log('Fin du round', round);
 };
 
 (async () => {
@@ -96,7 +104,7 @@ const askPlayersCard = async () => {
 
 	round.setPlayers(game.getPlayers());
 
-	round.setPlayerWhoGiveCards(player2);
+	round.setPlayerWhoGiveCards(player1);
 
 	round.setGameType(1);
 	round.addAttackerPlayer(player2);
