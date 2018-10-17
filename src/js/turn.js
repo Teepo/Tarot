@@ -1,20 +1,36 @@
+/* @flow */
+
+import { Player } from './player';
+import { Round } from './round';
+import { Card } from './card';
+
 export class Turn {
+
+    /* @var Round */
+    round : Round;
+
+    /* @var array<Player> */
+    players : Array<Player>;
+
+    /* @var array<Player> */
+    playersQueue: Array<Player>;
+
+    /* @var Player */
+    winner : Player;
+
+    /* @var array<Player> */
+    cards : Array<Card>;
 
     constructor() {
 
-        /* @var Round */
-        this.round = null;
+        this.round;
 
-        /* @var array<Player> */
         this.players = [];
 
-        /* @var array<Player> */
         this.playersQueue = [];
 
-        /* @var Player */
-        this.winner = false;
+        this.winner;
 
-        /* @var array<Player> */
         this.cards = [];
     }
 
@@ -22,7 +38,7 @@ export class Turn {
      *
      * @return {Round}
      */
-    getRound() {
+    getRound() : Round {
         return this.round;
     }
 
@@ -30,7 +46,7 @@ export class Turn {
      * @param {Round} round
      *
      */
-    setRound(round) {
+    setRound(round : Round) : void {
         this.round = round;
     }
 
@@ -38,7 +54,7 @@ export class Turn {
      *
      * @return {Players}
      */
-    getPlayers() {
+    getPlayers() : Array<Player> {
         return this.players;
     }
 
@@ -46,7 +62,7 @@ export class Turn {
      * @param {players} players
      *
      */
-    setPlayers(players) {
+    setPlayers(players : Array<Player>) : void {
         this.players = players;
     }
 
@@ -54,9 +70,13 @@ export class Turn {
      *
      * @return {Player}
      */
-    getNextPlayerToGiver() {
+    getNextPlayerToGiver() : ?Player {
 
         const giver = this.getRound().getPlayerWhoGiveCards();
+
+        if (!(giver instanceof Player)) {
+            return;
+        }
 
         const index = this.getNextPlayerIndexToGiver(giver) + 1;
 
@@ -68,7 +88,7 @@ export class Turn {
      *
      * @return {Number}
      */
-    getNextPlayerIndexToGiver(giver) {
+    getNextPlayerIndexToGiver(giver : ?Player): number {
 
         let indexAnchor = 0;
 
@@ -79,7 +99,7 @@ export class Turn {
         return indexAnchor;
     }
 
-    buildPlayersQueue() {
+    buildPlayersQueue() : void {
 
         let firstPlayerToBegin;
 
@@ -105,7 +125,7 @@ export class Turn {
 
         // 1. Tant qu'on a pas vidé la liste des joueurs restants
         //    on va construite la queue.
-        while (!!playersWithoutTheBeginner.length) {
+        while (playersWithoutTheBeginner.length) {
 
             // 1.1 Le joueur qui commence est en milieu de liste,
             //     on se positionne dans le tableau et on boucle.
@@ -134,9 +154,9 @@ export class Turn {
         }
     }
 
-    determineTheWinner() {
+    determineTheWinner() : void {
 
-        let winner = false;
+        let winner;
 
         this.getPlayersQueue().map(player => {
 
@@ -145,20 +165,31 @@ export class Turn {
                 return;
             }
 
+            let playerCurrentCard = player.getCurrentCard();
+            let winnerCurrentCard = winner.getCurrentCard();
+
+            if (!(playerCurrentCard instanceof Card)) {
+                return;
+            }
+
+            if (!(winnerCurrentCard instanceof Card)) {
+                return;
+            }
+
             // L'excuse peut pas gagner
-            if (player.getCurrentCard().isExcuse()) {
+            if (playerCurrentCard.isExcuse()) {
                 return;
             }
 
             // Le 21 gagne tout le temps
-            if (player.getCurrentCard().getIndex() === 21) {
+            if (playerCurrentCard.getIndex() === 21) {
                 winner = player;
                 return;
             }
 
             // Si le joueur a mis un atout et l'autre un signe
             // Il gagne
-            if (player.getCurrentCard().isAtout() && !winner.getCurrentCard().isAtout()) {
+            if (playerCurrentCard.isAtout() && !winnerCurrentCard.isAtout()) {
                 winner = player;
                 return;
             }
@@ -166,9 +197,9 @@ export class Turn {
             // Si les cartes sont de même signe, on va juste comparé les index
             // ici on trust à fond le fait qu'une fausse carte
             // ne soit pas dans la liste
-            if (player.getCurrentCard().getSign() === winner.getCurrentCard().getSign()) {
+            if (playerCurrentCard.getSign() === winnerCurrentCard.getSign()) {
 
-                if (player.getCurrentCard().getIndex() > winner.getCurrentCard().getIndex()) {
+                if (playerCurrentCard.getIndex() > winnerCurrentCard.getIndex()) {
                     winner = player;
                     return;
                 }
@@ -182,15 +213,25 @@ export class Turn {
      * @description Le gagnant récupère les cartes
      *
      */
-    pickUpCards() {
+    pickUpCards() : void {
 
-        this.getRound().getAttackerPlayers().includes(this.getWinner()) ?
+        const winner = this.getWinner();
+
+        if (!winner) { return; }
+
+        this.getRound().getAttackerPlayers().includes(winner) ?
         this.getRound().addAttackerStackCards(this.getCards()) : this.getRound().addDefenderStackCards(this.getCards());
     }
 
-    resetPlayersCurrentCard() {
+    resetPlayersCurrentCard() : void {
 
-        this.getPlayers().map(player => {
+        const players = this.getPlayers();
+
+        if (players.length <= 0) {
+            return;
+        }
+
+        players.map(player => {
             player.setCurrentCard(null);
         });
     }
@@ -199,7 +240,7 @@ export class Turn {
      *
      * @return {Player}
      */
-    getWinner() {
+    getWinner() : Player {
         return this.winner;
     }
 
@@ -207,7 +248,12 @@ export class Turn {
      * @param {Player}
      *
      */
-    setWinner(player) {
+    setWinner(player : ?Player) : void {
+
+        if (!(player instanceof Player)) {
+            return;
+        }
+
         this.winner = player;
     }
 
@@ -215,14 +261,19 @@ export class Turn {
      *
      * @return {array<Player>}
      */
-    getPlayersQueue() {
+    getPlayersQueue() : Array<Player> {
         return this.playersQueue;
     }
 
     /**
      * @param {Player} player
      */
-    addPlayerInQueue(player) {
+    addPlayerInQueue(player : ?Player) : void {
+
+        if (!(player instanceof Player)) {
+            return;
+        }
+
         this.playersQueue.push(player);
     }
 
@@ -230,7 +281,7 @@ export class Turn {
      *
      * @return {array<Card>}
      */
-    getCards() {
+    getCards() : Array<Card> {
         return this.cards;
     }
 
@@ -238,7 +289,7 @@ export class Turn {
      * @param {Card} card
      *
      */
-    addCard(card) {
+    addCard(card : Card) : void {
         this.cards.push(card);
     }
 }

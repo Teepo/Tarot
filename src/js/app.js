@@ -1,3 +1,5 @@
+/* @flow */
+
 import { asyncMap } from './utils';
 
 import { Player } from './player';

@@ -1,3 +1,5 @@
+/* @flow */
+
 const templatePlayerGameType   = require('./templates/modals/player_game_type.handlebars');
 const templatePlayerCardChoice = require('./templates/modals/player_card_choice.handlebars');
 
@@ -5,20 +7,36 @@ import { View } from './modules/view';
 
 import { Game } from './game.js';
 
+import type { Round } from './round.js';
+import type { Turn } from './turn.js';
+import type { Card } from './card';
+
 export class Player {
+
+    name     : string;
+    points   : number;
+    cards    : Array<Card>;
+    gameType : ?string;
+    currentCard : ?Card;
+
+    gameTypeResolver : Function;
+    cardChoiceResolver : Function;
+
+    onClickGameTypeButtonEvent : Function;
+    onClickCardChoiceButtonEvent : Function;
 
     constructor() {
 
         this.name = '';
         this.points = 0;
         this.cards = [];
-        this.gameType = null;
+        this.gameType;
 
-        this.gameTypeResolver = null;
-        this.cardChoiceResolver = null;
+        this.gameTypeResolver = () => {};
+        this.cardChoiceResolver = () => {};
 
-        this.onClickGameTypeButtonEvent = null;
-        this.onClickCardChoiceButtonEvent = null;
+        this.onClickGameTypeButtonEvent = () => {};
+        this.onClickCardChoiceButtonEvent = () => {};
 
         // La Card joué pendant un tour
         this.currentCard = null;
@@ -28,7 +46,7 @@ export class Player {
      *
      * @return {Card}
      */
-    getCurrentCard() {
+    getCurrentCard() : ?Card {
         return this.currentCard;
     }
 
@@ -36,7 +54,7 @@ export class Player {
      * @param {Card} card
      *
      */
-    setCurrentCard(card) {
+    setCurrentCard(card: ?Card) : void {
         this.currentCard = card;
     }
 
@@ -44,7 +62,7 @@ export class Player {
      * @param {array<Card>} cards
      *
      */
-    addCards(cards) {
+    addCards(cards : Array<Card>) : void {
 
         cards.map(card => {
             this.cards.push(card);
@@ -56,9 +74,9 @@ export class Player {
      *
      * @param {Number} index L'index dans le tableau de getCards()
      *
-     * @return {Card}
+     * @return {array}
      */
-    removeCard(index) {
+    removeCard(index : number) : Array<any> {
         return this.getCards().splice(index, 1);
     }
 
@@ -66,7 +84,7 @@ export class Player {
      *
      * @return {array<Card>}
      */
-    getCards() {
+    getCards() : Array<Card> {
         return this.cards;
     }
 
@@ -75,7 +93,7 @@ export class Player {
      *
      * @return {Boolean}
      */
-    hasCardOfThisSignInHisDeck(sign) {
+    hasCardOfThisSignInHisDeck(sign : string) : bool {
 
         return this.getCards().filter(card => {
             return card.getSign() === sign;
@@ -87,7 +105,7 @@ export class Player {
      *
      * @return {Boolean}
      */
-    hasCardStrongerInHisDeck(index) {
+    hasCardStrongerInHisDeck(index : number) : bool {
 
         return this.getCards().filter(card => {
             return card.isAtout() && card.getIndex() >= index;
@@ -98,26 +116,41 @@ export class Player {
      * @param {Event} event
      *
      */
-    onClickGameTypeButton(event) {
+    onClickGameTypeButton(event : Event) : void {
+
+        const target : EventTarget = event.target;
+
+        if (!(target instanceof HTMLElement)) {
+            return;
+        }
 
         // 1. On supprime la delegation
-        this.onClickButtonEvent.destroy();
+        this.onClickGameTypeButtonEvent.destroy();
 
         // 2. On passe à la suite
-        this.gameTypeResolver(event.target.dataset.type);
+        this.gameTypeResolver(target.dataset.type);
     }
 
     /**
-     * @param {Turn}  turn A été bind au préalable
+     * @param {Turn}  turn  A été bind au préalable
      * @param {Event} event
      *
      */
-    onClickCardChoiceButton(turn, event) {
+    onClickCardChoiceButton(turn : Turn, event : Event) : void{
 
-        const cardId = parseInt(event.target.dataset.id);
+        const target : EventTarget = event.target;
+
+        if (!(target instanceof HTMLElement)) {
+            return;
+        }
+
+        const cardId = parseInt(target.dataset.id);
 
         // 1. On supprime la modal
-        document.getElementById('playerCardChoice').remove();
+        const playerCardChoiceNode = document.getElementById('playerCardChoice');
+        if (playerCardChoiceNode) {
+            playerCardChoiceNode.remove();
+        }
 
         // 2. On supprime la delegation de la vue
         this.onClickCardChoiceButtonEvent.destroy();
@@ -139,7 +172,7 @@ export class Player {
         this.setCurrentCard(card);
 
         // 7. On passe à la suite
-        this.cardChoiceResolver(event.target.dataset.type);
+        this.cardChoiceResolver(target.dataset.type);
     }
 
     /**
@@ -148,7 +181,7 @@ export class Player {
      *
      * @return {Promise}
      */
-    askCard(turn, hasError = false) {
+    askCard(turn : Turn, hasError : bool = false) : Promise<*> {
 
         return new Promise(resolve => {
 
@@ -173,7 +206,7 @@ export class Player {
      *
      * @return {Promise}
      */
-    askGameType(round) {
+    askGameType(round : Round) : Promise<*> {
 
         return new Promise(resolve => {
 
