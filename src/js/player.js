@@ -1,11 +1,12 @@
 /* @flow */
 
 const templatePlayerGameType   = require('./templates/modals/player_game_type.handlebars');
+const templateCalledKing       = require('./templates/modals/called_king.handlebars');
 const templatePlayerCardChoice = require('./templates/modals/player_card_choice.handlebars');
 
 import { View } from './modules/view';
 
-import { Game } from './game.js';
+import { Game } from './game';
 
 import type { Round } from './round.js';
 import type { Turn } from './turn.js';
@@ -19,10 +20,12 @@ export class Player {
     gameType : ?string;
     currentCard : ?Card;
 
-    gameTypeResolver : Function;
+    gameTypeResolver   : Function;
+    calledKingResolver : Function;
     cardChoiceResolver : Function;
 
-    onClickGameTypeButtonEvent : Function;
+    onClickGameTypeButtonEvent   : Function;
+    onClickCalledKingButtonEvent : Function;
     onClickCardChoiceButtonEvent : Function;
 
     constructor() {
@@ -32,10 +35,12 @@ export class Player {
         this.cards = [];
         this.gameType;
 
-        this.gameTypeResolver = () => {};
+        this.gameTypeResolver   = () => {};
+        this.calledKingResolver = () => {};
         this.cardChoiceResolver = () => {};
 
-        this.onClickGameTypeButtonEvent = () => {};
+        this.onClickGameTypeButtonEvent   = () => {};
+        this.onClickCalledKingButtonEvent = () => {};
         this.onClickCardChoiceButtonEvent = () => {};
 
         // La Card joué pendant un tour
@@ -113,10 +118,11 @@ export class Player {
     }
 
     /**
+     * @param {Round} round
      * @param {Event} event
      *
      */
-    onClickGameTypeButton(event : Event) : void {
+    onClickGameTypeButton(round : Round, event : Event) : void {
 
         const target : EventTarget = event.target;
 
@@ -124,11 +130,51 @@ export class Player {
             return;
         }
 
-        // 1. On supprime la delegation
+        // 1. On supprime la modal
+        const playerChooseGameTypeModal = document.getElementById('playerChooseGameType');
+        if (playerChooseGameTypeModal) {
+            playerChooseGameTypeModal.remove();
+        }
+
+        const type = target.dataset.type;
+
+        // 2. Si le joueur ne passe pas, on l'ajoute le joueur à la liste des attaquants
+        if (type) {
+            round.resetAttackerPlayers();
+            round.addAttackerPlayer(this);
+        }
+
+        // 3. On supprime la delegation
         this.onClickGameTypeButtonEvent.destroy();
 
-        // 2. On passe à la suite
-        this.gameTypeResolver(target.dataset.type);
+        // 4. On passe à la suite
+        this.gameTypeResolver(type);
+    }
+
+    /**
+     * @param {Turn}  round
+     * @param {Event} event
+     *
+     */
+    onClickCalledKingButton(round : Round, event : Event) : void {
+
+        const target : EventTarget = event.target;
+
+        if (!(target instanceof HTMLElement)) {
+            return;
+        }
+
+        // 1. On supprime la modal
+        const calledKingModal = document.getElementById('chooseCalledKing');
+        if (calledKingModal) {
+            calledKingModal.remove();
+        }
+
+        // 2. On supprime la delegation de la vue
+        this.onClickCalledKingButtonEvent.destroy();
+
+        // 7. On passe à la suite
+        this.calledKingResolver();
     }
 
     /**
@@ -136,7 +182,7 @@ export class Player {
      * @param {Event} event
      *
      */
-    onClickCardChoiceButton(turn : Turn, event : Event) : void{
+    onClickCardChoiceButton(turn : Turn, event : Event) : void {
 
         const target : EventTarget = event.target;
 
@@ -147,20 +193,22 @@ export class Player {
         const cardId = parseInt(target.dataset.id);
 
         // 1. On supprime la modal
-        const playerCardChoiceNode = document.getElementById('playerCardChoice');
-        if (playerCardChoiceNode) {
-            playerCardChoiceNode.remove();
+        const playerCardChoiceModal = document.getElementById('playerCardChoice');
+        if (playerCardChoiceModal) {
+            playerCardChoiceModal.remove();
         }
 
         // 2. On supprime la delegation de la vue
         this.onClickCardChoiceButtonEvent.destroy();
 
         // 3. On check si la Card a le droit d'etre joué
+        /*
         if (!Game.isOkToPlayThisCard(turn, this, this.getCards().slice(cardId, cardId+1)[0])) {
 
             this.askCard(turn, true);
             return;
         }
+        */
 
         // 4. On supprime la Card du deck du joueur
         const card = this.removeCard(cardId)[0];
@@ -206,6 +254,29 @@ export class Player {
      *
      * @return {Promise}
      */
+    askCalledKing(round : Round) : Promise<*> {
+
+        return new Promise(resolve => {
+
+            // 1. La function qui fera passer à la suite
+            this.calledKingResolver = resolve;
+
+            // 2. On stocke la delegation pour la détruite une fois la Promise résolut
+            this.onClickCalledKingButtonEvent = require('delegate')(document.body, '#chooseCalledKing button', 'click', this.onClickCalledKingButton.bind(this, round));
+
+            // 3. On render la template
+            View.render(require('handlebars').compile(templateCalledKing)({
+                player : this,
+                cards  : Game.getKingCards()
+            }));
+        });
+    }
+
+    /**
+     * @param {Round} round
+     *
+     * @return {Promise}
+     */
     askGameType(round : Round) : Promise<*> {
 
         return new Promise(resolve => {
@@ -214,7 +285,7 @@ export class Player {
             this.gameTypeResolver = resolve;
 
             // 2. On stocke la delegation pour la détruite une fois la Promise résolut
-            this.onClickGameTypeButtonEvent = require('delegate')(document.body, '#playerChooseGameType button', 'click', this.onClickGameTypeButton.bind(this));
+            this.onClickGameTypeButtonEvent = require('delegate')(document.body, '#playerChooseGameType button', 'click', this.onClickGameTypeButton.bind(this, round));
 
             // 3. On render la template
             View.render(require('handlebars').compile(templatePlayerGameType)({

@@ -318,6 +318,10 @@ export class Round {
         this.attackerPlayers.push(player);
     }
 
+    resetAttackerPlayers() : void {
+        this.attackerPlayers = [];
+    }
+
     /**
      * @param {Player} player
      *

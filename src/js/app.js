@@ -56,6 +56,13 @@ const askGameType = async () => {
 	});
 };
 
+const askCalledKing = async () => {
+
+	const player = round.getAttackerPlayers()[0];
+
+	await player.askCalledKing();
+};
+
 const gameTypeLoop = async () => {
 
 	while (!round.gameTypeIsChoosen()) {
@@ -113,20 +120,22 @@ const askPlayersCard = async () => {
 
 (async () => {
 
-	// await gameTypeLoop();
+	await gameTypeLoop();
+
+	await askCalledKing();
 
 	round.setPlayers(game.getPlayers());
 
 	round.setPlayerWhoGiveCards(player1);
 
-	round.setGameType(1);
-	round.addAttackerPlayer(player2);
+	//round.setGameType(1);
+	//round.addAttackerPlayer(player2);
 
-	round.setCalledKing(new Card(64)); // Roi de Coeur
+	//round.setCalledKing(new Card(64)); // Roi de Coeur
 
-	round.addAttackerPlayer(round.findPartnerByCards());
+	//round.addAttackerPlayer(round.findPartnerByCards());
 
-	round.setDefenderPlayers(round.findDefenderPlayers());
+	//round.setDefenderPlayers(round.findDefenderPlayers());
 
 	// Un joueur a pris, on commence la partie
 	game.addRound(round);

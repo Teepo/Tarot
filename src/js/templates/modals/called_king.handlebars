@@ -1,0 +1,16 @@
+<div class="modal" id="chooseCalledKing" tabindex="-1" role="dialog" style="display:block;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="card-title">{{ player.name }} - Choisissez votre roi</h4>
+            </div>
+
+            <div class="modal-body text-center">
+                {{#each cards}}
+                    <button type="button" data-id="{{@key}}" class="col-2 btn btn-light carte__{{this.sign}}">{{this.value}}</button>
+                {{/each}}
+            </div>
+        </div>
+    </div>
+</div>

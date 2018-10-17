@@ -6,10 +6,13 @@ import { Deck } from './deck';
 
 import { View } from './modules/view';
 
+import { cardsList } from './config/cardList';
+
+import { Card } from './card';
+
 import type { Player } from './player';
 import type { Round } from './round';
 import type { Turn } from './turn';
-import type { Card } from './card';
 
 export class Game {
 
@@ -75,6 +78,20 @@ export class Game {
      */
     addRound(round : Round) : void {
         this.rounds.push(round);
+    }
+
+    /**
+     * @static
+     *
+     * @return {array<Card>}
+     */
+    static getKingCards() : Array<Card> {
+
+        return Object.keys(cardsList).filter(cardID => {
+            return [36, 50, 64, 78].indexOf(parseInt(cardID)) >= 0;
+        }).map(index => {
+            return new Card(index);
+        });
     }
 
     giveCardsToPlayers() : void {
