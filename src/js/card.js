@@ -1,11 +1,16 @@
+/* @flow */
+
 import { cardsList } from './config/cardList';
 
 export class Card {
 
+    index : number;
+    value : string;
+
     /**
      * @param {integer} index
      */
-    constructor(index) {
+    constructor(index : number) {
 
         this.index = index;
         this.value = cardsList[index];
@@ -15,7 +20,7 @@ export class Card {
      *
      * @return {int}
      */
-    getIndex() {
+    getIndex() : number {
         return this.index;
     }
 
@@ -23,7 +28,7 @@ export class Card {
      *
      * @return {String}
      */
-    getValue() {
+    getValue() : string {
         return this.value;
     }
 
@@ -31,7 +36,7 @@ export class Card {
      *
      * @return {Boolean}
      */
-    isAtout() {
+    isAtout() : bool {
         return this.value.slice(0, 1) === 'A';
     }
 
@@ -39,7 +44,7 @@ export class Card {
      *
      * @return {Boolean}
      */
-    isBout() {
+    isBout() : bool {
         return (this.index === 1 || this.index === 21 || this.index === 22);
     }
 
@@ -47,7 +52,7 @@ export class Card {
      *
      * @return {Boolean}
      */
-    isExcuse() {
+    isExcuse() : bool {
         return this.index === 22;
     }
 
@@ -56,7 +61,7 @@ export class Card {
      *
      * @return {String}
      */
-    getSign() {
+    getSign() : string {
         return this.sign;
     }
 
@@ -65,7 +70,7 @@ export class Card {
      *
      * @return {String}
      */
-    get sign() {
+    get sign() : string {
 
         if (this.isAtout()) {
             return 'A';

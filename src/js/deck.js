@@ -1,6 +1,10 @@
+/* @flow */
+
 import { Card } from './card';
 
 export class Deck {
+
+    cards : Array<Card>
 
     constructor() {
 
@@ -15,7 +19,7 @@ export class Deck {
      * @param {array<Card>} cards
      *
      */
-    setCards(cards) {
+    setCards(cards : Array<Card>) : void {
         this.cards = cards;
     }
 
@@ -24,7 +28,7 @@ export class Deck {
      *
      * @return {array<Card>}
      */
-    getThreeCard() {
+    getThreeCard() : Array<Card> | bool {
 
         const cards = this.cards.slice(0, 3);
 
@@ -40,7 +44,7 @@ export class Deck {
      *
      * @return {Card}
      */
-    getOneCard() {
+    getOneCard() : Card {
 
         const card = this.cards.slice(0, 1)[0]; // Can throw exception
 
@@ -54,15 +58,11 @@ export class Deck {
      *
      * @return {array}
      */
-    removeCardFromDeck(card) {
+    removeCardFromDeck(card : Card) {
         return this.cards.filter(c => c !== card);
     }
 
-    /**
-     *
-     * @return {array<Card>}
-     */
-    shuffle() {
+    shuffle() : void {
 
         this.cards.sort(() => {
             return 0.5 - Math.random();

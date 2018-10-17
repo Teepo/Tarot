@@ -2,6 +2,8 @@
 
 module.exports = {
 
+    mode : 'production',
+
     entry : {
         app : __dirname + '/src/js/app.js'
     },

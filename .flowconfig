@@ -1,0 +1,5 @@
+[ignore]
+.*/public/css/bootstrap/
+
+[include]
+.*/src/js/

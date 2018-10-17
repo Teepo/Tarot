@@ -1,10 +1,24 @@
+/* @flow */
+
 const gameBoardTemplate = require('./templates/game_board.handlebars');
 
 import { Deck } from './deck';
 
 import { View } from './modules/view';
 
+import type { Player } from './player';
+import type { Round } from './round';
+import type { Turn } from './turn';
+import type { Card } from './card';
+
 export class Game {
+
+    players : Array<Player|any>;
+    rounds : Array<Round|any>;
+
+    deck : Deck;
+
+    chiens : Array<Card|any>;
 
     constructor() {
 
@@ -20,7 +34,7 @@ export class Game {
      * @description Ajoute de manière aléatoire une carte dans le chien.
      *              Dans une limite de 3 cartes.
      */
-    addCardInChien() {
+    addCardInChien() : void {
 
         if (this.chiens.length >= 3) {
             return;
@@ -43,7 +57,7 @@ export class Game {
      * @param {array<Player>} players
      *
      */
-    setPlayers(players) {
+    setPlayers(players : Array<Player>) : void {
         this.players = players;
     }
 
@@ -51,7 +65,7 @@ export class Game {
      *
      * @return {array<Player>}
      */
-    getPlayers() {
+    getPlayers() : Array<Player> {
         return this.players;
     }
 
@@ -59,11 +73,11 @@ export class Game {
      * @param {Round} round
      *
      */
-    addRound(round) {
+    addRound(round : Round) : void {
         this.rounds.push(round);
     }
 
-    giveCardsToPlayers() {
+    giveCardsToPlayers() : void {
 
         this.deck.shuffle();
 
@@ -77,6 +91,10 @@ export class Game {
                 playerIndex = 0;
             }
 
+            if (!(cards instanceof Array)) {
+                return;
+            }
+
             this.players[playerIndex].addCards(cards);
 
             // On met eventuellement une carte dans le chien
@@ -86,9 +104,13 @@ export class Game {
         }
     }
 
-    displayBoard() {
+    displayBoard() : void {
 
         const dashboard = document.getElementById('dashboard');
+
+        if (!(dashboard instanceof HTMLElement)) {
+            return;
+        }
 
         View.empty(dashboard);
 
@@ -109,7 +131,7 @@ export class Game {
      *
      * @return {Boolean}
      */
-    static isOkToPlayThisCard(turn, player, card) {
+    static isOkToPlayThisCard(turn : Turn, player : Player, card : Card) : bool {
 
         // On est le 1er a joué. C'est nous qui décidons du signe.
         if (turn.getCards().length <= 0) {

@@ -1,3 +1,5 @@
+/* @flow */
+
 export class View {
 
     /**
@@ -6,7 +8,12 @@ export class View {
      * @param {Node} node
      *
      */
-    static empty(node) {
+    static empty(node : HTMLElement) : void {
+
+        if (!(node instanceof HTMLElement)) {
+            return;
+        }
+
         node.innerHTML = "";
     }
 
@@ -17,9 +24,13 @@ export class View {
      * @param {Node}   node
      *
      */
-    static render(html, node = false) {
+    static render(html : string, node : ?HTMLElement | bool = false) : void{
 
         node = node || document.getElementById('app');
+
+        if (!(node instanceof HTMLElement)) {
+            return;
+        }
 
         node.insertAdjacentHTML('beforeend', html.trim());
     }
