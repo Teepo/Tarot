@@ -74,7 +74,13 @@ const gameLoop = async () => {
 
 	while (!round.isFinished()) {
 
-		round.addTurn(new Turn);
+		let turn = new Turn;
+		turn.setRound(round);
+		turn.setPlayers(round.getPlayers());
+
+		turn.buildPlayersQueue();
+
+		round.addTurn(turn);
 
 		await askPlayersCard();
 	}
@@ -91,10 +97,6 @@ const gameLoop = async () => {
 const askPlayersCard = async () => {
 
 	const turn = round.getCurrentTurn();
-
-	turn.setRound(round);
-	turn.setPlayers(round.getPlayers());
-	turn.buildPlayersQueue();
 
 	await asyncMap(turn.getPlayersQueue(), async player => {
 
