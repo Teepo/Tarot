@@ -1,8 +1,13 @@
 /* @flow */
 
+const delegate = require('delegate');
+
+const handlebars = require('handlebars');
+
 const templatePlayerGameType   = require('./templates/modals/player_game_type.handlebars');
 const templateCalledKing       = require('./templates/modals/called_king.handlebars');
 const templatePlayerCardChoice = require('./templates/modals/player_card_choice.handlebars');
+const templatePlayerChienChoice = require('./templates/modals/player_chien_choice.handlebars');
 
 import { View } from './modules/view';
 
@@ -23,10 +28,13 @@ export class Player {
     gameTypeResolver   : Function;
     calledKingResolver : Function;
     cardChoiceResolver : Function;
+    chienChoiceResolver : Function;
 
-    onClickGameTypeButtonEvent   : Function;
-    onClickCalledKingButtonEvent : Function;
-    onClickCardChoiceButtonEvent : Function;
+    onClickGameTypeButtonEvent        : Function;
+    onClickCalledKingButtonEvent      : Function;
+    onClickCardChoiceButtonEvent      : Function;
+    onClickChienCardChoiceButtonEvent : Function;
+    onClickChienValidateButtonEvent   : Function;
 
     constructor() {
 
@@ -35,13 +43,16 @@ export class Player {
         this.cards = [];
         this.gameType;
 
-        this.gameTypeResolver   = () => {};
-        this.calledKingResolver = () => {};
-        this.cardChoiceResolver = () => {};
+        this.gameTypeResolver    = () => {};
+        this.calledKingResolver  = () => {};
+        this.cardChoiceResolver  = () => {};
+        this.chienChoiceResolver = () => {};
 
-        this.onClickGameTypeButtonEvent   = () => {};
-        this.onClickCalledKingButtonEvent = () => {};
-        this.onClickCardChoiceButtonEvent = () => {};
+        this.onClickGameTypeButtonEvent        = () => {};
+        this.onClickCalledKingButtonEvent      = () => {};
+        this.onClickCardChoiceButtonEvent      = () => {};
+        this.onClickChienCardChoiceButtonEvent = () => {};
+        this.onClickChienValidateButtonEvent   = () => {};
 
         // La Card joué pendant un tour
         this.currentCard = null;
@@ -170,6 +181,82 @@ export class Player {
     }
 
     /**
+     * @param {Round} round  A été bind au préalable
+     * @param {Event} event
+     *
+     */
+    onClickChienCardChoiceButton(round : Round, event : Event) : void {
+
+        const target : EventTarget = event.target;
+
+        if (!(target instanceof HTMLElement)) {
+            return;
+        }
+
+        const parentNode = target.parentNode;
+
+        if (!(parentNode instanceof HTMLElement)) {
+            return;
+        }
+
+        const chiensNode = document.getElementById('chiens');
+        const cardsNode = document.getElementById('cards');
+
+        if (!(chiensNode instanceof HTMLElement)) {
+            return;
+        }
+        if (!(cardsNode instanceof HTMLElement)) {
+            return;
+        }
+
+        if (parentNode.id === "chiens") {
+            cardsNode.appendChild(target);
+        }
+        else if (parentNode.id === "cards") {
+            chiensNode.appendChild(target);
+        }
+    }
+
+    /**
+     * @param {Round} round  A été bind au préalable
+     * @param {Event} event
+     *
+     */
+    onClickChienChoiceValidateButton(round : Round, event : Event) : void {
+
+        const target : EventTarget = event.target;
+
+        if (!(target instanceof HTMLElement)) {
+            return;
+        }
+
+        // 1. On supprime la delegation de la vue
+        this.onClickChienCardChoiceButtonEvent.destroy();
+        this.onClickChienValidateButtonEvent.destroy();
+
+        // 2. On vérifie que le chien est valide
+
+        // Build Card list by DOM Node.
+        const chiens = Array.prototype.slice.call(document.querySelectorAll('#chiens button')).map(node => {
+            return new Card(parseInt(node.dataset.id));
+        });
+
+        if (!Game.isChienValid(chiens)) {
+            this.askChien(round, true);
+            return;
+        }
+
+        // 3. On supprime la modal
+        const playerChienChoiceModal = document.getElementById('playerChienChoice');
+        if (playerChienChoiceModal) {
+            playerChienChoiceModal.remove();
+        }
+
+        // 4. On passe à la suite
+        this.chienChoiceResolver();
+    }
+
+    /**
      * @param {Turn}  turn  A été bind au préalable
      * @param {Event} event
      *
@@ -216,6 +303,36 @@ export class Player {
     }
 
     /**
+     * @param {Round}   round
+     * @param {Boolean} hasError
+     *
+     * @return {Promise}
+     */
+    askChien(round : Round, hasError : bool = false) : Promise<*> {
+
+        return new Promise(resolve => {
+
+            // 1. La function qui fera passer à la suite
+            //    En cas d'erreur, on se change pas le précédent resolver
+            !hasError && (this.chienChoiceResolver = resolve);
+
+            // 2. On stocke la delegation pour la détruite une fois la Promise résolut
+            this.onClickChienCardChoiceButtonEvent = delegate(document.body, '#playerChienChoice .btn-light', 'click', this.onClickChienCardChoiceButton.bind(this, round));
+            this.onClickChienValidateButtonEvent = delegate(document.body, '#playerChienChoice .btn-primary', 'click', this.onClickChienChoiceValidateButton.bind(this, round));
+
+            const template = handlebars.compile(templatePlayerChienChoice)({
+                player   : this,
+                cards    : this.getCards(),
+                chiens   : round.getChiens(),
+                hasError : hasError
+            });
+
+            // 3. On render la template
+            View.render(template);
+        });
+    }
+
+    /**
      * @param {Turn}    turn
      * @param {Boolean} hasError
      *
@@ -230,10 +347,10 @@ export class Player {
             !hasError && (this.cardChoiceResolver = resolve);
 
             // 2. On stocke la delegation pour la détruite une fois la Promise résolut
-            this.onClickCardChoiceButtonEvent = require('delegate')(document.body, '#playerCardChoice button', 'click', this.onClickCardChoiceButton.bind(this, turn));
+            this.onClickCardChoiceButtonEvent = delegate(document.body, '#playerCardChoice button', 'click', this.onClickCardChoiceButton.bind(this, turn));
 
             // 3. On render la template
-            View.render(require('handlebars').compile(templatePlayerCardChoice)({
+            View.render(handlebars.compile(templatePlayerCardChoice)({
                 player   : this,
                 cards    : this.getCards(),
                 hasError : hasError
@@ -254,10 +371,10 @@ export class Player {
             this.calledKingResolver = resolve;
 
             // 2. On stocke la delegation pour la détruite une fois la Promise résolut
-            this.onClickCalledKingButtonEvent = require('delegate')(document.body, '#chooseCalledKing button', 'click', this.onClickCalledKingButton.bind(this, round));
+            this.onClickCalledKingButtonEvent = delegate(document.body, '#chooseCalledKing button', 'click', this.onClickCalledKingButton.bind(this, round));
 
             // 3. On render la template
-            View.render(require('handlebars').compile(templateCalledKing)({
+            View.render(handlebars.compile(templateCalledKing)({
                 player : this,
                 cards  : Game.getKingCards()
             }));
@@ -277,10 +394,10 @@ export class Player {
             this.gameTypeResolver = resolve;
 
             // 2. On stocke la delegation pour la détruite une fois la Promise résolut
-            this.onClickGameTypeButtonEvent = require('delegate')(document.body, '#playerChooseGameType button', 'click', this.onClickGameTypeButton.bind(this, round));
+            this.onClickGameTypeButtonEvent = delegate(document.body, '#playerChooseGameType button', 'click', this.onClickGameTypeButton.bind(this, round));
 
             // 3. On render la template
-            View.render(require('handlebars').compile(templatePlayerGameType)({
+            View.render(handlebars.compile(templatePlayerGameType)({
                 player : this,
                 gameTypeAvailable : round.getAvailableGameType()
             }));

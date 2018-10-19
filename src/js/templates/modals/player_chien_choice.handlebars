@@ -1,0 +1,36 @@
+<div class="modal" id="playerChienChoice" tabindex="-1" role="dialog" style="display:block;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="card-title">Faîtes votre chien - {{ player.name }}</h4>
+            </div>
+
+            <div class="modal-body text-center">
+
+                {{#if hasError}}
+                    <div class="alert alert-danger">Votre chien est invalide</div>
+                {{/if}}
+
+                <div id="chiens">
+                    {{#each chiens}}
+                        <button type="button" data-id="{{this.index}}" class="col-2 btn btn-light carte__{{this.sign}}">{{this.value}}</button>
+                    {{/each}}
+                </div>
+
+                <hr />
+
+                <div id="cards">
+                    {{#each cards}}
+                        <button type="button" data-id="{{this.index}}" class="col-2 btn btn-light carte__{{this.sign}}">{{this.value}}</button>
+                    {{/each}}
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Je valide</button>
+            </div>
+
+        </div>
+    </div>
+</div>

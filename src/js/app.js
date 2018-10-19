@@ -35,9 +35,6 @@ game.setPlayers([
 
 // -------- GAME START -------- //
 
-// On distribute les cartes
-game.giveCardsToPlayers();
-
 // Ask to each player their game type
 
 const askCalledKing = async (round) => {
@@ -91,8 +88,12 @@ const gameLoop = async () => {
 
 		round.buildPlayersQueue();
 
+		// On distribute les cartes
+		round.giveCardsToPlayers();
+
 		await askGameType(round);
 		await askCalledKing(round);
+		await askChien(round);
 
 		round.addAttackerPlayer(round.findPartnerByCards());
 		round.setDefenderPlayers(round.findDefenderPlayers());
@@ -128,6 +129,13 @@ const roundLoop = async (round) => {
 	round.setPoints();
 
 	console.log('Fin du round', round);
+};
+
+const askChien = async (round) => {
+
+	const player = round.getAttackerPlayers()[0];
+
+	await player.askChien(round);
 };
 
 const askPlayersCard = async (round) => {

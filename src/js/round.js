@@ -6,6 +6,7 @@ import { pointByCard  } from './config/pointByCard';
 
 import { Player } from './player';
 import { Card } from './card';
+import { Deck } from './deck';
 
 import type { Game } from './game';
 import type { Turn } from './turn';
@@ -34,6 +35,10 @@ export class Round {
 
     turns : Array<Turn>;
 
+    deck : Deck;
+
+    chiens : Array<Card|any>;
+
     constructor() {
 
         this.game;
@@ -57,6 +62,68 @@ export class Round {
         this.gameType;
 
         this.turns = [];
+
+        this.deck = new Deck;
+
+        this.chiens = [];
+    }
+
+    /**
+     * @description Ajoute de manière aléatoire une carte dans le chien.
+     *              Dans une limite de 3 cartes.
+     */
+    addCardInChien() : void {
+
+        if (this.chiens.length >= 3) {
+            return;
+        }
+
+        // @TODO
+        // Techniquement, avec ce fonctionnement on peut se retrouver
+        // à la fin de la distribution avec un chien avec un nombre
+        // insuffisant de carte.
+
+        // On ajoute une probabilité de ne pas rajouter une carte
+        if (Math.floor(Math.random() * Math.floor(26)) > 13) {
+            return;
+        }
+
+        this.chiens.push(this.deck.getOneCard());
+    }
+
+    /**
+     *
+     * @return {array<Card>}
+     */
+    getChiens() : Array<Card> {
+        return this.chiens;
+    }
+
+    giveCardsToPlayers() : void {
+
+        this.deck.shuffle();
+
+        // On distribue les cartes
+        let playerIndex = 0;
+
+        let cards = [];
+        while (cards = this.deck.getThreeCard()) {
+
+            if (playerIndex >= 5) {
+                playerIndex = 0;
+            }
+
+            if (!(cards instanceof Array)) {
+                return;
+            }
+
+            this.players[playerIndex].addCards(cards);
+
+            // On met eventuellement une carte dans le chien
+            this.addCardInChien();
+
+            playerIndex++;
+        }
     }
 
     /**
