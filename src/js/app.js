@@ -57,8 +57,10 @@ const askGameType = async (round) => {
 
 			let type = await player.askGameType(round);
 
+			// Si le joueur ne passe pas, on ajoute le joueur à la liste des attaquants
 			if (type) {
 				round.setGameType(parseInt(type));
+				round.resetAttackerPlayers();
 				round.addAttackerPlayer(player);
 			}
 		});
@@ -90,8 +92,10 @@ const gameLoop = async () => {
 		round.buildPlayersQueue();
 
 		await askGameType(round);
-
 		await askCalledKing(round);
+
+		round.addAttackerPlayer(round.findPartnerByCards());
+		round.setDefenderPlayers(round.findDefenderPlayers());
 
 		// Un joueur a pris, on commence la partie
 		game.addRound(round);

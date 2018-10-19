@@ -136,19 +136,11 @@ export class Player {
             playerChooseGameTypeModal.remove();
         }
 
-        const type = target.dataset.type;
-
-        // 2. Si le joueur ne passe pas, on l'ajoute le joueur à la liste des attaquants
-        if (type) {
-            round.resetAttackerPlayers();
-            round.addAttackerPlayer(this);
-        }
-
         // 3. On supprime la delegation
         this.onClickGameTypeButtonEvent.destroy();
 
         // 4. On passe à la suite
-        this.gameTypeResolver(type);
+        this.gameTypeResolver(target.dataset.type);
     }
 
     /**

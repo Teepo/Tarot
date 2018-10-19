@@ -271,7 +271,7 @@ export class Round {
      */
     findPartnerByCards() : Player | bool {
 
-        const partner = this.players.find(player => {
+        const partner = this.getPlayers().find(player => {
             return player.getCards().find(card => {
 
                 let calledKing = this.getCalledKing();
@@ -280,7 +280,7 @@ export class Round {
                     return false;
                 }
 
-                return card.index === calledKing.index;
+                return card.getIndex() === calledKing.getIndex();
             });
         });
 
