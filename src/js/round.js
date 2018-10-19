@@ -100,7 +100,8 @@ export class Round {
         const gameType = this.gameType;
 
         // Aucun type choisi, on retourne la liste complète direct.
-        if (!gameType) {
+        if (gameType === undefined
+            || gameType === null) {
             return gameTypeList;
         }
 
