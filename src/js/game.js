@@ -81,6 +81,32 @@ export class Game {
     }
 
     /**
+     *
+     * @return {array<Round>}
+     */
+    getRounds() : Array<Round> {
+        return this.rounds;
+    }
+
+    /**
+     * @description Retourne le dernier élément de getRounds(), donc le courant.
+     *
+     * @return {Round}
+     */
+    getCurrentRound() : Round {
+        return this.getRounds().slice(-1)[0];
+    }
+
+    /**
+     * @description Retourne l'avant dernier élément de getRound(), donc le précédent.
+     *
+     * @return {Round}
+     */
+    getPreviousRound() : Round {
+        return this.getRounds().slice(-2, -1)[0];
+    }
+
+    /**
      * @static
      *
      * @return {array<Card>}

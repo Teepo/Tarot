@@ -6,9 +6,13 @@ import { pointByCard  } from './config/pointByCard';
 
 import { Player } from './player';
 import { Card } from './card';
+
+import type { Game } from './game';
 import type { Turn } from './turn';
 
 export class Round {
+
+    game : Game;
 
     players         : Array<Player>;
     attackerPlayers : Array<Player>;
@@ -20,6 +24,8 @@ export class Round {
     attackerPoints : number;
     defenderPoints : number;
 
+    playersQueue: Array<Player>;
+
     playerWhoGiveCards : ?Player;
 
     calledKing : ?Card;
@@ -29,6 +35,8 @@ export class Round {
     turns : Array<Turn>;
 
     constructor() {
+
+        this.game;
 
         this.players         = [];
         this.attackerPlayers = [];
@@ -40,6 +48,8 @@ export class Round {
         this.attackerPoints = 0;
         this.defenderPoints = 0;
 
+        this.playersQueue = [];
+
         this.playerWhoGiveCards = null;
 
         this.calledKing = null;
@@ -47,6 +57,22 @@ export class Round {
         this.gameType;
 
         this.turns = [];
+    }
+
+    /**
+     *
+     * @return {Game}
+     */
+    getGame() : Game {
+        return this.game;
+    }
+
+    /**
+     * @param {Game} game
+     *
+     */
+    setGame(game : Game) : void {
+        this.game = game;
     }
 
     /**
@@ -80,6 +106,82 @@ export class Round {
      */
     getPreviousTurn() : Turn {
         return this.getTurns().slice(-2, -1)[0];
+    }
+
+    /**
+     *
+     * @return {Player}
+     */
+    getNextPlayerToGiver() : ?Player {
+
+        const giver = this.getPlayerWhoGiveCards();
+
+        if (!(giver instanceof Player)) {
+            return;
+        }
+
+        const index = this.getNextPlayerIndexToGiver(giver) + 1;
+
+        return this.getPlayers()[index];
+    }
+
+    /**
+     * @param {Player} giver
+     *
+     * @return {Number}
+     */
+    getNextPlayerIndexToGiver(giver : ?Player): number {
+
+        let indexAnchor = 0;
+
+        this.getPlayers().map((player, index) => {
+            indexAnchor = Object.is(player, giver) ? index : indexAnchor;
+        });
+
+        return indexAnchor;
+    }
+
+    buildPlayersQueue() : void {
+
+        const firstPlayerToBegin = this.getNextPlayerToGiver();
+
+        this.addPlayerInQueue(firstPlayerToBegin);
+
+        const playersWithoutTheBeginner = this.getPlayers().filter(player => {
+            return !Object.is(player, firstPlayerToBegin);
+        });
+
+        let indexAnchor = this.getNextPlayerIndexToGiver(firstPlayerToBegin);
+
+        // 1. Tant qu'on a pas vidé la liste des joueurs restants
+        //    on va construite la queue.
+        while (playersWithoutTheBeginner.length) {
+
+            // 1.1 Le joueur qui commence est en milieu de liste,
+            //     on se positionne dans le tableau et on boucle.
+            if (indexAnchor > 0) {
+
+                for (let i = 0; i <= playersWithoutTheBeginner.length; i++) {
+
+                    let a = playersWithoutTheBeginner.splice(indexAnchor, 1)[0];
+
+                    // Don't ask too ...
+                    if (typeof a === "undefined") {
+                        continue;
+                    }
+
+                    this.addPlayerInQueue(a);
+                }
+
+                indexAnchor = 0;
+            }
+            else {
+
+                // 1.2 On est ( ou revenu ) au début du tableau.
+                //     On balance le reste.
+                this.addPlayerInQueue(playersWithoutTheBeginner.splice(0, 1)[0]);
+            }
+        }
     }
 
     /**
@@ -240,6 +342,26 @@ export class Round {
      */
     setDefenderPoints(points : number) : void {
         this.defenderPoints = points;
+    }
+
+    /**
+     *
+     * @return {array<Player>}
+     */
+    getPlayersQueue() : Array<Player> {
+        return this.playersQueue;
+    }
+
+    /**
+     * @param {Player} player
+     */
+    addPlayerInQueue(player : ?Player) : void {
+
+        if (!(player instanceof Player)) {
+            return;
+        }
+
+        this.playersQueue.push(player);
     }
 
     setPoints() : void {

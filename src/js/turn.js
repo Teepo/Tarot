@@ -6,19 +6,14 @@ import { Card } from './card';
 
 export class Turn {
 
-    /* @var Round */
     round : Round;
 
-    /* @var array<Player> */
     players : Array<Player>;
 
-    /* @var array<Player> */
     playersQueue: Array<Player>;
 
-    /* @var Player */
     winner : Player;
 
-    /* @var array<Player> */
     cards : Array<Card>;
 
     constructor() {
@@ -108,7 +103,7 @@ export class Turn {
             firstPlayerToBegin = this.getNextPlayerToGiver();
         }
         else {
-            // Sinon bah c'est celui qui a gagné au tour précédent
+            // Sinon bah c'est celui qui a gagné au Turn précédent
             firstPlayerToBegin = this.getRound().getPreviousTurn().getWinner();
         }
 

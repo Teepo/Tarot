@@ -6,7 +6,6 @@ import { Player } from './player';
 import { Game   } from './game';
 import { Round  } from './round';
 import { Turn   } from './turn';
-import { Card   } from './card';
 
 // Setup player
 
@@ -36,27 +35,12 @@ game.setPlayers([
 
 // -------- GAME START -------- //
 
-const round = new Round;
-
 // On distribute les cartes
 game.giveCardsToPlayers();
 
 // Ask to each player their game type
 
-const askGameType = async () => {
-
-	await asyncMap(game.getPlayers(), async player => {
-
-		let type = await player.askGameType(round);
-
-		if (type) {
-			round.setGameType(parseInt(type));
-			round.addAttackerPlayer(player);
-		}
-	});
-};
-
-const askCalledKing = async () => {
+const askCalledKing = async (round) => {
 
 	const player = round.getAttackerPlayers()[0];
 
@@ -65,14 +49,60 @@ const askCalledKing = async () => {
 	round.setCalledKing(card);
 };
 
-const gameTypeLoop = async () => {
+const askGameType = async (round) => {
 
 	while (!round.gameTypeIsChoosen()) {
-		await askGameType();
+
+		await asyncMap(round.getPlayersQueue(), async player => {
+
+			let type = await player.askGameType(round);
+
+			if (type) {
+				round.setGameType(parseInt(type));
+				round.addAttackerPlayer(player);
+			}
+		});
 	}
 };
 
 const gameLoop = async () => {
+
+	let round;
+
+	// Ca fait peur hein !? =D
+	while (true) {
+
+		round = new Round;
+
+		round.setGame(game);
+
+		round.setPlayers(game.getPlayers());
+
+		round.setPlayerWhoGiveCards((() => {
+
+			if (!(game.getCurrentRound() instanceof Round)) {
+				return player1;
+			}
+
+			return game.getCurrentRound().getNextPlayerToGiver();
+		})());
+
+		round.buildPlayersQueue();
+
+		await askGameType(round);
+
+		await askCalledKing(round);
+
+		// Un joueur a pris, on commence la partie
+		game.addRound(round);
+
+		game.displayBoard();
+
+		await roundLoop(round);
+	}
+};
+
+const roundLoop = async (round) => {
 
 	while (!round.isFinished()) {
 
@@ -84,7 +114,7 @@ const gameLoop = async () => {
 
 		round.addTurn(turn);
 
-		await askPlayersCard();
+		await askPlayersCard(round);
 	}
 
 	// Fin de la partie
@@ -96,7 +126,7 @@ const gameLoop = async () => {
 	console.log('Fin du round', round);
 };
 
-const askPlayersCard = async () => {
+const askPlayersCard = async (round) => {
 
 	const turn = round.getCurrentTurn();
 
@@ -123,31 +153,5 @@ const askPlayersCard = async () => {
 };
 
 (async () => {
-
-	await gameTypeLoop();
-
-	await askCalledKing();
-
-	round.setPlayers(game.getPlayers());
-
-	round.setPlayerWhoGiveCards(player1);
-
-	//round.setGameType(1);
-	//round.addAttackerPlayer(player2);
-
-	//round.setCalledKing(new Card(64)); // Roi de Coeur
-
-	//round.addAttackerPlayer(round.findPartnerByCards());
-
-	//round.setDefenderPlayers(round.findDefenderPlayers());
-
-	// Un joueur a pris, on commence la partie
-	game.addRound(round);
-
-	// on cache la modal
-	// document.querySelector('.modal').remove();
-
-	game.displayBoard();
-
 	await gameLoop();
 })();
