@@ -86,6 +86,14 @@ export class Player {
     }
 
     /**
+     * @param {array<Card>} cards
+     *
+     */
+    setCards(cards : Array<Card>) : void {
+        this.cards = cards;
+    }
+
+    /**
      * @description Défausse une carte du deck d'un joueur
      *
      * @param {Number} index L'index dans le tableau de getCards()
@@ -230,30 +238,42 @@ export class Player {
             return;
         }
 
-        // 1. On supprime la delegation de la vue
-        this.onClickChienCardChoiceButtonEvent.destroy();
-        this.onClickChienValidateButtonEvent.destroy();
+        const destroy = () => {
 
-        // 2. On vérifie que le chien est valide
+            // On supprime la delegation de la vue
+            this.onClickChienCardChoiceButtonEvent.destroy();
+            this.onClickChienValidateButtonEvent.destroy();
 
-        // Build Card list by DOM Node.
+            // On supprime la modal
+            const playerChienChoiceModal = document.getElementById('playerChienChoice');
+            if (playerChienChoiceModal) {
+                playerChienChoiceModal.remove();
+            }
+        };
+
+
+        // On vérifie que le chien est valide
         const chiens = Array.prototype.slice.call(document.querySelectorAll('#chiens button')).map(node => {
             return new Card(parseInt(node.dataset.id));
         });
 
+        const cards = Array.prototype.slice.call(document.querySelectorAll('#cards button')).map(node => {
+            return new Card(parseInt(node.dataset.id));
+        });
+
         if (!Game.isChienValid(chiens)) {
+            destroy()
             this.askChien(round, true);
             return;
         }
 
-        // 3. On supprime la modal
-        const playerChienChoiceModal = document.getElementById('playerChienChoice');
-        if (playerChienChoiceModal) {
-            playerChienChoiceModal.remove();
-        }
+        // On passe à la suite
+        this.chienChoiceResolver({
+            cards  : cards,
+            chiens : chiens
+        });
 
-        // 4. On passe à la suite
-        this.chienChoiceResolver();
+        destroy();
     }
 
     /**

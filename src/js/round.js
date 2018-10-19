@@ -285,6 +285,15 @@ export class Round {
     /**
      * @description Le type de partie choisi ( petite, garde, garde-sans, garde-contre )
      *
+     * @return {int}
+     */
+    getGameType() : ?number {
+        return this.gameType;
+    }
+
+    /**
+     * @description Le type de partie choisi ( petite, garde, garde-sans, garde-contre )
+     *
      * @param {int} type
      */
     setGameType(type : number) : void{

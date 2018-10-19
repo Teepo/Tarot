@@ -93,7 +93,33 @@ const gameLoop = async () => {
 
 		await askGameType(round);
 		await askCalledKing(round);
-		await askChien(round);
+
+		// Petite ou garde
+		if (round.getGameType() <= 1) {
+
+			const { cards, chiens } = await (async () => {
+				return await round.getAttackerPlayers()[0].askChien(round);
+			})();
+
+			// On mets les cartes selectionnés dans le chien
+			round.addAttackerStackCards(chiens);
+
+			// On met à jour notre deck
+			round.getAttackerPlayers()[0].setCards(cards);
+		}
+		// Garde sans
+		else if (round.getGameType() === 2) {
+
+			// On mets le chien direct dans notre stack de carte
+			round.addAttackerStackCards(round.getChiens());
+
+		}
+		// Garde contre
+		else if (round.getGameType() === 3) {
+
+			// On mets le chien direct dans la stack de carte des defenseurs
+			round.addDefenderStackCards(round.getChiens());
+		}
 
 		round.addAttackerPlayer(round.findPartnerByCards());
 		round.setDefenderPlayers(round.findDefenderPlayers());
@@ -102,6 +128,8 @@ const gameLoop = async () => {
 		game.addRound(round);
 
 		game.displayBoard();
+
+		console.log(round);
 
 		await roundLoop(round);
 	}
@@ -129,13 +157,6 @@ const roundLoop = async (round) => {
 	round.setPoints();
 
 	console.log('Fin du round', round);
-};
-
-const askChien = async (round) => {
-
-	const player = round.getAttackerPlayers()[0];
-
-	await player.askChien(round);
 };
 
 const askPlayersCard = async (round) => {
