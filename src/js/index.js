@@ -19,7 +19,7 @@ const createWindow = () => {
     window.setMenu(null);
     window.loadURL(startURL);
 
-    window.webContents.openDevTools();
+    // window.webContents.openDevTools();
 
     window.on('closed', () => {
         window = null;

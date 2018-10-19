@@ -10,7 +10,7 @@
         "build": "src/"
     },
     "scripts": {
-        "app": "yarn run build && node_modules/electron/cli.js ./src/js/index.js",
+        "app": "node_modules/electron/cli.js ./src/js/index.js",
         "web": "./node_modules/serve/bin/serve.js ./public/",
         "watch": "npm-watch",
         "jsdoc": "node_modules/jsdoc/jsdoc.js -c jsdoc.json",
