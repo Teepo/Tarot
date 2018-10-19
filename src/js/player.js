@@ -7,10 +7,10 @@ const templatePlayerCardChoice = require('./templates/modals/player_card_choice.
 import { View } from './modules/view';
 
 import { Game } from './game';
+import { Card } from './card';
 
 import type { Round } from './round.js';
 import type { Turn } from './turn.js';
-import type { Card } from './card';
 
 export class Player {
 
@@ -174,7 +174,7 @@ export class Player {
         this.onClickCalledKingButtonEvent.destroy();
 
         // 7. On passe à la suite
-        this.calledKingResolver();
+        this.calledKingResolver(new Card(parseInt(target.dataset.id)));
     }
 
     /**

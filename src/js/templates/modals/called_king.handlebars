@@ -8,7 +8,7 @@
 
             <div class="modal-body text-center">
                 {{#each cards}}
-                    <button type="button" data-id="{{@key}}" class="col-2 btn btn-light carte__{{this.sign}}">{{this.value}}</button>
+                    <button type="button" data-id="{{this.index}}" class="col-2 btn btn-light carte__{{this.sign}}">{{this.value}}</button>
                 {{/each}}
             </div>
         </div>

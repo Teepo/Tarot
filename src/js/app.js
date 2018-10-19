@@ -60,7 +60,9 @@ const askCalledKing = async () => {
 
 	const player = round.getAttackerPlayers()[0];
 
-	await player.askCalledKing();
+	const card = await player.askCalledKing();
+
+	round.setCalledKing(card);
 };
 
 const gameTypeLoop = async () => {
