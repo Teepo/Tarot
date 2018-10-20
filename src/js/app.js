@@ -91,6 +91,9 @@ const gameLoop = async () => {
 		// On distribute les cartes
 		round.giveCardsToPlayers();
 
+		// On refresh la vue
+		game.displayBoard();
+
 		await askGameType(round);
 		await askCalledKing(round);
 
@@ -133,6 +136,10 @@ const gameLoop = async () => {
 	}
 };
 
+const displayScoreBoard = async (round) => {
+	await round.getGame().displayScoreBoard();
+};
+
 const roundLoop = async (round) => {
 
 	while (!round.isFinished()) {
@@ -155,6 +162,8 @@ const roundLoop = async (round) => {
 	round.determineTheWinner();
 
 	console.log('Fin du round', round);
+
+	await displayScoreBoard(round);
 };
 
 const askPlayersCard = async (round) => {

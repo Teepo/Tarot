@@ -1,6 +1,11 @@
 /* @flow */
 
+const delegate = require('delegate');
+
+const handlebars = require('handlebars');
+
 const gameBoardTemplate = require('./templates/game_board.handlebars');
+const scoreBoardTemplate = require('./templates/modals/score_board.handlebars');
 
 import { View } from './modules/view';
 
@@ -17,10 +22,17 @@ export class Game {
     players : Array<Player|any>;
     rounds : Array<Round|any>;
 
+    scoreBoardResolver : Function;
+
+    onClickScoreBoardButtonEvent : Function;
+
     constructor() {
 
         this.players = [];
         this.rounds = [];
+
+        this.scoreBoardResolver = () => {};
+        this.onClickScoreBoardButtonEvent = () => {};
     }
 
     /**
@@ -98,7 +110,7 @@ export class Game {
         View.empty(dashboard);
 
         View.render(
-            require('handlebars').compile(gameBoardTemplate)({
+            handlebars.compile(gameBoardTemplate)({
                 players : this.players
             }),
             dashboard
@@ -171,5 +183,72 @@ export class Game {
         }
 
         return true;
+    }
+
+    /**
+     * @param {Event} event
+     *
+     */
+    onClickScoreBoardButton(event : Event) : void {
+
+        const target : EventTarget = event.target;
+
+        if (!(target instanceof HTMLElement)) {
+            return;
+        }
+
+        // 1. On supprime la modal
+        const scoreBoardModal = document.getElementById('scoreboard');
+        if (scoreBoardModal) {
+            scoreBoardModal.remove();
+        }
+
+        // 3. On supprime la delegation
+        this.onClickScoreBoardButtonEvent.destroy();
+
+        // 4. On passe à la suite
+        this.scoreBoardResolver();
+    }
+
+    /**
+     * @TODO Afficher le total
+     *
+     * @return {Promise}
+     */
+    displayScoreBoard() : Promise<*> {
+
+        return new Promise(resolve => {
+
+            // 1. La function qui fera passer à la suite
+            this.scoreBoardResolver = resolve;
+
+            // 2. On stocke la delegation pour la détruite une fois la Promise résolut
+            this.onClickScoreBoardButtonEvent = delegate(document.body, '#scoreboard button', 'click', this.onClickScoreBoardButton.bind(this));
+
+            // 3. On render la template
+            View.render(handlebars.compile(scoreBoardTemplate)({
+                players : this.getPlayers()
+            }));
+
+            // On skin ici les scores parce qu'avec handlebars c'est un peu chaud ...
+            // Pareil pour le total ...
+            document.querySelectorAll('#scoreboard  tr').forEach(tr => {
+
+                let total = 0;
+                tr.querySelectorAll('td').forEach(td => {
+                    let value = parseInt(td.innerText);
+                    !Number.isNaN(value) && (total += parseInt(td.innerText));
+                });
+
+                let td = document.createElement('td');
+                         td.classList.add('alert', 'font-weight-bold');
+                         td.innerText = total;
+                tr.appendChild(td);
+            });
+
+            document.querySelectorAll('#scoreboard .alert').forEach(node => {
+                node.classList.add(`alert-${parseInt(node.innerText) >= 0 ? 'success' : 'danger'}`);
+            });
+        });
     }
 }
