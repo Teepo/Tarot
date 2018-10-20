@@ -129,8 +129,6 @@ const gameLoop = async () => {
 
 		game.displayBoard();
 
-		console.log(round);
-
 		await roundLoop(round);
 	}
 };
@@ -150,11 +148,11 @@ const roundLoop = async (round) => {
 		await askPlayersCard(round);
 	}
 
-	// Fin de la partie
-	round.determineTheWinner();
-
 	// On compte les points
 	round.setPoints();
+
+	// Fin de la partie
+	round.determineTheWinner();
 
 	console.log('Fin du round', round);
 };

@@ -60,6 +60,22 @@ export class Player {
 
     /**
      *
+     * @return {int}
+     */
+    getPoints() : number {
+        return this.points;
+    }
+
+    /**
+     * @param {int} points
+     *
+     */
+    updatePoints(points : number) : void {
+        this.points += points;
+    }
+
+    /**
+     *
      * @return {Card}
      */
     getCurrentCard() : ?Card {

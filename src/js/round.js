@@ -3,6 +3,9 @@
 import { cardsList    } from './config/cardList';
 import { gameTypeList } from './config/gameTypeList';
 import { pointByCard  } from './config/pointByCard';
+import { pointToReachByBout } from './config/pointToReachByBout';
+import { ratioByGameType, pointByGameType } from './config/pointByGameType';
+
 
 import { Player } from './player';
 import { Card } from './card';
@@ -416,6 +419,14 @@ export class Round {
      * @param {float} points
      *
      */
+    getAttackerPoints() : number {
+        return this.attackerPoints;
+    }
+
+    /**
+     * @param {float} points
+     *
+     */
     setDefenderPoints(points : number) : void {
         this.defenderPoints = points;
     }
@@ -559,7 +570,54 @@ export class Round {
         return typeof this.gameType !== 'undefined';
     }
 
+    /**
+     * @param {array<Card>} cards
+     *
+     * @return {int}
+     */
+    countBoutInCards(cards : Array<Card>) : number {
+
+        return cards.filter(card => {
+            return card.isBout();
+        }).length;
+    }
 
     determineTheWinner() {
+
+        const pointToReach = pointToReachByBout[this.countBoutInCards(this.getAttackerStackCards())];
+
+        const bonusPoint = this.getAttackerPoints() - pointToReach;
+
+        let points;
+        if (this.getAttackerPoints() >= pointToReach) {
+
+            points = Math.abs((25 + bonusPoint) * ratioByGameType[this.getGameType()]);
+
+            this.getAttackerPlayers().map(player => {
+                player.updatePoints(points);
+            });
+
+            this.getDefenderPlayers().map(player => {
+                player.updatePoints(-points);
+            });
+
+            // x2 pour le preneur
+            this.getAttackerPlayers()[0].updatePoints(points);
+        }
+        else {
+
+            points = Math.abs(bonusPoint * ratioByGameType[this.getGameType()]);
+
+            this.getAttackerPlayers().map(player => {
+                player.updatePoints(-points);
+            });
+
+            this.getDefenderPlayers().map(player => {
+                player.updatePoints(points);
+            });
+
+            // x2 pour le preneur
+            this.getAttackerPlayers()[0].updatePoints(-points);
+        }
     }
 }
