@@ -19,10 +19,10 @@ import type { Turn } from './turn.js';
 
 export class Player {
 
-    name     : string;
-    points   : number;
-    cards    : Array<Card>;
-    gameType : ?string;
+    name        : string;
+    scores      : Array<number>;
+    cards       : Array<Card>;
+    gameType    : ?string;
     currentCard : ?Card;
 
     gameTypeResolver   : Function;
@@ -39,7 +39,7 @@ export class Player {
     constructor() {
 
         this.name = '';
-        this.points = 0;
+        this.scores = [];
         this.cards = [];
         this.gameType;
 
@@ -59,19 +59,37 @@ export class Player {
     }
 
     /**
-     *
-     * @return {int}
+     * @param {int} points
      */
-    getPoints() : number {
-        return this.points;
+    addScore(points : number) : void {
+        this.scores.push(points);
+    }
+
+    /**
+     *
+     * @return {array<Int>}
+     */
+    getScores() : Array<number> {
+        return this.scores;
+    }
+
+    /**
+     *
+     * @return {number}
+     */
+    getTotalScore() : number {
+
+        return this.scores.reduce((x, score) => {
+            return x += score;
+        });
     }
 
     /**
      * @param {int} points
      *
      */
-    updatePoints(points : number) : void {
-        this.points += points;
+    increaseLastScore(points : number) {
+        this.scores[this.scores.length -1] += points;
     }
 
     /**

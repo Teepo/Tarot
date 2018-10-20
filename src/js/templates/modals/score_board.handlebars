@@ -1,0 +1,32 @@
+<div class="modal" id="scoreboard" tabindex="-1" role="dialog" style="display:block;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="card-title">Tableau des scores</h4>
+            </div>
+
+            <div class="modal-body text-center">
+
+                <table class="table table-bordered">
+                    <tbody>
+                        {{#each players}}
+                            <tr>
+
+                                <td class="font-weight-bold">{{this.name}}</td>
+
+                                {{#each this.scores}}
+                                    <td class="alert">{{this}}</td>
+                                {{/each}}
+                            </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Passez à la suite</button>
+            </div>
+        </div>
+    </div>
+</div>

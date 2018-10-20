@@ -4,7 +4,7 @@ import { cardsList    } from './config/cardList';
 import { gameTypeList } from './config/gameTypeList';
 import { pointByCard  } from './config/pointByCard';
 import { pointToReachByBout } from './config/pointToReachByBout';
-import { ratioByGameType, pointByGameType } from './config/pointByGameType';
+import { ratioByGameType    } from './config/ratioByGameType';
 
 
 import { Player } from './player';
@@ -582,6 +582,10 @@ export class Round {
         }).length;
     }
 
+    /**
+     * @TODO Gérer le cas ou un Player est tout seul
+     *
+     */
     determineTheWinner() {
 
         const pointToReach = pointToReachByBout[this.countBoutInCards(this.getAttackerStackCards())];
@@ -594,30 +598,30 @@ export class Round {
             points = Math.abs((25 + bonusPoint) * ratioByGameType[this.getGameType()]);
 
             this.getAttackerPlayers().map(player => {
-                player.updatePoints(points);
+                player.addScore(points);
             });
 
             this.getDefenderPlayers().map(player => {
-                player.updatePoints(-points);
+                player.addScore(-points);
             });
 
             // x2 pour le preneur
-            this.getAttackerPlayers()[0].updatePoints(points);
+            this.getAttackerPlayers()[0].increaseLastScore(points);
         }
         else {
 
             points = Math.abs(bonusPoint * ratioByGameType[this.getGameType()]);
 
             this.getAttackerPlayers().map(player => {
-                player.updatePoints(-points);
+                player.addScore(-points);
             });
 
             this.getDefenderPlayers().map(player => {
-                player.updatePoints(points);
+                player.addScore(points);
             });
 
             // x2 pour le preneur
-            this.getAttackerPlayers()[0].updatePoints(-points);
+            this.getAttackerPlayers()[0].increaseLastScore(-points);
         }
     }
 }
