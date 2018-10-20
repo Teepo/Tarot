@@ -4,6 +4,7 @@
 
 ```js
 yarn install
+yarn run install-vendor ( if this is your first Installation)
 ```
 
 You can run the application in electron app with:
