@@ -3,6 +3,7 @@ bind o windowlist
 altscreen on
 term xterm-256color
 termcapingo xterm-color|xterm|xterms|xs|rxvt ti@:te@
+shell /bin/bash
 
 screen -t GIT 0
 screen -t CONFIG 1

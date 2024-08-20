@@ -63,8 +63,6 @@
   
 <script>
 
-import { ROOM_NAME } from './../config/ws.js';
-
 import { socket } from './../modules/ws.js';
 import { wsErrorHandler } from '../modules/wsErrorHandler.js';
 
@@ -105,50 +103,46 @@ export default {
     mounted() {
 
         sessionStorage.setItem('id', 'A');
-        sessionStorage.setItem('room', ROOM_NAME);
+        sessionStorage.setItem('room', this.$route.params.roomId);
 
         this.id    = sessionStorage.getItem('id');
         this.room  = sessionStorage.getItem('room');
 
         socket.emit('createRoom', {
-            roomName : ROOM_NAME
+            roomName : this.room
         });
         
         socket.emit('joinRoom', {
             id       : 'A',
-            roomName : ROOM_NAME,
+            roomName : this.room,
             login    : 'A'
         });
 
         socket.emit('joinRoom', {
             id       : 'B',
-            roomName : ROOM_NAME,
+            roomName : this.room,
             login    : 'B'
         });
 
         socket.emit('joinRoom', {
             id       : 'C',
-            roomName : ROOM_NAME,
+            roomName : this.room,
             login    : 'C'
         });
 
         socket.emit('joinRoom', {
             id       : 'D',
-            roomName : ROOM_NAME,
+            roomName : this.room,
             login    : 'D'
         });
 
         socket.emit('joinRoom', {
             id       : 'E',
-            roomName : ROOM_NAME,
+            roomName : this.room,
             login    : 'E'
         });
 
-        this.id   = sessionStorage.getItem('id');
-        this.room = sessionStorage.getItem('room');
-
         if (!this.id || !this.room) {
-            console.log('no session', this.id, this.room);
             return this.goToHome();
         }
 
@@ -185,7 +179,7 @@ export default {
                 roomName : this.room
             });
         })
-        .on('start', data => {
+        .on('start', () => {
 
             socket.removeAllListeners();
 
@@ -230,7 +224,7 @@ export default {
         startTheRoom() {
 
             socket.emit('start', {
-                roomName : ROOM_NAME
+                roomName : this.room
             });
         },
 
