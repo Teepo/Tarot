@@ -18,15 +18,16 @@ import { store } from './../store/index.js';
 export default {
 
     props : {
-        card   : Object,
-        player : Object
+        _card   : Object,
+        _player : Object
     },
 
     data : function() {
 
         return {
             isActive      : false,
-            player        : this.player,
+            card          : this._card,
+            player        : this._player,
             currentPlayer : store.state.currentPlayer
         }
     },

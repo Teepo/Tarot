@@ -11,8 +11,8 @@
             <div class="gameboard-player-cards">
                 <template v-for="card in player.cards" :key="card.index">
                     <Card
-                        :card="card"
-                        :player="player"
+                        :_card="card"
+                        :_player="player"
                         @click="handleClickCard(card)"
                         ref="refCards"
                     />

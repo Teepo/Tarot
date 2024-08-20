@@ -296,7 +296,7 @@ export default {
         goToHome() {
             sessionStorage.clear();
             socket.removeAllListeners();
-            this.$router.push('/');
+            this.$router.push({ name : 'index' });
         }
     }
 }

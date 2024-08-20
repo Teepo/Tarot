@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { ref, shallowRef, reactive, defineExpose } from 'vue';
+import { ref, shallowRef, reactive } from 'vue';
 
 export default {
     setup() {
@@ -22,10 +22,6 @@ export default {
             currentComponent.value = null;
             Object.keys(currentProps).forEach(key => delete currentProps[key]);
         };
-
-        const r = dynamicRef.$refs;
-
-        defineExpose({ r, test1 : 'test2' });
 
         return {
             currentComponent,

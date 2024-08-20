@@ -21,8 +21,8 @@
             <div class="gameboard-player-cards">
                 <template v-for="card in player.cards" :key="card.index">
                     <Card
-                        :card="card"
-                        :player="player"
+                        :_card="card"
+                        :_player="player"
                         @click="handleClickCard(card)"
                         ref="refCards"
                     />
@@ -58,11 +58,11 @@ import OverlayCallKing  from './../components/overlayCallKing.vue';
 import OverlayMakeChien from './../components/overlayMakeChien.vue';
 import Board            from './../components/board.vue';
 
-const player1 = new Player({ id : 'A', login : 'A' });
-const player2 = new Player({ id : 'B', login : 'B' });
-const player3 = new Player({ id : 'C', login : 'C' });
-const player4 = new Player({ id : 'D', login : 'D' });
-const player5 = new Player({ id : 'E', login : 'E' });
+const player1 = new Player({ id : 1, login : 'HUMAN' });
+const player2 = new Player({ id : 2, login : 'CPU 1' });
+const player3 = new Player({ id : 3, login : 'CPU 2' });
+const player4 = new Player({ id : 4, login : 'CPU 3' });
+const player5 = new Player({ id : 5, login : 'CPU 4' });
 
 const currentPlayer = player1;
 
@@ -71,6 +71,17 @@ let handlerClickCardResolver;
 export default {
 
     components : [ DynamicComponent ],
+
+    props : {
+        isOneplayerMode : {
+            type    : Boolean,
+            default : false
+        },
+        isMultiplayerMode : {
+            type    : Boolean,
+            default : false
+        },
+    },
 
     data() {
 

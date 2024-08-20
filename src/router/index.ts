@@ -7,30 +7,50 @@
 // Composables
 import { createRouter, createWebHistory } from 'vue-router/auto'
 
-const manualRoutes = [
-  {
-    path: '/',
-    name: 'Index',
-    component: () => import('../pages/index.vue'),
-  }, {
-    path: '/multiplayer/',
-    name: 'Multiplayer',
-    component: () => import('../pages/multiplayer.vue'),
-  }, {
-    path: '/create-room/',
-    name: 'CreateRoom',
-    component: () => import('../pages/createRoom.vue'),
-  }, {
-    path: '/lobby/:roomId/',
-    name: 'Lobby',
-    component: () => import('../pages/lobby.vue'),
-  }
-]
-
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    ...manualRoutes,
+    {
+      path: '/',
+      name: 'index',
+      component: () => import('../pages/index.vue'),
+    }, {
+      path: '/oneplayer',
+      name: 'oneplayer',
+      component: () => import('../pages/oneplayer.vue'),
+      children : [
+        {
+          name: 'OneplayerGame',
+          path: 'game',
+          component: () => import('../pages/game.vue'),
+          props : {
+            isOneplayerMode : true
+          }
+        }
+      ]
+    }, {
+      path: '/multiplayer/',
+      name: 'multiplayer',
+      component: () => import('../pages/multiplayer.vue'),
+      children : [
+        {
+          name: 'MultiplayerGame',
+          path: 'game',
+          component: import('../pages/game.vue'),
+          props : {
+            isMultiplayerMode : true
+          }
+        }
+      ]
+    }, {
+      path: '/create-room',
+      name: 'CreateRoom',
+      component: () => import('../pages/createRoom.vue'),
+    }, {
+      path: '/lobby/:roomId',
+      name: 'Lobby',
+      component: () => import('../pages/lobby.vue'),
+    }
   ],
 })
 
