@@ -1,0 +1,16 @@
+.u-icon {
+
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    vertical-align: middle;
+    fill: currentColor;
+
+    &-visible {
+        display: inline-block !important;
+    }
+
+    &-hidden {
+        display: none !important;
+    }
+}

@@ -1,0 +1,24 @@
+#noty_layout__topLeft {
+    width: 75vw;
+}
+
+.noty {
+
+    &_bar {
+        margin: 0 0 10px !important;
+    }
+
+    &_body {
+
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 10px 1.25em !important;
+        font-weight: 700;
+
+        img {
+            width: 26px;
+            margin-right: 15px;
+        }
+    }
+}

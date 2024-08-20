@@ -1,0 +1,178 @@
+@import "~noty/src/noty.scss";
+@import "~noty/src/themes/metroui.scss";
+
+@import './mixins.scss';
+
+@import './modules/alert.scss';
+@import './modules/button.scss';
+@import './modules/icon.scss';
+
+html {
+    overflow: hidden;
+}
+
+body {
+    font-family: Arial;
+    @include smooth;
+}
+
+.gameboard {
+
+    &-player {
+
+        $root: &;
+
+        position: absolute;
+
+        &-name {
+
+            position: absolute;
+
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        &-card {
+            position: absolute;
+        }
+
+        &__0 {
+
+            bottom: 0;
+            left: 0;
+            right: 0;
+            text-align: center;
+            margin: 0 auto 2;
+
+            .card {
+                display: inline-block;
+            }
+
+            #{$root} {
+
+                &-name {
+                    top: -50px;
+                }
+
+                &-card {
+                    bottom: 40px;
+                    right: 150px;
+                }
+            }
+        }
+
+        &__1 {
+
+            top: 15vw;
+            left: 0;
+
+            #{$root} {
+
+                &-name {
+                    top: 60px;
+                    right: -50px;
+                }
+
+                &-card {
+                    top: 130px;
+                    left: 60px;
+                }
+            }
+        }
+
+        &__2 {
+
+            top: 0;
+            left: 0;
+
+            .card {
+                display: inline-block;
+            }
+
+            #{$root} {
+
+                &-name {
+                    bottom: -50px;
+                    left: 120px;
+                }
+
+                &-card {
+                    top: 50px;
+                    left: 150px;
+                }
+            }
+        }
+
+        &__3 {
+
+            top: 0;
+            right: 0;
+
+            .card {
+                display: inline-block;
+            }
+
+            #{$root} {
+
+                &-name {
+                    bottom: -50px;
+                    right: 120px;
+                }
+
+                &-card {
+                    top: 50px;
+                    right: 150px;
+                }
+            }
+        }
+
+        &__4 {
+
+            top: 15vw;
+            right: 0;
+
+            #{$root} {
+
+                &-name {
+                    top: 60px;
+                    left: -50px;
+                }
+
+                &-card {
+                    top: 130px;
+                    right: 60px;
+                }
+            }
+        }
+    }
+}
+
+.card {
+    
+    padding: 8px 5px;
+
+    background-color: #fff;
+    
+    border: 1px solid rgba(#000, .2);
+    border-radius: .25rem;
+    
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-align: center;
+    color: #333;
+
+    &[class*="card--is-♥"],
+    &[class*="card--is-♦"] {
+        color: tomato;
+    }
+
+    &[class*="card--is-A"] {
+        color: #3a9c5e;
+    }
+
+    &--is-active {
+        cursor: pointer;
+    }
+}
+

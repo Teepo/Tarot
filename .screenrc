@@ -1,0 +1,17 @@
+escape ^po
+bind o windowlist
+altscreen on
+term xterm-256color
+termcapingo xterm-color|xterm|xterms|xs|rxvt ti@:te@
+
+screen -t GIT 0
+screen -t CONFIG 1
+screen -t CONTROLLER 2
+screen -t ENTITY 3
+screen -t TPL 4
+screen -t SASS 5
+screen -t JS 6
+screen -t null 7
+screen -t null 8
+screen -t DOCKER 9
+screen -t MYSQL 10
