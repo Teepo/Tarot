@@ -149,18 +149,10 @@ body {
 }
 
 .card {
-    
-    padding: 8px 5px;
 
-    background-color: #fff;
-    
-    border: 1px solid rgba(#000, .2);
-    border-radius: .25rem;
-    
-    font-size: 1.1rem;
-    font-weight: 700;
-    text-align: center;
-    color: #333;
+    & + & {
+        margin-left: -30px;
+    }
 
     &[class*="card--is-♥"],
     &[class*="card--is-♦"] {

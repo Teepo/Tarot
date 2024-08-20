@@ -7,7 +7,7 @@
             'card--is-active' : this.isActive
         }"
     >
-        {{ card.value }}
+        <img :src="`/imgs/cards/${card.index}.png`" width="70" height="120" />
     </div>
 </template>
 
