@@ -150,6 +150,9 @@ body {
 
 .card {
 
+    position: relative;
+    transition: transform .2s ease-in-out;
+
     & + & {
         margin-left: -30px;
     }
@@ -163,8 +166,13 @@ body {
         color: #3a9c5e;
     }
 
-    &--is-active {
+    &--is-mine {
+
         cursor: pointer;
+
+        &:hover {
+            transform: translate(0, -40px);
+        }
     }
 }
 

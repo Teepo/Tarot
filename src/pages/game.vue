@@ -56,7 +56,6 @@ import DynamicComponent from './../components/dynamicComponent.vue';
 import OverlayGameType  from './../components/overlayGameType.vue';
 import OverlayCallKing  from './../components/overlayCallKing.vue';
 import OverlayMakeChien from './../components/overlayMakeChien.vue';
-import Board            from './../components/board.vue';
 
 const player1 = new Player({ id : 1, login : 'HUMAN' });
 const player2 = new Player({ id : 2, login : 'CPU 1' });
@@ -181,19 +180,26 @@ export default {
 
             for await (const player of turn.getPlayersQueue()) {
 
-                console.log(player.id);
+                console.log(player.login, ' turn');
 
                 turn.setCurrentPlayer(player);
 
                 store.commit('setTurn', turn);
 
-                // On attend que le Player choissise sa Card
-                const card = await new Promise(resolver => {
+                if (player.id === currentPlayer.id) {
 
-                    handlerClickCardResolver = resolver;
-                
-                    this.activateCardsForPlayer(turn.getCurrentPlayer());
-                });
+                    // On attend que le Player choissise sa Card
+                    const card = await new Promise(resolver => {
+
+                        handlerClickCardResolver = resolver;
+
+                        this.activateCardsForPlayer(turn.getCurrentPlayer());
+                    });
+                }
+                else if (this.isOneplayerMode) {
+
+                    const card = player.pickRandomValidCardInHisDeck();
+                }
 
                 // On ajoute la Card dans la liste des Card du tour
                 turn.addCard(card);
@@ -390,14 +396,6 @@ export default {
 
         destroyOverlayMakeChien : function() {
             this.$refs.refOverlayMakeChien.destroy();
-        },
-
-        renderBoard : function(players) {
-
-            this.$refs.refBoard.render(Board, {
-                currentPlayer : currentPlayer,
-                players       : players
-            });
         }
     }
 }

@@ -7,7 +7,6 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Board: typeof import('./src/components/board.vue')['default']
     Card: typeof import('./src/components/card.vue')['default']
     DynamicComponent: typeof import('./src/components/dynamicComponent.vue')['default']
     OverlayCallKing: typeof import('./src/components/overlayCallKing.vue')['default']

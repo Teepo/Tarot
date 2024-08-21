@@ -1,4 +1,4 @@
-import { cardsList } from './config/cardList';
+import { cardList } from './config/cardList';
 
 import { Card } from './card';
 
@@ -57,7 +57,7 @@ export class Game {
 
     static getKingCards() : Array<Card> {
 
-        return Object.keys(cardsList).filter(cardID => {
+        return Object.keys(cardList).filter(cardID => {
             return [36, 50, 64, 78].indexOf(parseInt(cardID)) >= 0;
         }).map(index => {
             return new Card(index);

@@ -1,18 +1,24 @@
 import { Player } from './player';
 
-import { cardsList } from './config/cardList';
+import { cardList } from './config/cardList';
 
 export class Card {
 
     index : number;
+    sign  : string;
+    label : string;
     value : string;
 
     player! : Player;
 
     constructor(index : number) {
 
+        const { sign, label, value } = cardList[index];
+
         this.index = index;
-        this.value = cardsList[index];
+        this.sign  = sign;
+        this.label = label;
+        this.value = value;
     }
 
     getIndex() : number {

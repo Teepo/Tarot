@@ -1,6 +1,6 @@
 /* @flow */
 
-import { cardsList    } from './config/cardList';
+import { cardList    } from './config/cardList';
 import { gameTypeList } from './config/gameTypeList';
 import { pointByCard  } from './config/pointsByCard';
 import { pointToReachByBout } from './config/pointsToReachByBout';
@@ -298,7 +298,7 @@ export class Round {
 
         const index = parseInt(card.index);
 
-        const isRegularCard = Object.keys(cardsList).find(a => {
+        const isRegularCard = Object.keys(cardList).find(a => {
             return parseInt(a) === index;
         });
 

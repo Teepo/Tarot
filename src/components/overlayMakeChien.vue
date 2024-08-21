@@ -7,7 +7,7 @@
 
             <v-card-text>
                 <template v-for="card in chiens" :key="card">
-                    <v-btn color="primary" class="mr-5 mb-5" @click="handleClickChienCard(card)">{{ card.value }}</v-btn>
+                    <v-btn color="primary" class="mr-5 mb-5" @click="handleClickChienCard(card)">{{ card.sign + card.label }}</v-btn>
                 </template>
             </v-card-text>
 
@@ -15,7 +15,7 @@
 
             <v-card-text>
                 <template v-for="card in cards" :key="card">
-                    <v-btn color="primary" class="mr-5 mb-5" @click="handleClickDeckCard(card)">{{ card.value }}</v-btn>
+                    <v-btn color="primary" class="mr-5 mb-5" @click="handleClickDeckCard(card)">{{ card.sign + card.label }}</v-btn>
                 </template>
             </v-card-text>
 
