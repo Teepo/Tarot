@@ -34,7 +34,7 @@ body {
         }
 
         &-card {
-            position: absolute;
+            position: absolute !important;
         }
 
         &__0 {
@@ -65,7 +65,7 @@ body {
         &__1 {
 
             top: 15vw;
-            left: 0;
+            left: 70px;
 
             #{$root} {
 
@@ -75,9 +75,14 @@ body {
                 }
 
                 &-card {
-                    top: 130px;
-                    left: 60px;
+                    top: 230px;
+                    left: 140px;
                 }
+            }
+
+            .card {
+                margin: 0 70px -70px -30px;
+                transform: rotate(90deg);
             }
         }
 
@@ -98,8 +103,8 @@ body {
                 }
 
                 &-card {
-                    top: 50px;
-                    left: 150px;
+                    top: 130px;
+                    left: 300px;
                 }
             }
         }
@@ -121,8 +126,8 @@ body {
                 }
 
                 &-card {
-                    top: 50px;
-                    right: 150px;
+                    top: 130px;
+                    right: 280px;
                 }
             }
         }
@@ -136,13 +141,18 @@ body {
 
                 &-name {
                     top: 60px;
-                    left: -50px;
+                    left: -150px;
                 }
 
                 &-card {
                     top: 130px;
-                    right: 60px;
+                    right: 150px;
                 }
+            }
+
+            .card {
+                margin: 0 50px -80px -30px;
+                transform: rotate(-90deg);
             }
         }
     }

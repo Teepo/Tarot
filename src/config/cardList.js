@@ -76,5 +76,5 @@ export const cardList = {
     75 : { sign: 'A', label: '19', value: 119 },
     76 : { sign: 'A', label: '20', value: 120 },
     77 : { sign: 'A', label: '21', value: 121 },
-    78 : { sign: '1', label: 'E', value: 122 }
+    78 : { sign: 'A', label: 'E', value: 122 }
 };

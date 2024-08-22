@@ -15,11 +15,14 @@
                 [`card--is-${player.currentCard.value}`]: true
             }"
             v-if="player.currentCard">
-                {{ player.currentCard.value }}
+                <Card
+                    :_card="player.currentCard"
+                    :_player="player"
+                />
             </span>
 
             <div class="gameboard-player-cards">
-                <template v-for="card in player.cards" :key="card.index">
+                <template v-for="card in player.getCardsOrderBySignAndValue()" :key="card.index">
                     <Card
                         :_card="card"
                         :_player="player"
@@ -186,10 +189,11 @@ export default {
 
                 store.commit('setTurn', turn);
 
+                let card;
                 if (player.id === currentPlayer.id) {
 
                     // On attend que le Player choissise sa Card
-                    const card = await new Promise(resolver => {
+                    card = await new Promise(resolver => {
 
                         handlerClickCardResolver = resolver;
 
@@ -198,7 +202,9 @@ export default {
                 }
                 else if (this.isOneplayerMode) {
 
-                    const card = player.pickRandomValidCardInHisDeck();
+                    card = player.pickRandomValidCardInHisDeck(turn);
+
+                    console.log(player.login, ' play ', card.label + card.sign);
                 }
 
                 // On ajoute la Card dans la liste des Card du tour
@@ -206,6 +212,14 @@ export default {
 
                 // On ajoute au Player la Card joué
                 player.setCurrentCard(card);
+
+                // On la supprime du deck du Player
+                player.removeCard(card);
+
+                const cardComponent = this.$refs.refCards.find(refCard => refCard.card.index === card.index);
+                cardComponent.isActive = false;
+
+                console.log(cardComponent);
 
                 console.log(card);
             }
@@ -222,7 +236,7 @@ export default {
 
             if (!Game.isOkToPlayThisCard(turn, currentPlayer, card)) {
                 Alert.add({
-                    str : `Player ${currentPlayer.login} try to play card ${card.value}, but this is invalid`,
+                    str : `Player ${currentPlayer.login} try to play card ${card.sign}${card.label}, but this is invalid`,
                     type : 'error'
                 });
                 return;

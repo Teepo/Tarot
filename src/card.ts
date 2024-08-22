@@ -38,7 +38,7 @@ export class Card {
     }
 
     isAtout() : Boolean {
-        return this.value.slice(0, 1) === 'A';
+        return this.sign === 'A';
     }
 
     isKing() : Boolean {

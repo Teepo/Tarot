@@ -70,14 +70,8 @@ export class Player {
         this.cards = cards;
     }
 
-    /**
-     * @description Défausse une carte du deck d'un joueur
-     *
-     * @param {Number} index L'index dans le tableau de getCards()
-     *
-     */
-    removeCard(index : number) : Array<Card> {
-        return this.getCards().splice(index, 1);
+    removeCard(card : Card) {
+        this.cards = this.cards.filter(c => c !== card);
     }
 
     getCards() : Array<Card> {
@@ -109,8 +103,13 @@ export class Player {
         // Aucune carte n'a encore été joué dans ce tour.
         // On peut jouer ce qu'on veut.
         if (previousCards.length <= 0) {
-
+            return this.getRandomWeakestCard();
         }
+
+        const firstPreviousCard = previousCards[0];
+        const lastPreviousCard = previousCards[previousCards.length - 1];
+
+        return this.getWeakestPossibleCard(firstPreviousCard.getSign(), lastPreviousCard);
     }
 
     getWeakestPossibleCard(sign : string, lastPlayedCard : Card) : Card {
@@ -135,5 +134,19 @@ export class Player {
 
         // Étape 4 : Si aucun, prendre la carte la plus faible parmi toutes
         return this.getCards().reduce((lowest, card) => card.value < lowest.value ? card : lowest);
+    }
+
+    getRandomWeakestCard() : Card {
+        return this.getCards().reduce((lowest, card) => card.value < lowest.value ? card : lowest);
+    }
+
+    getCardsOrderBySignAndValue() : Array<Card> {
+
+        return this.getCards().sort((a, b) => {
+            if (a.sign === b.sign) {
+                return a.value - b.value;
+            }
+            return a.sign.localeCompare(b.sign);
+        });
     }
 }
