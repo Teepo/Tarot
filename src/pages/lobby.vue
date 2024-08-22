@@ -161,7 +161,6 @@ export default {
             const error = wsErrorHandler(data);
 
             if (error) {
-                console.log(error, data);
                 return this.goToHome();
             }
 

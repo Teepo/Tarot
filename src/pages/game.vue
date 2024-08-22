@@ -268,6 +268,8 @@ export default {
 
             round.setPlayers(this.game.getPlayers());
 
+            round.emptyPlayersCards();
+
             round.setPlayerWhoGiveCards((() => {
 
                 if (!(this.game.getCurrentRound() instanceof Round)) {
@@ -281,6 +283,17 @@ export default {
 
             // On distribute les cartes
             round.giveCardsToPlayers();
+
+            // On check qu'il n'y a pas de petit sec
+            if (round.checkIfThereArePetitSec()) {
+
+                Alert.add({
+                    str : 'Petit sec detected, we restart the round',
+                    type : 'error'
+                });
+
+                return this.newRound();
+            }
 
             return round;
         },

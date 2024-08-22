@@ -1,5 +1,3 @@
-/* @flow */
-
 import { cardList    } from './config/cardList';
 import { gameTypeList } from './config/gameTypeList';
 import { pointByCard  } from './config/pointsByCard';
@@ -518,5 +516,19 @@ export class Round {
             // x2 pour le preneur
             this.getAttackerPlayers()[0].increaseLastScore(-points);
         }
+    }
+
+    checkIfThereArePetitSec() : Boolean {
+
+        return !!this.getPlayers().find(player => {
+            return player.hasPetitSec();
+        });
+    }
+
+    emptyPlayersCards() {
+
+        this.getPlayers().map(player => {
+            player.setCards([]);
+        });
     }
 }

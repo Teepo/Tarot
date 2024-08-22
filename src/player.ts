@@ -149,4 +149,19 @@ export class Player {
             return a.sign.localeCompare(b.sign);
         });
     }
+
+    hasPetitSec() : Boolean {
+
+        const cardsAtout: Array<Card> = this.getCards().filter(card => card.sign === 'A');
+
+        if (cardsAtout.length !== 1) {
+            return false;
+        }
+
+        if (cardsAtout[0].isPetit()) {
+            return true;
+        }
+
+        return false;
+    }
 }

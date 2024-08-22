@@ -49,6 +49,10 @@ export class Card {
         return (this.index === 57 || this.index === 77 || this.index === 78);
     }
 
+    isPetit() : Boolean {
+        return this.isBout() && this.label === '1';
+    }
+
     isExcuse() : Boolean {
         return this.index === 78;
     }
