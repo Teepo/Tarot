@@ -56,16 +56,4 @@ export class Card {
     getSign() : string {
         return this.sign;
     }
-
-    get sign() : string {
-
-        if (this.isAtout()) {
-            return 'A';
-        }
-        else if (this.isExcuse()) {
-            return 'E';
-        }
-
-        return this.value.slice(0, 1);
-    }
 }
