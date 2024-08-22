@@ -1,4 +1,5 @@
-export const cardList = {
+export const cardList: { [key: number]: { sign: string; label: string; value: number } } = {
+
     1  : { sign: '♠', label: '1', value: 1 },
     2  : { sign: '♠', label: '2', value: 2 },
     3  : { sign: '♠', label: '3', value: 3 },

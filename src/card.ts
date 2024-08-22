@@ -7,7 +7,7 @@ export class Card {
     index : number;
     sign  : string;
     label : string;
-    value : string;
+    value : number;
 
     player! : Player;
 
@@ -25,7 +25,7 @@ export class Card {
         return this.index;
     }
 
-    getValue() : string {
+    getValue() : number {
         return this.value;
     }
 
