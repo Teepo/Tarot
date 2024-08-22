@@ -55,7 +55,7 @@ export class Player {
         return this.currentCard;
     }
 
-    setCurrentCard(card: Card | null) {
+    setCurrentCard(card: Card) {
         this.currentCard = card;
     }
 
@@ -89,10 +89,10 @@ export class Player {
      * @param {int} index L'index d'une carte
      *
      */
-    hasCardStrongerInHisDeck(index : Number) : Boolean {
+    hasCardStrongerInHisDeck(index : number) : Boolean {
 
         return this.getCards().filter(card => {
-            return card.isAtout() && card.getIndex() >= index;
+            return card.isAtout() && card.getIndex() >= index
         }).length > 0;
     }
 

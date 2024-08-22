@@ -294,10 +294,8 @@ export class Round {
 
     setCalledKing(card : Card) {
 
-        const index = parseInt(card.index);
-
         const isRegularCard = Object.keys(cardList).find(a => {
-            return parseInt(a) === index;
+            return parseInt(a) === card.index;
         });
 
         // Carte non présente dans la configuration
