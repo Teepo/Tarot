@@ -45,6 +45,8 @@ import { store } from './../store';
 
 import { gameTypeList } from './../config/gameTypeList';
 
+import { sleep } from './../utils/timing';
+
 import { socket } from './../modules/ws.js';
 import { wsErrorHandler } from './../modules/wsErrorHandler.js';
 import { Alert } from './../modules/alert.js';
@@ -201,6 +203,8 @@ export default {
                     });
                 }
                 else if (this.isOneplayerMode) {
+
+                    await sleep(2000);
 
                     card = player.pickRandomValidCardInHisDeck(turn);
 
