@@ -6,7 +6,7 @@
             </v-card-title>
             <v-card-text>
                 <template v-for="card in cards" :key="card">
-                    <v-btn block color="primary" class="mb-5" @click="handleClickKingCard(card)">{{ card.value }}</v-btn>
+                    <v-btn block color="primary" class="mb-5" @click="handleClickKingCard(card)">{{ card.sign }}{{ card.label }}</v-btn>
                 </template>
             </v-card-text>
         </v-card>

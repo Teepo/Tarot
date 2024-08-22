@@ -58,7 +58,7 @@ export class Game {
     static getKingCards() : Array<Card> {
 
         return Object.keys(cardList).filter(cardID => {
-            return [36, 50, 64, 78].indexOf(parseInt(cardID)) >= 0;
+            return [14, 28, 42, 56].indexOf(parseInt(cardID)) >= 0;
         }).map(index => {
             return new Card(index);
         });
