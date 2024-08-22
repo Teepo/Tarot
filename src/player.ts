@@ -78,6 +78,22 @@ export class Player {
         return this.cards;
     }
 
+    hasAllKingCards() : Boolean {
+        return this.getCards().filter(card => card.getLabel() === 'R').length >= 4;
+    }
+
+    hasAllQueenCards() : Boolean {
+        return this.getCards().filter(card => card.getLabel() === 'D').length >= 4;
+    }
+
+    hasAllKnightCards() : Boolean {
+        return this.getCards().filter(card => card.getLabel() === 'C').length >= 4;
+    }
+
+    hasAllJackCards() : Boolean {
+        return this.getCards().filter(card => card.getLabel() === 'V').length >= 4;
+    }
+
     hasCardOfThisSignInHisDeck(sign : string) : Boolean {
 
         return this.getCards().filter(card => {

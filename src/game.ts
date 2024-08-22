@@ -64,6 +64,32 @@ export class Game {
         });
     }
 
+    static getQueenCards() : Array<Card> {
+
+        return Object.keys(cardList).filter(cardID => {
+            return [13, 27, 41, 55].indexOf(parseInt(cardID)) >= 0;
+        }).map(index => {
+            return new Card(index);
+        });
+    }
+
+    static getKnightCards() : Array<Card> {
+
+        return Object.keys(cardList).filter(cardID => {
+            return [12, 26, 40, 54].indexOf(parseInt(cardID)) >= 0;
+        }).map(index => {
+            return new Card(index);
+        });
+    }
+
+    static getJackCards() : Array<Card> {
+
+        return Object.keys(cardList).filter(cardID => {
+            return [11, 25, 39, 53].indexOf(parseInt(cardID)) >= 0;
+        }).map(index => {
+            return new Card(index);
+        });
+    }
 
     /**
      * @description API qui indique si une carte a le droit d'être joué.

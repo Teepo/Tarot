@@ -11,11 +11,10 @@ import { Deck } from './deck';
 import type { Game } from './game';
 import type { Turn } from './turn';
 
+import { store } from './store';
+
 export class Round {
 
-    game : Game | null = null;
-
-    players         : Array<Player>;
     attackerPlayers : Array<Player>;
     defenderPlayers : Array<Player>;
 
@@ -41,7 +40,6 @@ export class Round {
 
     constructor() {
 
-        this.players         = [];
         this.attackerPlayers = [];
         this.defenderPlayers = [];
 
@@ -109,7 +107,7 @@ export class Round {
                 return;
             }
             
-            const player = this.players[playerIndex];
+            const player = store.state.players[playerIndex];
 
             // On dit que ces Card appartient à ce joueur
             cards.map(card => {
@@ -123,14 +121,6 @@ export class Round {
 
             playerIndex++;
         }
-    }
-
-    getGame() : Game | null {
-        return this.game;
-    }
-
-    setGame(game : Game) {
-        this.game = game;
     }
 
     addTurn(turn : Turn) {
@@ -167,14 +157,14 @@ export class Round {
 
         const index = this.getNextPlayerIndexToGiver(giver) + 1;
 
-        return this.getPlayers()[index];
+        return store.state.players[index];
     }
 
     getNextPlayerIndexToGiver(giver : Player | null): number {
 
         let indexAnchor = 0;
 
-        this.getPlayers().map((player, index) => {
+        store.state.players.map((player, index) => {
             indexAnchor = Object.is(player, giver) ? index : indexAnchor;
         });
 
@@ -187,7 +177,7 @@ export class Round {
 
         this.addPlayerInQueue(firstPlayerToBegin);
 
-        const playersWithoutTheBeginner = this.getPlayers().filter(player => {
+        const playersWithoutTheBeginner = store.state.players.filter(player => {
             return !Object.is(player, firstPlayerToBegin);
         });
 
@@ -320,7 +310,7 @@ export class Round {
      */
     findPartnerByCards() : Player | Boolean {
 
-        const partner = this.getPlayers().find(player => {
+        const partner = store.state.players.find(player => {
             return player.getCards().find(card => {
 
                 let calledKing = this.getCalledKing();
@@ -345,16 +335,8 @@ export class Round {
         return partner;
     }
 
-    getPlayers() : Array<Player> {
-        return this.players;
-    }
-
     getPlayerWhoGiveCards() : Player | null {
         return this.playerWhoGiveCards;
-    }
-
-    setPlayers(players : Array<Player>) {
-        this.players = players;
     }
 
     setPlayerWhoGiveCards(player : Player)  {
@@ -455,7 +437,7 @@ export class Round {
      */
     findDefenderPlayers() : Array<Player> {
 
-        return this.getPlayers().filter(player => {
+        return store.state.players.filter(player => {
             return this.getAttackerPlayers().filter(aplayer => {
                 return Object.is(player, aplayer);
             }).length <= 0;
@@ -518,14 +500,14 @@ export class Round {
 
     checkIfThereArePetitSec() : Boolean {
 
-        return !!this.getPlayers().find(player => {
+        return !!store.state.players.find(player => {
             return player.hasPetitSec();
         });
     }
 
     emptyPlayersCards() {
 
-        this.getPlayers().map(player => {
+        store.state.players.map(player => {
             player.setCards([]);
         });
     }

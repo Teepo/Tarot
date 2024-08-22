@@ -29,6 +29,10 @@ export class Card {
         return this.value;
     }
 
+    getLabel() : string {
+        return this.label;
+    }
+
     getPlayer() : Player {
         return this.player;
     }

@@ -17,16 +17,31 @@
 
 import { gameTypeList } from './../config/gameTypeList';
 
+import { Game } from './../game';
+
 export default {
 
     props : {
         player   : Object,
-        cards    : Array,
         resolver : Function,
     },
 
     data() {
+
+        let cards = Game.getKingCards();
+
+        if (this.player.hasAllKingCards()) {
+            cards = Game.getQueenCards();
+        }
+
+        if (this.player.hasAllQueenCards()) {
+            cards = Game.getKnightCards();
+        }
+
+        // cards = Game.getJackCards();
+
         return {
+            cards : cards,
             shouldDisplayDialog : true
         }
     },

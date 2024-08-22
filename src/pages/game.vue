@@ -130,7 +130,7 @@ export default {
                 // Fake game type
                 round.setGameType(1);
                 round.resetAttackerPlayers();
-                round.addAttackerPlayer(player1);
+                round.addAttackerPlayer(store.state.players[0]);
                 
                 // await this.askCalledKing(round);
 
@@ -268,10 +268,6 @@ export default {
 
             const round = new Round;
 
-            round.setGame(this.game);
-
-            round.setPlayers(this.game.getPlayers());
-
             round.emptyPlayersCards();
 
             round.setPlayerWhoGiveCards((() => {
@@ -402,7 +398,6 @@ export default {
 
                 this.$refs.refOverlayCallKing.render(OverlayCallKing, {
                     player   : player,
-                    cards    : Game.getKingCards(),
                     resolver : resolver
                 });
             });
