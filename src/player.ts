@@ -114,19 +114,26 @@ export class Player {
 
     getWeakestPossibleCard(sign : string, lastPlayedCard : Card) : Card {
 
-        // Étape 1 : Trouver l'objet avec le bon sign et la valeur la plus basse au-dessus de x
-        const cardsWithGoodSign = this.getCards().filter(card => card.sign === sign && card.value > lastPlayedCard.value);
-        if (cardsWithGoodSign.length > 0) {
-            return cardsWithGoodSign.reduce((lowest, card) => card.value < lowest.value ? card : lowest);
+        // Trouver la carte avec le bon sign et la valeur la plus basse au-dessus de x
+        const cardsWithGoodSignAbove = this.getCards().filter(card => card.sign === sign && card.value > lastPlayedCard.value);
+        if (cardsWithGoodSignAbove.length > 0) {
+            return cardsWithGoodSignAbove.reduce((lowest, card) => card.value < lowest.value ? card : lowest);
         }
 
-        // Étape 2 : Si aucun, chercher les cartes avec le sign 'A' au-dessus de x
+        // On a pas de carte du même sign au dessus
+        // On cherche quand même si y a pas le même sign peu importe la valeur
+        const cardsWithGoodSign = this.getCards().filter(card => card.sign === sign);
+        if (cardsWithGoodSign.length > 0) {
+            return cardsWithGoodSign[0];
+        }
+
+        // Si aucun, chercher les cartes avec le sign 'A' au-dessus de x
         const lowestPossibleCardAtout = this.getCards().filter(card => card.sign === 'A' && card.value > lastPlayedCard.value);
         if (lowestPossibleCardAtout.length > 0) {
             return lowestPossibleCardAtout.reduce((lowest, card) => card.value < lowest.value ? card : lowest);
         }
 
-        // Étape 3 : Si aucun, chercher les cartes avec le sign 'A' sans condition sur x
+        // Si aucun, chercher les cartes avec le sign 'A' sans condition sur x
         const lowestCardAtout = this.getCards().filter(card => card.sign === 'A');
         if (lowestCardAtout.length > 0) {
             return lowestCardAtout.reduce((lowest, card) => card.value < lowest.value ? card : lowest);
