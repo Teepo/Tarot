@@ -45,7 +45,7 @@ export class Turn {
         return this.currentPlayer;
     }
 
-    setCurrentPlayer(player) : void {
+    setCurrentPlayer(player: Player) : void {
         this.currentPlayer = player;
     }
 
@@ -130,7 +130,7 @@ export class Turn {
 
     determineTheWinner() : void {
 
-        let winner : Player | null;
+        let winner : Player | null = null;
 
         this.getPlayersQueue().map(player => {
 

@@ -11,7 +11,7 @@ export class Player {
     scores       : Array<number>;
     cards        : Array<Card>;
     gameType     : String | null;
-    currentCard! : Card;
+    currentCard! : Card | null;
 
     constructor({ id, login }: { id: string, login: string }) {
 
@@ -55,7 +55,7 @@ export class Player {
         return this.currentCard;
     }
 
-    setCurrentCard(card: Card) {
+    setCurrentCard(card: Card | null) {
         this.currentCard = card;
     }
 
