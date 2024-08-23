@@ -8,7 +8,6 @@ import { Player } from './player';
 import { Card } from './card';
 import { Deck } from './deck';
 
-import type { Game } from './game';
 import type { Turn } from './turn';
 
 import { store } from './store';

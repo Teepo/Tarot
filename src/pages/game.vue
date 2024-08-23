@@ -146,28 +146,7 @@ export default {
                 this.game.addRound(round);
 
                 while (!round.isFinished()) {
-
-                    const turn = new Turn;
-                    turn.setRound(round);
-                    turn.setPlayers(round.getPlayers());
-
-                    turn.buildPlayersQueue();
-
-                    round.addTurn(turn);
-
-                    store.commit('setRound', round);
-
-                    await this.waitCards(turn);
-
-                    // Fin du tour
-	                turn.determineTheWinner();
-
-                    // Les gagnants prennent les Card
-                    turn.pickUpCards();
-
-                    store.commit('setTurn', turn);
-
-                    console.log('Fin du turn');
+                    await this.turnLoop(round);
                 }
 
                 // On compte les points
@@ -179,6 +158,30 @@ export default {
 
                 console.log('Fin du round', round);
             }
+        },
+
+        turnLoop : async function(round) {
+
+            const turn = new Turn;
+            turn.setRound(round);
+
+            turn.buildPlayersQueue();
+
+            round.addTurn(turn);
+
+            store.commit('setRound', round);
+
+            await this.waitCards(turn);
+
+            // Fin du tour
+            turn.determineTheWinner();
+
+            // Les gagnants prennent les Card
+            turn.pickUpCards();
+
+            store.commit('setTurn', turn);
+
+            console.log('Fin du turn');
         },
 
         waitCards : async function(turn) {

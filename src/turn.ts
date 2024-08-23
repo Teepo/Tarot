@@ -2,11 +2,11 @@ import { Player } from './player';
 import { Round } from './round';
 import { Card } from './card';
 
+import { store } from './store';
+
 export class Turn {
 
     round!: Round;
-
-    players : Array<Player>;
 
     playersQueue: Array<Player>;
 
@@ -17,8 +17,6 @@ export class Turn {
     currentPlayer!: Player;
 
     constructor() {
-
-        this.players = [];
 
         this.playersQueue = [];
 
@@ -31,14 +29,6 @@ export class Turn {
 
     setRound(round : Round) : void {
         this.round = round;
-    }
-
-    getPlayers() : Array<Player> {
-        return this.players;
-    }
-
-    setPlayers(players : Array<Player>) : void {
-        this.players = players;
     }
 
     getCurrentPlayer() : Player {
@@ -59,14 +49,14 @@ export class Turn {
 
         const index = this.getNextPlayerIndexToGiver(giver) + 1;
 
-        return this.getRound().getPlayers()[index];
+        return store.state.players[index];
     }
 
     getNextPlayerIndexToGiver(giver : Player | null): number {
 
         let indexAnchor = 0;
 
-        this.getRound().getPlayers().map((player, index) => {
+        store.state.players.map((player, index) => {
             indexAnchor = Object.is(player, giver) ? index : indexAnchor;
         });
 
@@ -91,7 +81,7 @@ export class Turn {
             this.addPlayerInQueue(firstPlayerToBegin);
         }
 
-        const playersWithoutTheBeginner = this.getRound().getPlayers().filter(player => {
+        const playersWithoutTheBeginner = store.state.players.filter(player => {
             return !Object.is(player, firstPlayerToBegin);
         });
 
@@ -206,13 +196,11 @@ export class Turn {
 
     resetPlayersCurrentCard() : void {
 
-        const players = this.getPlayers();
-
-        if (players.length <= 0) {
+        if (store.state.players.length <= 0) {
             return;
         }
 
-        players.map(player => {
+        store.state.players.map(player => {
             player.setCurrentCard(null);
         });
     }
