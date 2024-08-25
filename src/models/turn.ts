@@ -2,8 +2,6 @@ import { Player } from './player';
 import { Round } from './round';
 import { Card } from './card';
 
-import { store } from './store';
-
 export class Turn {
 
     round!: Round;
@@ -231,7 +229,7 @@ export class Turn {
         this.playersQueue.push(player);
     }
 
-    getCards() : Array<Card> {
+    getCards() : Card[] {
         return this.cards;
     }
 

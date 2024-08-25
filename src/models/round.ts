@@ -1,16 +1,14 @@
-import { cardList    } from './config/cardList';
-import { gameTypeList } from './config/gameTypeList';
-import { pointByCard  } from './config/pointsByCard';
-import { pointToReachByBout } from './config/pointsToReachByBout';
-import { ratioByGameType    } from './config/ratioByGameType';
+import { cardList    } from './../config/cardList';
+import { gameTypeList } from './../config/gameTypeList';
+import { pointByCard  } from './../config/pointsByCard';
+import { pointToReachByBout } from './../config/pointsToReachByBout';
+import { ratioByGameType    } from './../config/ratioByGameType';
 
 import { Player } from './player';
 import { Card } from './card';
 import { Deck } from './deck';
 
 import type { Turn } from './turn';
-
-import { store } from './store';
 
 export class Round {
 
@@ -352,6 +350,10 @@ export class Round {
 
     setDefenderPoints(points : number) {
         this.defenderPoints = points;
+    }
+
+    getDefenderPoints() : number {
+        return this.defenderPoints;
     }
 
     getPlayersQueue() : Array<Player> {

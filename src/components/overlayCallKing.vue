@@ -17,7 +17,7 @@
 
 import { gameTypeList } from './../config/gameTypeList';
 
-import { Game } from './../game';
+import { Game } from './../models/game';
 
 export default {
 

@@ -1,35 +1,9 @@
 import { createStore } from 'vuex'
 
-export const store = createStore({
-    state () {
-        return {
-            currentPlayer : {},
-            players       : [],
-            game          : {},
-            round         : {},
-            turn          : {}
-        }
-    },
-    mutations: {
-        
-        setCurrentPlayer(state, currentPlayer) {
-            state.currentPlayer = currentPlayer;
-        },
+import GameStore  from './game';
+import RoundStore from './round';
+import TurnStore  from './turn';
 
-        setPlayers(state, players) {
-            state.players = players;
-        },
+export const store = createStore();
 
-        setGame(state, game) {
-            state.game = game;
-        },
-
-        setRound(state, round) {
-            state.round = round;
-        },
-
-        setTurn(state, turn) {
-            state.turn = turn;
-        },
-    }
-});
+export const gameStore = new GameStore({ store });

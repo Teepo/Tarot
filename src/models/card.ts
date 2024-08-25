@@ -1,8 +1,9 @@
-import { Player } from './player';
+import { Card as CardInterface } from './../types/card';
+import { Player } from './../types/player';
 
-import { cardList } from './config/cardList';
+import { cardList } from './../config/cardList';
 
-export class Card {
+export class Card implements CardInterface {
 
     index : number;
     sign  : string;

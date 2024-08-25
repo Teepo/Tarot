@@ -33,8 +33,8 @@ import { gameTypeList } from './../config/gameTypeList';
 
 import { Alert } from './../modules/alert';
 
-import { Game } from './../game';
-import { Card } from './../card';
+import { Game } from './../models/game';
+import { Card } from './../models/card';
 
 export default {
 

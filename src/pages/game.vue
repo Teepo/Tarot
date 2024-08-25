@@ -41,6 +41,8 @@
   
 <script>
 
+import { mapActions } from 'vuex';
+
 import { store } from './../store';
 
 import { gameTypeList } from './../config/gameTypeList';
@@ -51,11 +53,11 @@ import { socket } from './../modules/ws.js';
 import { wsErrorHandler } from './../modules/wsErrorHandler.js';
 import { Alert } from './../modules/alert.js';
 
-import { Player } from './../player';
-import { Game }   from './../game';
-import { Round }  from './../round';
-import { Turn }   from './../turn';
-import { Card }   from './../card';
+import { Player } from './../models/player';
+import { Game }   from './../models/game';
+import { Round }  from './../models/round';
+import { Turn }   from './../models/turn';
+import { Card }   from './../models/card';
 
 import DynamicComponent from './../components/dynamicComponent.vue';
 import OverlayGameType  from './../components/overlayGameType.vue';
@@ -71,6 +73,8 @@ const player5 = new Player({ id : 5, login : 'CPU 4' });
 const currentPlayer = player1;
 
 let handlerClickCardResolver;
+
+import { useStore } from 'vuex';
 
 export default {
 
@@ -98,10 +102,12 @@ export default {
 
     mounted() {
 
-        this.game = new Game;
-        this.game.setCurrentPlayer(currentPlayer);
+        const store = useStore();
 
-        this.game.setPlayers([
+        console.log(store);
+
+        store.dispatch('game/setCurrentPlayer', currentPlayer);
+        store.dispatch('game/setPlayers', [
             player1,
             player2,
             player3,
@@ -110,9 +116,6 @@ export default {
         ]);
 
         this.players = this.game.getPlayers();
-
-        store.commit('setCurrentPlayer', currentPlayer);
-        store.commit('setPlayers', this.game.getPlayers());
 
         this.gameLoop();
     },
