@@ -49,6 +49,22 @@ export class Card {
         return (this.index === 14 || this.index === 28 || this.index === 42 || this.index === 56);
     }
 
+    isQueen() : Boolean {
+        return (this.index === 13 || this.index === 27 || this.index === 41 || this.index === 55);
+    }
+
+    isKnight() : Boolean {
+        return (this.index === 12 || this.index === 26 || this.index === 40 || this.index === 54);
+    }
+
+    isJack() : Boolean {
+        return (this.index === 11 || this.index === 25 || this.index === 39 || this.index === 53);
+    }
+
+    isFigure() : Boolean {
+        return this.isKing() || this.isQueen() || this.isKnight() || this.isJack();
+    }
+
     isBout() : Boolean {
         return (this.index === 57 || this.index === 77 || this.index === 78);
     }

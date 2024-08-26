@@ -79,19 +79,19 @@ export class Player {
     }
 
     hasAllKingCards() : Boolean {
-        return this.getCards().filter(card => card.getLabel() === 'R').length >= 4;
+        return this.getCards().filter(card => card.isKing()).length >= 4;
     }
 
     hasAllQueenCards() : Boolean {
-        return this.getCards().filter(card => card.getLabel() === 'D').length >= 4;
+        return this.getCards().filter(card => card.isQueen()).length >= 4;
     }
 
     hasAllKnightCards() : Boolean {
-        return this.getCards().filter(card => card.getLabel() === 'C').length >= 4;
+        return this.getCards().filter(card => card.isKnight()).length >= 4;
     }
 
     hasAllJackCards() : Boolean {
-        return this.getCards().filter(card => card.getLabel() === 'V').length >= 4;
+        return this.getCards().filter(card => card.isJack()).length >= 4;
     }
 
     hasCardOfThisSignInHisDeck(sign : string) : Boolean {
@@ -186,5 +186,13 @@ export class Player {
         }
 
         return false;
+    }
+
+    dontHadCardWithSignAtout() : Boolean {
+        return this.getCards().filter(card => card.isAtout()).length === 0;
+    }
+
+    dontHaveCardWithFigure() : Boolean {
+        return this.getCards().filter(card => card.isFigure()).length === 0;
     }
 }

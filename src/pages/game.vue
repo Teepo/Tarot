@@ -197,6 +197,8 @@ export default {
                 let card;
                 if (player.id === currentPlayer.id) {
 
+                    // @TODO misere
+
                     // On attend que le Player choissise sa Card
                     card = await new Promise(resolver => {
 
