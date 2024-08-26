@@ -13,6 +13,9 @@ export class Game {
 
     currentPlayer!: Player;
 
+    isStarted: Boolean = false;
+    haveChienDone: Boolean = false;
+
     constructor() {
 
         this.players = [];
