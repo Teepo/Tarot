@@ -1,3 +1,5 @@
+import { shuffle } from './utils/array';
+
 import { Card } from './card';
 
 export class Deck {
@@ -50,9 +52,6 @@ export class Deck {
     }
 
     shuffle() {
-
-        this.cards.sort(() => {
-            return 0.5 - Math.random();
-        });
+        return shuffle(this.cards);
     }
 }
