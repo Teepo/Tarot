@@ -9,12 +9,12 @@
             </span>
 
             <span
-            :class="{
-                'gameboard-player-card': true,
-                'card': true,
-                [`card--is-${player.currentCard.value}`]: true
-            }"
-            v-if="player.currentCard">
+                :class="{
+                    'gameboard-player-card': true,
+                    'card': true,
+                    [`card--is-${player.currentCard.value}`]: true
+                }"
+                v-if="player.currentCard">
                 <Card
                     :_card="player.currentCard"
                     :_player="player"
@@ -32,6 +32,12 @@
                 </template>
             </div>
         </div>
+
+        <div class="chien">
+            <template v-if="shouldDisplayChien" v-for="card in round.chiens">
+                <Card :_card="card" />
+            </template>
+        </div>
     </div>
 
     <DynamicComponent ref="refOverlayGameType" />
@@ -42,6 +48,8 @@
 </template>
   
 <script>
+
+import { mapState } from 'vuex'
 
 import { store } from './../store';
 
@@ -91,12 +99,18 @@ export default {
         },
     },
 
+    computed : {
+        ...mapState(['round'])
+    },
+
     data() {
 
         return {
             game    : null,
             players : [],
             currentPlayer : currentPlayer,
+
+            shouldDisplayChien : false
         }
     },
 
@@ -141,7 +155,15 @@ export default {
                 // Fake call king
                 round.setCalledKing(new Card(42));
 
+                store.commit('setRound', round);
+
+                this.shouldDisplayChien = true;
+
+                await sleep(3000);
+
                 await this.makeChien(round);
+
+                this.shouldDisplayChien = false;
 
                 round.addAttackerPlayer(round.findPartnerByCards());
                 round.setDefenderPlayers(round.findDefenderPlayers());
