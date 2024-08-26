@@ -21,7 +21,7 @@
 
             <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn text="Go" color="success" variant="flat" @click="handleClickGo()"></v-btn>
+                <v-btn color="success" variant="flat" @click="handleClickGo()">Go</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>

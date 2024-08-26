@@ -15,6 +15,10 @@ export class Deck {
         }
     }
 
+    getCards() : Array<Card> {
+        return this.cards;
+    }
+
     setCards(cards : Array<Card>) {
         this.cards = cards;
     }

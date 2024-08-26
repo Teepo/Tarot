@@ -173,6 +173,10 @@ export class Player {
         });
     }
 
+    getCardsAtout() : Array<Card> {
+        return this.getCards().filter(card => card.isAtout());
+    }
+
     hasPetitSec() : Boolean {
 
         const cardsAtout: Array<Card> = this.getCards().filter(card => card.sign === 'A');
@@ -198,5 +202,21 @@ export class Player {
 
     haveMisere() : Boolean {
         return this.dontHaveCardWithSignAtout() || this.dontHaveCardWithFigure();
+    }
+
+    havePoignee() : Boolean {
+        return this.getCardsAtout().length >= 8;
+    }
+
+    haveSimplePoignee() : Boolean {
+        return this.getCardsAtout().length >= 8;
+    }
+
+    haveDoublePoignee() : Boolean {
+        return this.getCardsAtout().length >= 10;
+    }
+
+    haveTriplePoignee() : Boolean {
+        return this.getCardsAtout().length >= 12;
     }
 }

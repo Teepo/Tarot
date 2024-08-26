@@ -12,8 +12,10 @@ declare module 'vue' {
     OverlayCallKing: typeof import('./src/components/overlayCallKing.vue')['default']
     OverlayGameType: typeof import('./src/components/overlayGameType.vue')['default']
     OverlayMakeChien: typeof import('./src/components/overlayMakeChien.vue')['default']
+    OverlayMisere: typeof import('./src/components/overlayMisere.vue')['default']
     OverlayMisereAtout: typeof import('./src/components/overlayMisereAtout.vue')['default']
     OverlayMisereFigure: typeof import('./src/components/overlayMisereFigure.vue')['default']
+    OverlayPoignee: typeof import('./src/components/overlayPoignee.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

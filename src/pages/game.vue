@@ -37,8 +37,8 @@
     <DynamicComponent ref="refOverlayGameType" />
     <DynamicComponent ref="refOverlayCallKing" />
     <DynamicComponent ref="refOverlayMakeChien" />
-    <DynamicComponent ref="refOverlayMisereAtout" />
-    <DynamicComponent ref="refOverlayMisereFigure" />
+    <DynamicComponent ref="refOverlayMisere" />
+    <DynamicComponent ref="refOverlayPoignee" />
 </template>
   
 <script>
@@ -59,12 +59,12 @@ import { Round }  from './../round';
 import { Turn }   from './../turn';
 import { Card }   from './../card';
 
-import DynamicComponent    from './../components/dynamicComponent.vue';
-import OverlayGameType     from './../components/overlayGameType.vue';
-import OverlayCallKing     from './../components/overlayCallKing.vue';
-import OverlayMakeChien    from './../components/overlayMakeChien.vue';
-import OverlayMisereAtout  from './../components/overlayMisereAtout.vue';
-import OverlayMisereFigure from './../components/overlayMisereFigure.vue';
+import DynamicComponent from './../components/dynamicComponent.vue';
+import OverlayGameType  from './../components/overlayGameType.vue';
+import OverlayCallKing  from './../components/overlayCallKing.vue';
+import OverlayMakeChien from './../components/overlayMakeChien.vue';
+import OverlayMisere    from './../components/overlayMisere.vue';
+import OverlayPoignee   from './../components/overlayPoignee.vue';
 
 const player1 = new Player({ id : 1, login : 'HUMAN' });
 const player2 = new Player({ id : 2, login : 'CPU 1' });
@@ -201,6 +201,7 @@ export default {
                 store.commit('setTurn', turn);
 
                 await this.handleMiseres(player, isCPU);
+                await this.handlePoignee(player, isCPU);
 
                 let card;
                 if (player.id === currentPlayer.id) {
@@ -394,32 +395,78 @@ export default {
                 return;
             }
 
+            let misereType = '';
+
             if (player.dontHaveCardWithSignAtout()) {
-
-                const wantToAnnounce = isCPU ? true : await this.renderOverlayMisereAtout(player);
-
-                this.destroyOverlayMisereAtout();
-
-                if (wantToAnnounce) {
-                    Alert.add({
-                        str : `Player ${player.login} have a misere of atout`,
-                        type : 'error'
-                    });
-                }
+                misereType = 'atout';
             }
             else if (player.dontHaveCardWithFigure()) {
-
-                const wantToAnnounce = isCPU ? true : await this.renderOverlayMisereFigure(player);
-
-                this.destroyOverlayMisereFigure();
-
-                if (wantToAnnounce) {
-                    Alert.add({
-                        str : `Player ${player.login} have a misere of figure`,
-                        type : 'error'
-                    });
-                }
+                misereType = 'figure';
             }
+
+            const wantToAnnounce = isCPU ? true : await this.renderOverlayMisere({
+                player     : player,
+                misereType : misereType
+            });
+
+            this.destroyOverlayMisere();
+
+            if (wantToAnnounce) {
+                Alert.add({
+                    str : `Player ${player.login} have a misere of ${misereType}`,
+                    type : 'error'
+                });
+            }
+        },
+
+        handlePoignee : async function(player, isCPU) {
+
+            if (!player.havePoignee()) {
+                return;
+            }
+
+            let poigneeType = '';
+
+            if (player.haveSimplePoignee()) {
+                poigneeType = 'simple';
+            }
+            if (player.haveDoublePoignee()) {
+                poigneeType = 'double';
+            }
+            if (player.haveTriplePoignee()) {
+                poigneeType = 'triple';
+            }
+
+            const poigneeAnnounced = isCPU ? poigneeType : await this.renderOverlayPoignee({
+                player      : player,
+                poigneeType : poigneeType
+            });
+
+            this.destroyOverlayPoignee();
+
+            if (poigneeAnnounced) {
+                Alert.add({
+                    str : `Player ${player.login} have a ${poigneeAnnounced} poignee`,
+                    type : 'error'
+                });
+            }
+        },
+
+        renderOverlayPoignee : async function(data) {
+
+            const { player, poigneeType } = data;
+
+            return new Promise(resolver => {
+                this.$refs.refOverlayPoignee.render(OverlayPoignee, {
+                    player      : player,
+                    poigneeType : poigneeType,
+                    resolver    : resolver,
+                });
+            });
+        },
+
+        destroyOverlayPoignee : function() {
+            this.$refs.refOverlayPoignee.destroy();
         },
 
         renderOverlayGameType : async function(player, round) {
@@ -469,31 +516,21 @@ export default {
             this.$refs.refOverlayMakeChien.destroy();
         },
 
-        renderOverlayMisereAtout : async function(player) {
+        renderOverlayMisere : async function(data) {
+
+            const { player, misereType } = data;
 
             return new Promise(resolver => {
-                this.$refs.refOverlayMisereAtout.render(OverlayMisereAtout, {
-                    resolver : resolver
+                this.$refs.refOverlayMisere.render(OverlayMisere, {
+                    resolver   : resolver,
+                    misereType : misereType
                 });
             });
         },
 
-        destroyOverlayMisereAtout : function() {
-            this.$refs.refOverlayMisereAtout.destroy();
-        },
-
-        renderOverlayMisereFigure : async function(player) {
-
-            return new Promise(resolver => {
-                this.$refs.refOverlayMisereFigure.render(OverlayMisereFigure, {
-                    resolver : resolver
-                });
-            });
-        },
-
-        destroyOverlayMisereFigure : function() {
-            this.$refs.refOverlayMisereFigure.destroy();
-        },
+        destroyOverlayMisere : function() {
+            this.$refs.refOverlayMisere.destroy();
+        }
     }
 }
 </script>
