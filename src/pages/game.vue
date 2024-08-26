@@ -37,6 +37,8 @@
     <DynamicComponent ref="refOverlayGameType" />
     <DynamicComponent ref="refOverlayCallKing" />
     <DynamicComponent ref="refOverlayMakeChien" />
+    <DynamicComponent ref="refOverlayMisereAtout" />
+    <DynamicComponent ref="refOverlayMisereFigure" />
 </template>
   
 <script>
@@ -57,10 +59,12 @@ import { Round }  from './../round';
 import { Turn }   from './../turn';
 import { Card }   from './../card';
 
-import DynamicComponent from './../components/dynamicComponent.vue';
-import OverlayGameType  from './../components/overlayGameType.vue';
-import OverlayCallKing  from './../components/overlayCallKing.vue';
-import OverlayMakeChien from './../components/overlayMakeChien.vue';
+import DynamicComponent    from './../components/dynamicComponent.vue';
+import OverlayGameType     from './../components/overlayGameType.vue';
+import OverlayCallKing     from './../components/overlayCallKing.vue';
+import OverlayMakeChien    from './../components/overlayMakeChien.vue';
+import OverlayMisereAtout  from './../components/overlayMisereAtout.vue';
+import OverlayMisereFigure from './../components/overlayMisereFigure.vue';
 
 const player1 = new Player({ id : 1, login : 'HUMAN' });
 const player2 = new Player({ id : 2, login : 'CPU 1' });
@@ -188,16 +192,18 @@ export default {
 
             for await (const player of turn.getPlayersQueue()) {
 
+                const isCPU = this.isOneplayerMode && player.id !== currentPlayer.id;
+
                 console.log(player.login, ' turn');
 
                 turn.setCurrentPlayer(player);
 
                 store.commit('setTurn', turn);
 
+                await this.handleMiseres(player, isCPU);
+
                 let card;
                 if (player.id === currentPlayer.id) {
-
-                    // @TODO misere
 
                     // On attend que le Player choissise sa Card
                     card = await new Promise(resolver => {
@@ -382,6 +388,40 @@ export default {
             }
         },
 
+        handleMiseres : async function(player, isCPU) {
+
+            if (!player.haveMisere()) {
+                return;
+            }
+
+            if (player.dontHaveCardWithSignAtout()) {
+
+                const wantToAnnounce = isCPU ? true : await this.renderOverlayMisereAtout(player);
+
+                this.destroyOverlayMisereAtout();
+
+                if (wantToAnnounce) {
+                    Alert.add({
+                        str : `Player ${player.login} have a misere of atout`,
+                        type : 'error'
+                    });
+                }
+            }
+            else if (player.dontHaveCardWithFigure()) {
+
+                const wantToAnnounce = isCPU ? true : await this.renderOverlayMisereFigure(player);
+
+                this.destroyOverlayMisereFigure();
+
+                if (wantToAnnounce) {
+                    Alert.add({
+                        str : `Player ${player.login} have a misere of figure`,
+                        type : 'error'
+                    });
+                }
+            }
+        },
+
         renderOverlayGameType : async function(player, round) {
 
             return new Promise(resolver => {
@@ -427,7 +467,33 @@ export default {
 
         destroyOverlayMakeChien : function() {
             this.$refs.refOverlayMakeChien.destroy();
-        }
+        },
+
+        renderOverlayMisereAtout : async function(player) {
+
+            return new Promise(resolver => {
+                this.$refs.refOverlayMisereAtout.render(OverlayMisereAtout, {
+                    resolver : resolver
+                });
+            });
+        },
+
+        destroyOverlayMisereAtout : function() {
+            this.$refs.refOverlayMisereAtout.destroy();
+        },
+
+        renderOverlayMisereFigure : async function(player) {
+
+            return new Promise(resolver => {
+                this.$refs.refOverlayMisereFigure.render(OverlayMisereFigure, {
+                    resolver : resolver
+                });
+            });
+        },
+
+        destroyOverlayMisereFigure : function() {
+            this.$refs.refOverlayMisereFigure.destroy();
+        },
     }
 }
 </script>

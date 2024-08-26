@@ -188,11 +188,15 @@ export class Player {
         return false;
     }
 
-    dontHadCardWithSignAtout() : Boolean {
+    dontHaveCardWithSignAtout() : Boolean {
         return this.getCards().filter(card => card.isAtout()).length === 0;
     }
 
     dontHaveCardWithFigure() : Boolean {
         return this.getCards().filter(card => card.isFigure()).length === 0;
+    }
+
+    haveMisere() : Boolean {
+        return this.dontHaveCardWithSignAtout() || this.dontHaveCardWithFigure();
     }
 }
