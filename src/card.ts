@@ -1,5 +1,3 @@
-import { Player } from './player';
-
 import { cardList } from './config/cardList';
 
 export class Card {

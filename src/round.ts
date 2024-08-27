@@ -170,7 +170,7 @@ export class Round {
         return indexAnchor;
     }
 
-    buildPlayersQueue() : void {
+    buildPlayersQueue() {
 
         const firstPlayerToBegin = this.getNextPlayerToGiver();
 
@@ -267,7 +267,7 @@ export class Round {
      * @description Le type de partie choisi ( petite, garde, garde-sans, garde-contre )
      *
      */
-    setGameType(type : number) : void {
+    setGameType(type : number) {
 
         const isRegularType = !!Object.keys(gameTypeList).find(a => {
             return parseInt(a) === type;
@@ -517,5 +517,26 @@ export class Round {
 
     isLastTurn() : Boolean {
         return this.getTurns().length === 15;
+    }
+
+    getLastTurn() : Turn {
+        return this.getTurns().slice(-1)[0];
+    }
+
+    havePetitAuBout() : Boolean {
+
+        const lastTurn = this.getLastTurn();
+
+        if (!this.isLastTurn()) {
+            console.log('petit au bout > this is not the last turn');
+            return false;
+        }
+
+        if (!lastTurn.havePetitInCards()) {
+            console.log('petit au bout > no petit in last turn played');
+            return false;
+        }
+
+        return this.getAttackerPlayers().includes(lastTurn.getWinner());
     }
 }

@@ -23,25 +23,27 @@ export class Turn {
         this.cards = [];
     }
 
-    getRound() : Round {
+    getRound(): Round {
         return this.round;
     }
 
-    setRound(round : Round) : void {
+    setRound(round : Round) {
         this.round = round;
     }
 
-    getCurrentPlayer() : Player {
+    getCurrentPlayer(): Player {
         return this.currentPlayer;
     }
 
-    setCurrentPlayer(player: Player) : void {
+    setCurrentPlayer(player: Player) {
         this.currentPlayer = player;
     }
 
-    getNextPlayerToGiver() : Player | null {
+    getNextPlayerToGiver(): Player | null {
 
-        const giver = this.getRound().getPlayerWhoGiveCards();
+        const { players, round } = store.state;
+
+        const giver = round.getPlayerWhoGiveCards();
 
         if (!(giver instanceof Player)) {
             return null;
@@ -49,21 +51,21 @@ export class Turn {
 
         const index = this.getNextPlayerIndexToGiver(giver) + 1;
 
-        return store.state.players[index];
+        return players[index];
     }
 
-    getNextPlayerIndexToGiver(giver : Player | null): number {
+    getNextPlayerIndexToGiver(giver: Player | null): number {
 
         let indexAnchor = 0;
 
-        store.state.players.map((player, index) => {
+        store.state.players.map((player: Player, index: number) => {
             indexAnchor = Object.is(player, giver) ? index : indexAnchor;
         });
 
         return indexAnchor;
     }
 
-    buildPlayersQueue() : void {
+    buildPlayersQueue() {
 
         let firstPlayerToBegin;
 
@@ -124,7 +126,7 @@ export class Turn {
         }
     }
 
-    determineTheWinner() : void {
+    determineTheWinner() {
 
         let winner : Player | null = null;
 
@@ -190,7 +192,7 @@ export class Turn {
      * @description Le gagnant récupère les cartes
      *
      */
-    pickUpCards() : void {
+    pickUpCards() {
 
         const winner = this.getWinner();
 
@@ -200,13 +202,15 @@ export class Turn {
         this.getRound().addAttackerStackCards(this.getCards()) : this.getRound().addDefenderStackCards(this.getCards());
     }
 
-    resetPlayersCurrentCard() : void {
+    resetPlayersCurrentCard() {
 
-        if (store.state.players.length <= 0) {
+        const { players } = store.state;
+
+        if (players.length <= 0) {
             return;
         }
 
-        store.state.players.map(player => {
+        store.state.players.map((player: Player) => {
             player.setCurrentCard(null);
         });
     }
@@ -215,7 +219,7 @@ export class Turn {
         return this.winner;
     }
 
-    setWinner(player : Player | null) : void {
+    setWinner(player : Player | null) {
 
         if (!(player instanceof Player)) {
             return;
@@ -228,7 +232,7 @@ export class Turn {
         return this.playersQueue;
     }
 
-    addPlayerInQueue(player : Player | null) : void {
+    addPlayerInQueue(player : Player | null) {
 
         if (!(player instanceof Player)) {
             return;
@@ -241,7 +245,11 @@ export class Turn {
         return this.cards;
     }
 
-    addCard(card : Card) : void {
+    addCard(card : Card) {
         this.cards.push(card);
+    }
+
+    havePetitInCards(): Boolean {
+        return !!this.cards.find((card: Card) => card.isPetit());
     }
 }

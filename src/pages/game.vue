@@ -173,7 +173,7 @@ export default {
                 }
 
                 // @TODO check petit au bout
-                console.log('TURN', turn);
+                console.log('petit au bout ?', round.havePetitAuBout());
 
                 // On compte les points
                 round.setPoints();

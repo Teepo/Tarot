@@ -3,7 +3,7 @@ import { Card } from './card';
 
 export class Player {
 
-    id         : string;
+    id         : number;
     login      : string;
     isReady    : Boolean;
     customData : Object;
@@ -13,7 +13,7 @@ export class Player {
     gameType     : String | null;
     currentCard! : Card | null;
 
-    constructor({ id, login }: { id: string, login: string }) {
+    constructor({ id, login }: { id: number, login: string }) {
 
         this.id      = id;
         this.login   = login;
@@ -28,11 +28,11 @@ export class Player {
         };
     }
 
-    getId() : string {
+    getId() : number {
         return this.id;
     }
 
-    addScore(points : number) : void {
+    addScore(points : number) {
         this.scores.push(points);
     }
 
@@ -68,6 +68,11 @@ export class Player {
 
     setCards(cards : Array<Card>) {
         this.cards = cards;
+
+        // On s'assure que les Cards nous sont attribués
+        cards.map(card => {
+            card.setPlayerId(this.getId());
+        });
     }
 
     removeCard(card : Card) {
