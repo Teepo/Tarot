@@ -189,7 +189,6 @@ export default {
         turnLoop : async function(round) {
 
             const turn = new Turn;
-            turn.setRound(round);
 
             turn.buildPlayersQueue();
 

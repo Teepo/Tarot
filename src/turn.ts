@@ -1,18 +1,15 @@
 import { Player } from './player';
-import { Round } from './round';
 import { Card } from './card';
 
 import { store } from './store';
 
 export class Turn {
 
-    round!: Round;
-
     playersQueue: Array<Player>;
 
     winner!: Player;
 
-    cards : Array<Card>;
+    cards: Array<Card>;
 
     currentPlayer!: Player;
 
@@ -21,14 +18,6 @@ export class Turn {
         this.playersQueue = [];
 
         this.cards = [];
-    }
-
-    getRound(): Round {
-        return this.round;
-    }
-
-    setRound(round : Round) {
-        this.round = round;
     }
 
     getCurrentPlayer(): Player {
@@ -194,12 +183,14 @@ export class Turn {
      */
     pickUpCards() {
 
+        const { round } = store.state;
+
         const winner = this.getWinner();
 
         if (!winner) { return; }
 
-        this.getRound().getAttackerPlayers().includes(winner) ?
-        this.getRound().addAttackerStackCards(this.getCards()) : this.getRound().addDefenderStackCards(this.getCards());
+        round.getAttackerPlayers().includes(winner) ?
+        round.addAttackerStackCards(this.getCards()) : round.addDefenderStackCards(this.getCards());
     }
 
     resetPlayersCurrentCard() {
@@ -251,5 +242,9 @@ export class Turn {
 
     havePetitInCards(): Boolean {
         return !!this.cards.find((card: Card) => card.isPetit());
+    }
+
+    haveExcuseInCards(): Boolean {
+        return !!this.cards.find((card: Card) => card.isExcuse());
     }
 }
