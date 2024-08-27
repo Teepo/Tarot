@@ -13,22 +13,23 @@
 
 <script>
 
-import { store } from './../store/index.js';
+import { mapState } from 'vuex'
 
 export default {
 
     props : {
-        _card   : Object,
-        _player : Object
+        card   : Object,
+        player : Object
+    },
+
+    computed : {
+        ...mapState(['currentPlayer'])
     },
 
     data : function() {
 
         return {
-            isActive      : false,
-            card          : this._card,
-            player        : this._player,
-            currentPlayer : store.state.currentPlayer
+            isActive : false,
         }
     },
 

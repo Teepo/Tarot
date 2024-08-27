@@ -16,16 +16,16 @@
                 }"
                 v-if="player.currentCard">
                 <Card
-                    :_card="player.currentCard"
-                    :_player="player"
+                    :card="player.currentCard"
+                    :player="player"
                 />
             </span>
 
             <div class="gameboard-player-cards">
                 <template v-for="card in player.getCardsOrderBySignAndValue()" :key="card.index">
                     <Card
-                        :_card="card"
-                        :_player="player"
+                        :card="card"
+                        :player="player"
                         @click="handleClickCard(card)"
                         ref="refCards"
                     />
@@ -35,7 +35,7 @@
 
         <div class="chien">
             <template v-if="shouldDisplayChien" v-for="card in round.chiens">
-                <Card :_card="card" />
+                <Card :card="card" />
             </template>
         </div>
     </div>
@@ -100,14 +100,13 @@ export default {
     },
 
     computed : {
-        ...mapState(['round'])
+        ...mapState(['players', 'round'])
     },
 
     data() {
 
         return {
-            game    : null,
-            players : [],
+            game : null,
             currentPlayer : currentPlayer,
 
             shouldDisplayChien : false
@@ -126,8 +125,6 @@ export default {
             player4,
             player5
         ]);
-
-        this.players = this.game.getPlayers();
 
         store.commit('setCurrentPlayer', currentPlayer);
         store.commit('setPlayers', this.game.getPlayers());
@@ -159,7 +156,7 @@ export default {
 
                 this.shouldDisplayChien = true;
 
-                await sleep(3000);
+                await sleep(1000);
 
                 await this.makeChien(round);
 
@@ -174,6 +171,9 @@ export default {
                 while (!round.isFinished()) {
                     await this.turnLoop(round);
                 }
+
+                // @TODO check petit au bout
+                console.log('TURN', turn);
 
                 // On compte les points
                 round.setPoints();
@@ -213,6 +213,8 @@ export default {
         waitCards : async function(turn) {
 
             for await (const player of turn.getPlayersQueue()) {
+
+                player.setCurrentCard(null);
 
                 const isCPU = this.isOneplayerMode && player.id !== currentPlayer.id;
 
@@ -256,12 +258,9 @@ export default {
                 // On la supprime du deck du Player
                 player.removeCard(card);
 
+                // @TODO désactiver l'animation des Card quand c'est pas notre tour
                 const cardComponent = this.$refs.refCards.find(refCard => refCard.card.index === card.index);
                 cardComponent.isActive = false;
-
-                console.log(cardComponent);
-
-                console.log(card);
             }
         },
 

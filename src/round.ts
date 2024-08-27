@@ -514,4 +514,8 @@ export class Round {
     isFirstTurn() : Boolean {
         return this.getTurns().length === 1;
     }
+
+    isLastTurn() : Boolean {
+        return this.getTurns().length === 15;
+    }
 }
