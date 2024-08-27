@@ -143,7 +143,7 @@ export class Round {
      *
      */
     getPreviousTurn() : Turn {
-        return this.getTurns().slice(-2, -1)[0];
+        return this.getTurns()[this.getTurns().length - 1];
     }
 
     getNextPlayerToGiver() : Player | null {
