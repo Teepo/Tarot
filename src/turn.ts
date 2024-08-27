@@ -69,6 +69,10 @@ export class Turn {
 
         const { players, round } = store.state;
 
+        players.filter((player: Player) => {
+            player.setCurrentCard(null);
+        });
+
         // On est au 1er tour, le 1er a joué est celui après celui qui a distribué.
         if (round.isFirstTurn()) {
             firstPlayerToBegin = this.getNextPlayerToGiver();
@@ -83,7 +87,7 @@ export class Turn {
             this.addPlayerInQueue(firstPlayerToBegin);
         }
 
-        const playersWithoutTheBeginner = players.filter(player => {
+        const playersWithoutTheBeginner = players.filter((player: Player) => {
             return !Object.is(player, firstPlayerToBegin);
         });
 

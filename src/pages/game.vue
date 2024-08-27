@@ -214,8 +214,6 @@ export default {
 
             for await (const player of turn.getPlayersQueue()) {
 
-                player.setCurrentCard(null);
-
                 const isCPU = this.isOneplayerMode && player.id !== currentPlayer.id;
 
                 console.log(player.login, ' turn');
