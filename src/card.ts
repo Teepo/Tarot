@@ -9,7 +9,7 @@ export class Card {
     label : string;
     value : number;
 
-    player! : Player;
+    playerId! : number;
 
     constructor(index : number) {
 
@@ -33,12 +33,12 @@ export class Card {
         return this.label;
     }
 
-    getPlayer() : Player {
-        return this.player;
+    getPlayerId() : number {
+        return this.playerId;
     }
 
-    setPlayer(player : Player) {
-        this.player = player;
+    setPlayerId(playerId : number) {
+        this.playerId = playerId;
     }
 
     isAtout() : Boolean {

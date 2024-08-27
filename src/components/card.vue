@@ -35,7 +35,7 @@ export default {
     methods: {
 
         isMyCard() {
-            return this.card.getPlayer() && this.card.getPlayer().getId() === this.currentPlayer.getId()
+            return this.card.getPlayerId() && this.card.getPlayerId()=== this.currentPlayer.getId()
         }
     }
 }

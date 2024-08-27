@@ -270,7 +270,7 @@ export default {
             const turn          = store.state.turn;
             const currentPlayer = turn.currentPlayer;
 
-            if (card.player.id !== currentPlayer.id) {
+            if (card.playerId !== currentPlayer.id) {
                 return;
             }
 
@@ -293,7 +293,7 @@ export default {
             
             return this.$refs.refCards
             .filter(card => {
-                return card.player.id === player.id;
+                return card.playerId === player.id;
             })
             .forEach(card => {
                 card.isActive = true;
