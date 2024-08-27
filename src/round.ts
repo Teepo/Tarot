@@ -539,4 +539,21 @@ export class Round {
 
         return this.getAttackerPlayers().includes(lastTurn.getWinner());
     }
+
+    haveAttackerPlayersPlayedExcuseOnLastTurn(): Boolean {
+
+        const lastTurn = this.getLastTurn();
+
+        if (!this.isLastTurn()) {
+            console.log('excuse > this is not the last turn');
+            return false;
+        }
+
+        if (!lastTurn.haveExcuseInCards()) {
+            console.log('excuse > no excuse in last turn played');
+            return false;
+        }
+
+        return false;
+    }
 }
