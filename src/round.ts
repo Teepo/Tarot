@@ -436,8 +436,8 @@ export class Round {
      */
     findDefenderPlayers() : Array<Player> {
 
-        return store.state.players.filter(player => {
-            return this.getAttackerPlayers().filter(aplayer => {
+        return store.state.players.filter((player: Player) => {
+            return this.getAttackerPlayers().filter((aplayer: Player) => {
                 return Object.is(player, aplayer);
             }).length <= 0;
         });
@@ -499,20 +499,20 @@ export class Round {
 
     checkIfThereArePetitSec() : Boolean {
 
-        return !!store.state.players.find(player => {
+        return !!store.state.players.find((player: Player) => {
             return player.hasPetitSec();
         });
     }
 
     emptyPlayersCards() {
 
-        store.state.players.map(player => {
+        store.state.players.map((player: Player) => {
             player.setCards([]);
         });
     }
 
     isFirstTurn() : Boolean {
-        return this.getTurns().length === 1;
+        return this.getTurns().length === 0;
     }
 
     isLastTurn() : Boolean {
