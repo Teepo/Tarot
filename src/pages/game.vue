@@ -222,8 +222,10 @@ export default {
 
                 store.commit('setTurn', turn);
 
-                await this.handleMiseres(player, isCPU);
-                await this.handlePoignee(player, isCPU);
+                if (turn.round.isFirstTurn()) {
+                    await this.handleMiseres(player, isCPU);
+                    await this.handlePoignee(player, isCPU);
+                }
 
                 let card;
                 if (player.id === currentPlayer.id) {

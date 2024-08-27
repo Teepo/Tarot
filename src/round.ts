@@ -510,4 +510,8 @@ export class Round {
             player.setCards([]);
         });
     }
+
+    isFirstTurn() : Boolean {
+        return this.getTurns().length === 1;
+    }
 }
