@@ -5,7 +5,7 @@
 
             <span class="gameboard-player-name text-center">
                 {{ player.login }}
-                <strong class="d-block">( 0 pts )</strong>
+                <strong class="d-block">( {{ player.getTotalScore() }} pts )</strong>
             </span>
 
             <span

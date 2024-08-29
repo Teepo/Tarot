@@ -42,6 +42,10 @@ export class Player {
 
     getTotalScore() : number {
 
+        if (this.scores.length <= 0) {
+            return 0;
+        }
+
         return this.scores.reduce((x, score) => {
             return x += score;
         });
