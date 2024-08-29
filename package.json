@@ -14,7 +14,7 @@
     "base64-to-image": "^1.0.2",
     "core-js": "^3.38.1",
     "firebase": "^10.13.0",
-    "firebase-tools": "^13.15.4",
+    "firebase-tools": "^13.16.0",
     "noty": "^3.2.0-beta",
     "roboto-fontface": "*",
     "socket.io-client": "^4.7.5",
@@ -23,8 +23,8 @@
     "vuex": "^4.1.0"
   },
   "devDependencies": {
-    "@babel/types": "^7.25.4",
-    "@types/node": "^22.5.0",
+    "@babel/types": "^7.25.6",
+    "@types/node": "^22.5.1",
     "@vitejs/plugin-vue": "^5.1.2",
     "@vue/eslint-config-typescript": "^13.0.0",
     "eslint": "^9.9.1",
@@ -42,6 +42,6 @@
     "vite": "^5.4.2",
     "vite-plugin-vuetify": "^2.0.4",
     "vue-router": "^4.4.3",
-    "vue-tsc": "^2.0.29"
+    "vue-tsc": "^2.1.2"
   }
 }
