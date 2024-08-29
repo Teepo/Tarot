@@ -33,8 +33,8 @@
             </div>
         </div>
 
-        <div class="chien">
-            <template v-if="shouldDisplayChien" v-for="card in round.chiens">
+        <div class="chien" v-if="shouldDisplayChien">
+            <template v-for="card in round.chiens" :key="card.index">
                 <Card :card="card" />
             </template>
         </div>
@@ -53,11 +53,11 @@ import { mapState } from 'vuex'
 
 import { store } from './../store';
 
-import { gameTypeList } from './../config/gameTypeList';
+import { gameTypeList } from '../config/gameTypeList';
 
 import { sleep } from './../utils/timing';
 
-import { socket } from './../modules/ws.js';
+// import { socket } from './../modules/ws.js';
 import { wsErrorHandler } from './../modules/wsErrorHandler.js';
 import { Alert } from './../modules/alert.js';
 
@@ -175,14 +175,13 @@ export default {
                 // @TODO check petit au bout
                 console.log('petit au bout ?', round.havePetitAuBout());
 
-                // On compte les points
-                round.setPoints();
-
                 round.determineTheWinner();
 
                 store.commit('setRound', round);
 
                 console.log('Fin du round', round);
+
+                await sleep(99999999999999999999999);
             }
         },
 
@@ -190,9 +189,9 @@ export default {
 
             const turn = new Turn;
 
-            turn.buildPlayersQueue();
-
             round.addTurn(turn);
+
+            turn.buildPlayersQueue();
 
             store.commit('setRound', round);
 
@@ -211,17 +210,17 @@ export default {
 
         waitCards : async function(turn) {
 
+            const { round } = store.state;
+
             for await (const player of turn.getPlayersQueue()) {
 
                 const isCPU = this.isOneplayerMode && player.id !== currentPlayer.id;
 
                 console.log(player.login, ' turn');
 
-                turn.setCurrentPlayer(player);
-
                 store.commit('setTurn', turn);
 
-                if (turn.round.isFirstTurn()) {
+                if (round.isFirstTurn()) {
                     await this.handleMiseres(player, isCPU);
                     await this.handlePoignee(player, isCPU);
                 }
@@ -234,17 +233,17 @@ export default {
 
                         handlerClickCardResolver = resolver;
 
-                        this.activateCardsForPlayer(turn.getCurrentPlayer());
+                        this.activateCardsForPlayer(currentPlayer);
                     });
                 }
                 else if (this.isOneplayerMode) {
 
-                    await sleep(2000);
+                    await sleep(1000);
 
                     card = player.pickRandomValidCardInHisDeck(turn);
-
-                    console.log(player.login, ' play ', card.label + card.sign);
                 }
+
+                console.log(player.login, ' play ', card.label + card.sign);
 
                 // On ajoute la Card dans la liste des Card du tour
                 turn.addCard(card);
@@ -263,8 +262,7 @@ export default {
 
         handleClickCard(card) {
 
-            const turn          = store.state.turn;
-            const currentPlayer = turn.currentPlayer;
+            const { turn } = store.state;
 
             if (card.playerId !== currentPlayer.id) {
                 return;

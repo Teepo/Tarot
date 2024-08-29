@@ -1,6 +1,5 @@
 import { cardList    } from './config/cardList';
 import { gameTypeList } from './config/gameTypeList';
-import { pointByCard  } from './config/pointsByCard';
 import { pointToReachByBout } from './config/pointsToReachByBout';
 import { ratioByGameType    } from './config/ratioByGameType';
 
@@ -143,7 +142,7 @@ export class Round {
      *
      */
     getPreviousTurn() : Turn {
-        return this.getTurns()[this.getTurns().length - 1];
+        return this.getTurns().slice(-2)[0];
     }
 
     getNextPlayerToGiver() : Player | null {
@@ -243,8 +242,8 @@ export class Round {
      * @description Le type de partie choisi ( petite, garde, garde-sans, garde-contre )
      *
      */
-    getGameType() : number | null {
-        return this.gameType;
+    getGameType() : number {
+        return this.gameType ?? 0;
     }
 
     isPetite() : Boolean {
@@ -369,13 +368,16 @@ export class Round {
 
     setPoints() {
 
-        this.getAttackerStackCards().map(card => {
-            this.attackerPoints += pointByCard[card.getValue()];
+        this.getAttackerStackCards().map((card: Card) => {
+            this.attackerPoints += card.getPoints();
         });
 
-        this.getDefenderStackCards().map(card => {
-            this.defenderPoints += pointByCard[card.getValue()];
+        this.getDefenderStackCards().map((card: Card) => {
+            this.defenderPoints += card.getPoints();
         });
+
+        console.log('ROUND > setPoints() > attackerPoints', this.attackerPoints);
+        console.log('ROUND > setPoints() > defenderPoints', this.defenderPoints);
     }
 
     getAttackerStackCards() : Array<Card> {
@@ -460,41 +462,48 @@ export class Round {
      */
     determineTheWinner() {
 
+        // On compte les points
+        this.setPoints();
+
+        const gameType = this.getGameType();
+
+        console.log('ROUND > determineTheWinner() > gameType', gameType);
+
+        const multiplicator = ratioByGameType[gameType];
+
         const pointToReach = pointToReachByBout[this.countBoutInCards(this.getAttackerStackCards())];
 
-        const bonusPoint = this.getAttackerPoints() - pointToReach;
+        console.log('ROUND > determineTheWinner() > pointToReach', pointToReach);
 
-        let points;
-        if (this.getAttackerPoints() >= pointToReach) {
+        const diffPoints = this.getAttackerPoints() - pointToReach;
 
-            points = Math.abs((25 + bonusPoint) * ratioByGameType[this.getGameType()]);
+        console.log('ROUND > determineTheWinner() > diffPoints', diffPoints);
 
-            this.getAttackerPlayers().map(player => {
-                player.addScore(points);
-            });
+        const points = Math.abs(25 + (diffPoints >= 0 ? diffPoints : -diffPoints));
 
-            this.getDefenderPlayers().map(player => {
-                player.addScore(-points);
-            });
+        let pointsForAttacker = points * multiplicator;
+        let pointsForDefender = -points * multiplicator;
 
-            // x2 pour le preneur
-            this.getAttackerPlayers()[0].increaseLastScore(points);
+        const isWinForAttackers = this.getAttackerPoints() >= pointToReach;
+
+        if (!isWinForAttackers) {
+            pointsForAttacker = -pointsForAttacker;
+            pointsForDefender = pointsForDefender;
         }
-        else {
 
-            points = Math.abs(bonusPoint * ratioByGameType[this.getGameType()]);
+        console.log('ROUND > determineTheWinner() > pointsForAttacker', pointsForAttacker);
+        console.log('ROUND > determineTheWinner() > pointsForDefender', pointsForDefender);
 
-            this.getAttackerPlayers().map(player => {
-                player.addScore(-points);
-            });
+        this.getAttackerPlayers().map(player => {
+            player.addScore(pointsForAttacker);
+        });
 
-            this.getDefenderPlayers().map(player => {
-                player.addScore(points);
-            });
+        this.getDefenderPlayers().map(player => {
+            player.addScore(pointsForDefender);
+        });
 
-            // x2 pour le preneur
-            this.getAttackerPlayers()[0].increaseLastScore(-points);
-        }
+        // x2 pour le preneur
+        this.getAttackerPlayers()[0].increaseLastScore(pointsForAttacker);
     }
 
     checkIfThereArePetitSec() : Boolean {
@@ -512,7 +521,7 @@ export class Round {
     }
 
     isFirstTurn() : Boolean {
-        return this.getTurns().length === 0;
+        return this.getTurns().length === 1;
     }
 
     isLastTurn() : Boolean {

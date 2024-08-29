@@ -214,7 +214,7 @@ export class Player {
     }
 
     haveSimplePoignee() : Boolean {
-        return this.getCardsAtout().length >= 8;
+        return this.havePoignee();
     }
 
     haveDoublePoignee() : Boolean {

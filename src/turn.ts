@@ -11,21 +11,11 @@ export class Turn {
 
     cards: Array<Card>;
 
-    currentPlayer!: Player;
-
     constructor() {
 
         this.playersQueue = [];
 
         this.cards = [];
-    }
-
-    getCurrentPlayer(): Player {
-        return this.currentPlayer;
-    }
-
-    setCurrentPlayer(player: Player) {
-        this.currentPlayer = player;
     }
 
     getNextPlayerToGiver(): Player | null {
@@ -65,6 +55,7 @@ export class Turn {
         });
 
         // On est au 1er tour, le 1er a joué est celui après celui qui a distribué.
+        console.log('TURN > BUILD PLAYERS QUEUE >', round.isFirstTurn());
         if (round.isFirstTurn()) {
             firstPlayerToBegin = this.getNextPlayerToGiver();
         }
@@ -145,7 +136,7 @@ export class Turn {
             }
 
             // Le 21 gagne tout le temps
-            if (playerCurrentCard.getIndex() === 21) {
+            if (playerCurrentCard.is21()) {
                 winner = player;
                 console.log('TURN > DETERMINE THE WINNER > 21');
                 return;

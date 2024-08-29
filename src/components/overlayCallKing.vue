@@ -15,7 +15,7 @@
 
 <script>
 
-import { gameTypeList } from './../config/gameTypeList';
+import { gameTypeList } from '../config/gameTypeList';
 
 import { Game } from './../game';
 
