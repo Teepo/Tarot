@@ -162,7 +162,7 @@ export class Round {
 
         let indexAnchor = 0;
 
-        store.state.players.map((player, index) => {
+        store.state.players.map((player: Player, index: number) => {
             indexAnchor = Object.is(player, giver) ? index : indexAnchor;
         });
 
@@ -175,7 +175,7 @@ export class Round {
 
         this.addPlayerInQueue(firstPlayerToBegin);
 
-        const playersWithoutTheBeginner = store.state.players.filter(player => {
+        const playersWithoutTheBeginner = store.state.players.filter((player: Player) => {
             return !Object.is(player, firstPlayerToBegin);
         });
 
@@ -232,7 +232,7 @@ export class Round {
 
         return Object.keys(gameTypeList).filter(type => {
             return parseInt(type) > gameType;
-        }).reduce((obj, key) => {
+        }).reduce((obj, key: string) => {
             obj[key] = gameTypeList[key];
             return obj;
         }, {});
@@ -308,8 +308,8 @@ export class Round {
      */
     findPartnerByCards() : Player | Boolean {
 
-        const partner = store.state.players.find(player => {
-            return player.getCards().find(card => {
+        const partner = store.state.players.find((player: Player) => {
+            return player.getCards().find((card: Card) => {
 
                 let calledKing = this.getCalledKing();
 
