@@ -34,6 +34,7 @@ import { gameTypeList } from '../config/gameTypeList';
 import { Alert } from './../modules/alert';
 
 import { Game } from './../game';
+import { Card } from './../card';
 
 export default {
 

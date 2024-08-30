@@ -1,5 +1,5 @@
-import type { Player } from './player';
-import type { Card } from './card';
+import { Player } from './player';
+import { Card } from './card';
 
 import { store } from './store';
 
