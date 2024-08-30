@@ -89,6 +89,8 @@ export class Round {
 
     giveCardsToPlayers() {
 
+        const { players } = store.state;
+
         this.deck.shuffle();
 
         // On distribue les cartes
@@ -105,7 +107,7 @@ export class Round {
                 return;
             }
             
-            const player = store.state.players[playerIndex];
+            const player = players[playerIndex];
 
             // On dit que ces Card appartient à ce joueur
             cards.map(card => {
@@ -147,6 +149,8 @@ export class Round {
 
     getNextPlayerToGiver() : Player | null {
 
+        const { players } = store.state;
+
         const giver = this.getPlayerWhoGiveCards();
 
         if (!(giver instanceof Player)) {
@@ -155,14 +159,16 @@ export class Round {
 
         const index = this.getNextPlayerIndexToGiver(giver) + 1;
 
-        return store.state.players[index];
+        return players[index];
     }
 
     getNextPlayerIndexToGiver(giver : Player | null): number {
 
+        const { players } = store.state;
+
         let indexAnchor = 0;
 
-        store.state.players.map((player: Player, index: number) => {
+        players.map((player: Player, index: number) => {
             indexAnchor = Object.is(player, giver) ? index : indexAnchor;
         });
 
@@ -171,11 +177,13 @@ export class Round {
 
     buildPlayersQueue() {
 
+        const { players } = store.state;
+
         const firstPlayerToBegin = this.getNextPlayerToGiver();
 
         this.addPlayerInQueue(firstPlayerToBegin);
 
-        const playersWithoutTheBeginner = store.state.players.filter((player: Player) => {
+        const playersWithoutTheBeginner = players.filter((player: Player) => {
             return !Object.is(player, firstPlayerToBegin);
         });
 
@@ -308,7 +316,9 @@ export class Round {
      */
     findPartnerByCards() : Player | Boolean {
 
-        const partner = store.state.players.find((player: Player) => {
+        const { players } = store.state;
+
+        const partner = players.find((player: Player) => {
             return player.getCards().find((card: Card) => {
 
                 let calledKing = this.getCalledKing();
@@ -410,6 +420,10 @@ export class Round {
         return this.defenderPlayers;
     }
 
+    isAttackerPlayerAlone() : Boolean {
+        return this.getAttackerPlayers().length === 1;
+    }
+
     addAttackerPlayer(player : Player | Boolean = false) {
 
         // L'attaquant est seul ! Bonne chance minot !
@@ -438,7 +452,9 @@ export class Round {
      */
     findDefenderPlayers() : Array<Player> {
 
-        return store.state.players.filter((player: Player) => {
+        const { players } = store.state;
+
+        return players.filter((player: Player) => {
             return this.getAttackerPlayers().filter((aplayer: Player) => {
                 return Object.is(player, aplayer);
             }).length <= 0;
@@ -488,7 +504,7 @@ export class Round {
 
         if (!isWinForAttackers) {
             pointsForAttacker = -pointsForAttacker;
-            pointsForDefender = pointsForDefender;
+            pointsForDefender = Math.abs(pointsForDefender);
         }
 
         console.log('ROUND > determineTheWinner() > pointsForAttacker', pointsForAttacker);
@@ -502,20 +518,31 @@ export class Round {
             player.addScore(pointsForDefender);
         });
 
+        const playerTaker = this.getAttackerPlayers()[0];
+
         // x2 pour le preneur
-        this.getAttackerPlayers()[0].increaseLastScore(pointsForAttacker);
+        playerTaker.increaseLastScore(pointsForAttacker);
+
+        // Encore x2 si le preneur est seul
+        if (this.isAttackerPlayerAlone()) {
+            playerTaker.increaseLastScore(pointsForAttacker * 2);
+        }
     }
 
     checkIfThereArePetitSec() : Boolean {
 
-        return !!store.state.players.find((player: Player) => {
+        const { players } = store.state;
+
+        return !!players.find((player: Player) => {
             return player.hasPetitSec();
         });
     }
 
     emptyPlayersCards() {
 
-        store.state.players.map((player: Player) => {
+        const { players } = store.state;
+
+        players.map((player: Player) => {
             player.setCards([]);
         });
     }
