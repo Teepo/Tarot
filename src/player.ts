@@ -1,5 +1,5 @@
-import { Turn } from './turn';
-import { Card } from './card';
+import type { Turn } from './turn';
+import type { Card } from './card';
 
 export class Player {
 

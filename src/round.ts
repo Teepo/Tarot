@@ -3,8 +3,9 @@ import { gameTypeList } from './config/gameTypeList';
 import { pointToReachByBout } from './config/pointsToReachByBout';
 import { ratioByGameType    } from './config/ratioByGameType';
 
-import { Player } from './player';
-import { Card } from './card';
+import type { Player } from './player';
+import type { Card } from './card';
+
 import { Deck } from './deck';
 
 import type { Turn } from './turn';
