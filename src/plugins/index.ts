@@ -17,6 +17,13 @@ export function registerPlugins (app: App) {
     .use(router)
 }
 
+// Add the 'toArray' method to the Map interface
+declare global {
+  interface Map<K, V> {
+    toArray(): V[];
+  }
+}
+
 Map.prototype.toArray = function() {
   return Array.from(this.values());
 };
