@@ -1,10 +1,7 @@
 import { cardList } from './config/cardList';
 
 import { Card } from './card';
-
-import type { Player } from './player';
-import type { Round } from './round';
-import type { Turn } from './turn';
+import { Round } from './round';
 
 import { store } from './store';
 
