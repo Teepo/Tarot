@@ -116,18 +116,15 @@ export default {
     mounted() {
 
         this.game = new Game;
-        this.game.setCurrentPlayer(currentPlayer);
 
-        this.game.setPlayers([
+        store.commit('setCurrentPlayer', currentPlayer);
+        store.commit('setPlayers', [
             player1,
             player2,
             player3,
             player4,
             player5
         ]);
-
-        store.commit('setCurrentPlayer', currentPlayer);
-        store.commit('setPlayers', this.game.getPlayers());
 
         this.gameLoop();
     },
@@ -268,7 +265,7 @@ export default {
                 return;
             }
 
-            if (!Game.isOkToPlayThisCard(turn, currentPlayer, card)) {
+            if (!Game.isOkToPlayThisCard(card)) {
                 Alert.add({
                     str : `Player ${currentPlayer.login} try to play card ${card.sign}${card.label}, but this is invalid`,
                     type : 'error'

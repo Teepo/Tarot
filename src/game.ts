@@ -6,32 +6,17 @@ import type { Player } from './player';
 import type { Round } from './round';
 import type { Turn } from './turn';
 
+import { store } from './store';
+
 export class Game {
 
-    players : Array<Player>;
     rounds : Array<Round>;
-
-    currentPlayer!: Player;
 
     isStarted: Boolean = false;
     haveChienDone: Boolean = false;
 
     constructor() {
-
-        this.players = [];
         this.rounds = [];
-    }
-
-    setCurrentPlayer(player : Player) {
-        this.currentPlayer = player;
-    }
-
-    setPlayers(players : Array<Player>) {
-        this.players = players;
-    }
-
-    getPlayers() : Array<Player> {
-        return this.players;
     }
 
     addRound(round : Round) {
@@ -98,7 +83,9 @@ export class Game {
      * @description API qui indique si une carte a le droit d'être joué.
      *
      */
-    static isOkToPlayThisCard(turn : Turn, player : Player, card : Card) : Boolean {
+    static isOkToPlayThisCard(card : Card) : Boolean {
+
+        const { currentPlayer, turn } = store.state;
 
         // On est le 1er a joué. C'est nous qui décidons du signe.
         if (turn.getCards().length <= 0) {
@@ -117,24 +104,24 @@ export class Game {
 
         // Meme signe, même combat
         if (card.getSign() === firstCard.getSign() && !firstCard.isAtout()) {
-            console.log('isOkToPlayThisCard > same sign');
+            console.log('isOkToPlayThisCard > same sign > OK');
             return true;
         }
 
         // Les signes sont différents.
         // S'il tente de jouer autre chose que le signe alors qu'il en a.
-        if (card.getSign() !== firstCard.getSign() && player.hasCardOfThisSignInHisDeck(firstCard.getSign())) {
-            console.log('isOkToPlayThisCard > different sign');
+        if (card.getSign() !== firstCard.getSign() && currentPlayer.hasCardOfThisSignInHisDeck(firstCard.getSign())) {
+            console.log('isOkToPlayThisCard > different sign > KO');
             return false;
         }
 
-        if (lastCard.isAtout() && card.getIndex() <= lastCard.getIndex()) {
+        if (lastCard.isAtout() && card.getValue() <= lastCard.getValue()) {
 
-            console.log('isOkToPlayThisCard > is atout, but check if raise or not', !player.hasCardStrongerInHisDeck(lastCard.getIndex()));
+            console.log('isOkToPlayThisCard > is atout, but check if raised', !currentPlayer.hasBiggestCardComparedToPreviousCards(turn.getCards()));
             
             // Si la carte joué est de l'atout ainsi que la précédente
             // la carte joué doit être supérieur ( si possible )
-            return !player.hasCardStrongerInHisDeck(lastCard.getIndex());
+            return !currentPlayer.hasBiggestCardComparedToPreviousCards(turn.getCards());
         }
 
         // Donc ici soit tu as monté, soit tu pisses !

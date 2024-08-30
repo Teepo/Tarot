@@ -110,14 +110,18 @@ export class Player {
         }).length > 0;
     }
 
-    /**
-     * @param {int} index L'index d'une carte
-     *
-     */
-    hasCardStrongerInHisDeck(index : number) : Boolean {
+    hasBiggestCardComparedToPreviousCards(cards: Array<Card>) : Boolean {
+
+        // Pas de carte joué avant
+        // On peut jouer ce qu'on veut
+        if (cards.length <= 0) {
+            return true;
+        }
+
+        const biggestPreviousCard = cards.reduce((bigger, card) => card.value > bigger.value ? card : bigger);
 
         return this.getCards().filter(card => {
-            return card.isAtout() && card.getIndex() >= index
+            return card.isAtout() && card.getValue() >= biggestPreviousCard.getValue()
         }).length > 0;
     }
 
@@ -131,13 +135,14 @@ export class Player {
             return this.getRandomWeakestCard();
         }
 
-        const firstPreviousCard = previousCards[0];
-        const lastPreviousCard = previousCards[previousCards.length - 1];
-
-        return this.getWeakestPossibleCard(firstPreviousCard.getSign(), lastPreviousCard);
+        return this.getWeakestPossibleCard(previousCards);
     }
 
-    getWeakestPossibleCard(sign : string, lastPlayedCard : Card) : Card {
+    getWeakestPossibleCard(previousCards: Array<Card>) : Card {
+
+        const sign = previousCards[0].getSign();
+
+        const lastPlayedCard = previousCards[previousCards.length - 1];
 
         // Trouver la carte avec le bon sign et la valeur la plus basse au-dessus de x
         const cardsWithGoodSignAbove = this.getCards().filter(card => card.sign === sign && card.value > lastPlayedCard.value);
@@ -152,8 +157,14 @@ export class Player {
             return cardsWithGoodSign[0];
         }
 
-        // Si aucun, chercher les cartes avec le sign 'A' au-dessus de x
-        const lowestPossibleCardAtout = this.getCards().filter(card => card.sign === 'A' && card.value > lastPlayedCard.value);
+        // Si aucun, chercher les cartes avec le sign 'A'
+        // avec une valeur au-dessus de la plus grosse carte atout déjà joué
+
+        const biggestAtoutInPreviousCards = previousCards.filter(card => card.isAtout());
+        const biggestAtoutValueInPreviousCards = biggestAtoutInPreviousCards.length > 0
+        ? biggestAtoutInPreviousCards.reduce((bigger, card) => card.value > bigger.value ? card : bigger).value : 0;
+
+        const lowestPossibleCardAtout = this.getCards().filter(card => card.sign === 'A' && card.value > biggestAtoutValueInPreviousCards);
         if (lowestPossibleCardAtout.length > 0) {
             return lowestPossibleCardAtout.reduce((lowest, card) => card.value < lowest.value ? card : lowest);
         }
