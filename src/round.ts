@@ -96,7 +96,7 @@ export class Round {
         // On distribue les cartes
         let playerIndex = 0;
 
-        let cards = [];
+        let cards: Array<Card> | Boolean = [];
         while (cards = this.deck.getThreeCard()) {
 
             if (playerIndex >= 5) {
@@ -240,10 +240,10 @@ export class Round {
 
         return Object.keys(gameTypeList).filter(type => {
             return parseInt(type) > gameType;
-        }).reduce((obj, key: string) => {
-            obj[key] = gameTypeList[key];
+        }).reduce((obj, key) => {
+            obj[parseInt(key)] = gameTypeList[parseInt(key)];
             return obj;
-        }, {});
+        }, {} as { [key: number]: string });
     }
 
     /**
