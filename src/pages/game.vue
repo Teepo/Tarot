@@ -35,7 +35,7 @@
 
         <div class="chien" v-if="shouldDisplayChien">
             <template v-for="card in round.chiens" :key="card.index">
-                <Card :card="card" />
+                <Card :card="card" @click="handleClickCardChien(card)" />
             </template>
         </div>
     </div>
@@ -274,6 +274,17 @@ export default {
             }
 
             handlerClickCardResolver(card);
+        },
+
+        handleClickCardChien(card) {
+
+            const { round } = store.state;
+
+            const chiens = round.chiens;
+
+            const attackerPlayer = round.getAttackerPlayers()[0];
+
+
         },
 
         activateCardsForPlayer(player) {
