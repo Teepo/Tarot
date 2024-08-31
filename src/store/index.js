@@ -11,7 +11,7 @@ export const store = createStore({
         }
     },
     getters: {
-        findPlayerFromCurrentPlayerID: (state) => (playerId) => {
+        findPlayerById: (state) => (playerId) => {
             return state.players.find(player => player.getId() === playerId);
         }
     },

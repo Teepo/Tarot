@@ -152,9 +152,9 @@ export class Player {
 
         // On a pas de carte du même sign au dessus
         // On cherche quand même si y a pas le même sign peu importe la valeur
-        const cardsWithGoodSign = this.getCards().filter(card => card.sign === sign);
-        if (cardsWithGoodSign.length > 0) {
-            return cardsWithGoodSign[0];
+        const cardsWithGoodSign = this.getCards().find(card => card.sign === sign);
+        if (cardsWithGoodSign) {
+            return cardsWithGoodSign;
         }
 
         // Si aucun, chercher les cartes avec le sign 'A'

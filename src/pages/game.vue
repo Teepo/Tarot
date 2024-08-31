@@ -257,10 +257,6 @@ export default {
 
                 // On la supprime du deck du Player
                 player.removeCard(card);
-
-                // @TODO désactiver l'animation des Card quand c'est pas notre tour
-                const cardComponent = this.$refs.refCards.find(refCard => refCard.card.index === card.index);
-                cardComponent.isActive = false;
             }
         },
 
@@ -280,7 +276,7 @@ export default {
 
                 round.chiens.push(card);
 
-                const player = store.getters.findPlayerFromCurrentPlayerID(currentPlayer.id);
+                const player = store.getters.findPlayerById(currentPlayer.id);
                 player.removeCard(card);
 
                 store.commit('setRound', round);
