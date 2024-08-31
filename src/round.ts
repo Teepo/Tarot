@@ -36,6 +36,8 @@ export class Round {
 
     chiens : Array<Card>;
 
+    started : Boolean = false;
+
     constructor() {
 
         this.attackerPlayers = [];
@@ -557,6 +559,14 @@ export class Round {
 
     getLastTurn() : Turn {
         return this.getTurns().slice(-1)[0];
+    }
+
+    isStarted() : Boolean {
+        return this.started;
+    }
+
+    setStarted(started: Boolean) {
+        this.started = started;
     }
 
     havePetitAuBout() : Boolean {

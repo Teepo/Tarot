@@ -2,12 +2,12 @@
     <div
         :class="{
             'card': true,
-            [`card--is-${card.value}`]: true,
+            [`card--is-${card.getValue()}`]: true,
             'card--is-mine' : this.isMyCard(),
-            'card--is-active' : this.isActive
+            'card--is-active' : card.isActive()
         }"
     >
-        <img :src="`/imgs/cards/${card.index}.png`" width="70" height="120" />
+        <img :src="`/imgs/cards/${card.getIndex()}.png`" width="70" height="120" />
     </div>
 </template>
 
@@ -24,13 +24,6 @@ export default {
 
     computed : {
         ...mapState(['currentPlayer'])
-    },
-
-    data : function() {
-
-        return {
-            isActive : false,
-        }
     },
 
     methods: {

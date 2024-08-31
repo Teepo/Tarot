@@ -186,10 +186,25 @@ body {
     }
 }
 
-.chien {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    text-align: center;
+.chiens {
+
+    .v-card {
+
+        background-color: transparent;
+        box-shadow: none !important;
+
+        &-text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        &-actions {
+            justify-content: center !important;
+        }
+    }
+
+    .card {
+        cursor: pointer;
+    }
 }

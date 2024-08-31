@@ -63,14 +63,14 @@ export class Player {
         this.currentCard = card;
     }
 
-    addCards(cards : Array<Card>) {
+    addCards(cards: Array<Card>) {
 
         cards.map(card => {
             this.cards.push(card);
         });
     }
 
-    setCards(cards : Array<Card>) {
+    setCards(cards: Array<Card>) {
         this.cards = cards;
 
         // On s'assure que les Cards nous sont attribués
@@ -79,8 +79,8 @@ export class Player {
         });
     }
 
-    removeCard(card : Card) {
-        this.cards = this.cards.filter(c => c !== card);
+    removeCard(card: Card) {
+        this.cards = this.cards.filter(c => c.getIndex() !== card.getIndex());
     }
 
     getCards() : Array<Card> {

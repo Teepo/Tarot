@@ -10,6 +10,8 @@ export class Card {
 
     playerId! : number;
 
+    active: Boolean = false;
+
     constructor(index : number) {
 
         const { sign, label, value, points } = cardList[index];
@@ -87,5 +89,13 @@ export class Card {
 
     is21() : Boolean {
         return this.isBout() && this.getSign() === 'A' && this.getLabel() === '21';
+    }
+
+    setActive(active : Boolean) {
+        this.active = active;
+    }
+
+    isActive() : Boolean {
+        return this.active;
     }
 }

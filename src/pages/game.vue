@@ -1,7 +1,7 @@
 <template>
 
     <div class="gameboard">
-        <div :class="['gameboard-player', `gameboard-player__${key}`]" v-for="player, key in players" :key="player.id">
+        <div :class="['gameboard-player', `gameboard-player__${key}`]" v-for="player, key in this.players" :key="player.id">
 
             <span class="gameboard-player-name text-center">
                 {{ player.login }}
@@ -22,7 +22,7 @@
             </span>
 
             <div class="gameboard-player-cards">
-                <template v-for="card in player.getCardsOrderBySignAndValue()" :key="card.index">
+                <template v-for="card in player.getCardsOrderBySignAndValue()" :key="card.getIndex()">
                     <Card
                         :card="card"
                         :player="player"
@@ -33,16 +33,23 @@
             </div>
         </div>
 
-        <div class="chien" v-if="shouldDisplayChien">
-            <template v-for="card in round.chiens" :key="card.index">
-                <Card :card="card" @click="handleClickCardChien(card)" />
-            </template>
-        </div>
+        <v-dialog class="chiens" max-width="500" v-model="shouldDisplayChien" :scrim="false" persistent>
+            <v-card>
+                <v-card-text>
+                    <div class="chien" v-for="card in this.round.chiens" :key="card.getIndex()">
+                        <Card :card="card" @click="handleClickCardChien(card)" />
+                    </div>
+                </v-card-text>
+
+                <v-card-actions>
+                    <v-btn color="success" variant="flat" @click="handleClickValidateChien()">Validate</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 
     <DynamicComponent ref="refOverlayGameType" />
     <DynamicComponent ref="refOverlayCallKing" />
-    <DynamicComponent ref="refOverlayMakeChien" />
     <DynamicComponent ref="refOverlayMisere" />
     <DynamicComponent ref="refOverlayPoignee" />
 </template>
@@ -70,7 +77,6 @@ import { Card }   from './../card';
 import DynamicComponent from './../components/dynamicComponent.vue';
 import OverlayGameType  from './../components/overlayGameType.vue';
 import OverlayCallKing  from './../components/overlayCallKing.vue';
-import OverlayMakeChien from './../components/overlayMakeChien.vue';
 import OverlayMisere    from './../components/overlayMisere.vue';
 import OverlayPoignee   from './../components/overlayPoignee.vue';
 
@@ -83,6 +89,7 @@ const player5 = new Player({ id : 5, login : 'CPU 4' });
 const currentPlayer = player1;
 
 let handlerClickCardResolver;
+let handlerClickValidateChienResolver;
 
 export default {
 
@@ -162,6 +169,8 @@ export default {
                 round.addAttackerPlayer(round.findPartnerByCards());
                 round.setDefenderPlayers(round.findDefenderPlayers());
 
+                round.setStarted(true);
+
                 // Un joueur a pris, on commence la partie
                 this.game.addRound(round);
 
@@ -177,8 +186,6 @@ export default {
                 store.commit('setRound', round);
 
                 console.log('Fin du round', round);
-
-                await sleep(99999999999999999999999);
             }
         },
 
@@ -259,11 +266,28 @@ export default {
 
         handleClickCard(card) {
 
-            const { turn } = store.state;
+            const { round } = store.state;
 
             if (card.playerId !== currentPlayer.id) {
                 return;
             }
+
+            // On est dans la phase de faisage de chien
+            if (!round.isStarted()) {
+
+                card.setActive(false);
+                card.setPlayerId(null);
+
+                round.chiens.push(card);
+
+                const player = store.getters.findPlayerFromCurrentPlayerID(currentPlayer.id);
+                player.removeCard(card);
+
+                store.commit('setRound', round);
+                store.commit('setCurrentPlayer', player);
+                return;
+            }
+
 
             if (!Game.isOkToPlayThisCard(card)) {
                 Alert.add({
@@ -278,13 +302,28 @@ export default {
 
         handleClickCardChien(card) {
 
-            const { round } = store.state;
-
-            const chiens = round.chiens;
+            const { round, currentPlayer } = store.state;
 
             const attackerPlayer = round.getAttackerPlayers()[0];
 
+            card.setActive(true);
+            card.setPlayerId(currentPlayer.getId());
 
+            attackerPlayer.addCards([card]);
+
+            const index = round.chiens.findIndex(c => c.getIndex() === card.getIndex());
+            round.chiens.splice(index, 1);
+        },
+
+        handleClickValidateChien() {
+
+            const { round } = store.state;
+
+            if (!Game.isChienValid(round.chiens)) {
+                return Alert.add({ str : 'Chien is invalid', type : 'warning' });
+            }
+
+            handlerClickValidateChienResolver()
         },
 
         activateCardsForPlayer(player) {
@@ -388,20 +427,17 @@ export default {
 
                 const attackerPlayer = round.getAttackerPlayers()[0];
 
-                const { cards, chiens } = await this.renderOverlayMakeChien(attackerPlayer, round);
+                await new Promise(resolver => {
+                    handlerClickValidateChienResolver = resolver;
+                });
 
                 Alert.add({
                     str : `Player ${attackerPlayer.login} make chien`,
                     type : 'success'
                 });
 
-                this.destroyOverlayMakeChien();
-
                 // On mets les cartes selectionnés dans le chien
-                round.addAttackerStackCards(chiens);
-
-                // On met à jour notre deck
-                attackerPlayer.setCards(cards);
+                round.addAttackerStackCards(round.chiens);
             }
             else if (round.isGardeSans()) {
 
@@ -523,23 +559,6 @@ export default {
 
         destroyOverlayCallKing : function() {
             this.$refs.refOverlayCallKing.destroy();
-        },
-
-        renderOverlayMakeChien : async function(player, round) {
-
-            return new Promise(resolver => {
-
-                this.$refs.refOverlayMakeChien.render(OverlayMakeChien, {
-                    player   : player,
-                    cards    : player.getCards(),
-                    chiens   : round.getChiens(),
-                    resolver : resolver
-                });
-            });
-        },
-
-        destroyOverlayMakeChien : function() {
-            this.$refs.refOverlayMakeChien.destroy();
         },
 
         renderOverlayMisere : async function(data) {

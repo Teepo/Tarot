@@ -10,6 +10,11 @@ export const store = createStore({
             turn          : {}
         }
     },
+    getters: {
+        findPlayerFromCurrentPlayerID: (state) => (playerId) => {
+            return state.players.find(player => player.getId() === playerId);
+        }
+    },
     mutations: {
         
         setCurrentPlayer(state, currentPlayer) {
