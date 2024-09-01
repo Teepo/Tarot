@@ -407,6 +407,17 @@ export class Round {
         });
     }
 
+    removeAttackerStackCard(card: Card) {
+        this.attackerStackCards = this.attackerStackCards.filter(c => c.getIndex() !== card.getIndex());
+    }
+
+    removeExcuseCardFromAttackerStackCard() {
+
+        const card = this.getAttackerStackCards().find(card => card.isExcuse());
+
+        card && this.removeAttackerStackCard(card);
+    }
+
     addDefenderStackCards(cards : Array<Card>) {
 
         cards.map(card => {
@@ -512,6 +523,16 @@ export class Round {
         console.log('ROUND > determineTheWinner() > pointsForAttacker', pointsForAttacker);
         console.log('ROUND > determineTheWinner() > pointsForDefender', pointsForDefender);
 
+        console.log('haveAttackerPlayersPlayedExcuseOnLastTurn', this.haveAttackerPlayersPlayedExcuseOnLastTurn());
+
+        // Remove Excuse from attacker stack cards if played in last turn
+        if (this.haveAttackerPlayersPlayedExcuseOnLastTurn()) {
+            console.log('haveAttackerPlayersPlayedExcuseOnLastTurn > excuse is lost');
+            this.removeExcuseCardFromAttackerStackCard();
+        }
+
+        console.log('attackerStackCards', this.getAttackerStackCards());
+
         this.getAttackerPlayers().map(player => {
             player.addScore(pointsForAttacker);
         });
@@ -588,18 +609,27 @@ export class Round {
 
     haveAttackerPlayersPlayedExcuseOnLastTurn(): Boolean {
 
+        if (!this.isLastTurn()) {
+            console.log('haveAttackerPlayersPlayedExcuseOnLastTurn() > this is not the last turn');
+            return false;
+        }
+
         const lastTurn = this.getLastTurn();
 
-        if (!this.isLastTurn()) {
-            console.log('excuse > this is not the last turn');
-            return false;
-        }
-
         if (!lastTurn.haveExcuseInCards()) {
-            console.log('excuse > no excuse in last turn played');
+            console.log('haveAttackerPlayersPlayedExcuseOnLastTurn() > no excuse in last turn played');
             return false;
         }
 
-        return false;
+        const cardExcuse = lastTurn.getCards().find(card => card.isExcuse());
+
+        if (!cardExcuse?.getPlayerId()) {
+            console.log('haveAttackerPlayersPlayedExcuseOnLastTurn() > card excuse has not playerId');
+            return false;
+        }
+
+        console.log('haveAttackerPlayersPlayedExcuseOnLastTurn() > card excuse', cardExcuse);
+
+        return this.getAttackerPlayers().map(player => player.getId()).includes(cardExcuse.getPlayerId());
     }
 }

@@ -234,14 +234,14 @@ export class Turn {
     }
 
     addCard(card : Card) {
-        this.cards.push(card);
+        this.getCards().push(card);
     }
 
     havePetitInCards(): Boolean {
-        return !!this.cards.find((card: Card) => card.isPetit());
+        return this.getCards().some((card: Card) => card.isPetit());
     }
 
     haveExcuseInCards(): Boolean {
-        return !!this.cards.find((card: Card) => card.isExcuse());
+        return this.getCards().some((card: Card) => card.isExcuse());
     }
 }
