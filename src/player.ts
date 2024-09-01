@@ -140,7 +140,15 @@ export class Player {
 
     getWeakestPossibleCard(previousCards: Array<Card>) : Card {
 
-        const sign = previousCards[0].getSign();
+        const firstPreviousCard = previousCards[0];
+
+        const sign = firstPreviousCard.getSign();
+
+        // La premiere Card est l'excuse,
+        // On peut jouer n'importe quelle Card
+        if (firstPreviousCard.isExcuse()) {
+            return this.getRandomWeakestCard();
+        }
 
         const lastPlayedCard = previousCards[previousCards.length - 1];
 
