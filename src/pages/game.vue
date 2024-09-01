@@ -210,6 +210,8 @@ export default {
             store.commit('setTurn', turn);
 
             console.log('Fin du turn');
+
+            await sleep(1000);
         },
 
         waitCards : async function(turn) {
