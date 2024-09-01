@@ -104,10 +104,15 @@ export class Player {
     }
 
     hasCardOfThisSignInHisDeck(sign : string) : Boolean {
+        return this.getCards().some(card => card.getSign() === sign);
+    }
 
-        return this.getCards().filter(card => {
-            return card.getSign() === sign;
-        }).length > 0;
+    hasCardAtoutInHisCards() : Boolean {
+        return this.getCards().some(card => card.isAtout());
+    }
+
+    hasCardFigureInHisCards() : Boolean {
+        return this.getCards().some(card => card.isFigure());
     }
 
     hasBiggestCardComparedToPreviousCards(cards: Array<Card>) : Boolean {
@@ -220,16 +225,8 @@ export class Player {
         return false;
     }
 
-    dontHaveCardWithSignAtout() : Boolean {
-        return this.getCards().filter(card => card.isAtout()).length === 0;
-    }
-
-    dontHaveCardWithFigure() : Boolean {
-        return this.getCards().filter(card => card.isFigure()).length === 0;
-    }
-
     haveMisere() : Boolean {
-        return this.dontHaveCardWithSignAtout() || this.dontHaveCardWithFigure();
+        return !this.hasCardAtoutInHisCards() || !this.hasCardFigureInHisCards();
     }
 
     havePoignee() : Boolean {

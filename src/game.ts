@@ -108,14 +108,21 @@ export class Game {
         // Les signes sont différents.
         // S'il tente de jouer autre chose que le signe alors qu'il en a.
         if (card.getSign() !== firstCard.getSign() && currentPlayer.hasCardOfThisSignInHisDeck(firstCard.getSign())) {
-            console.log('isOkToPlayThisCard > different sign > KO');
+            console.log('isOkToPlayThisCard > different sign > KO because has sign');
+            return false;
+        }
+
+        // Les signes sont différents.
+        // S'il tente de jouer autre chose que le signe alors qu'il a des atouts
+        if (card.getSign() !== firstCard.getSign() && !card.isAtout() && currentPlayer.hasCardAtoutInHisCards()) {
+            console.log('isOkToPlayThisCard > different sign > KO because has atout');
             return false;
         }
 
         if (lastCard.isAtout() && card.getValue() <= lastCard.getValue()) {
 
             console.log('isOkToPlayThisCard > is atout, but check if raised', !currentPlayer.hasBiggestCardComparedToPreviousCards(turn.getCards()));
-            
+
             // Si la carte joué est de l'atout ainsi que la précédente
             // la carte joué doit être supérieur ( si possible )
             return !currentPlayer.hasBiggestCardComparedToPreviousCards(turn.getCards());

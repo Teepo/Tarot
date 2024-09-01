@@ -457,10 +457,10 @@ export default {
 
             let misereType = '';
 
-            if (player.dontHaveCardWithSignAtout()) {
+            if (!player.hasCardAtoutInHisCards()) {
                 misereType = 'atout';
             }
-            else if (player.dontHaveCardWithFigure()) {
+            else if (!player.hasCardFigureInHisCards()) {
                 misereType = 'figure';
             }
 
