@@ -158,21 +158,20 @@ export class Player {
         const lastPlayedCard = previousCards[previousCards.length - 1];
 
         // Trouver la carte avec le bon sign et la valeur la plus basse au-dessus de x
-        const cardsWithGoodSignAbove = this.getCards().filter(card => card.sign === sign && card.value > lastPlayedCard.value);
+        const cardsWithGoodSignAbove = !firstPreviousCard.isAtout() ? this.getCards().filter(card => card.sign === sign && card.value > lastPlayedCard.value) : [];
         if (cardsWithGoodSignAbove.length > 0) {
             return cardsWithGoodSignAbove.reduce((lowest, card) => card.value < lowest.value ? card : lowest);
         }
 
         // On a pas de carte du même sign au dessus
         // On cherche quand même si y a pas le même sign peu importe la valeur
-        const cardsWithGoodSign = this.getCards().find(card => card.sign === sign);
+        const cardsWithGoodSign = !firstPreviousCard.isAtout() ? this.getCards().find(card => card.sign === sign) : false;
         if (cardsWithGoodSign) {
             return cardsWithGoodSign;
         }
 
         // Si aucun, chercher les cartes avec le sign 'A'
         // avec une valeur au-dessus de la plus grosse carte atout déjà joué
-
         const biggestAtoutInPreviousCards = previousCards.filter(card => card.isAtout());
         const biggestAtoutValueInPreviousCards = biggestAtoutInPreviousCards.length > 0
         ? biggestAtoutInPreviousCards.reduce((bigger, card) => card.value > bigger.value ? card : bigger).value : 0;
