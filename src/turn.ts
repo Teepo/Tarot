@@ -113,6 +113,12 @@ export class Turn {
         this.getPlayersQueue().map(player => {
 
             if (!winner) {
+
+                // On est dans le cas ou la 1ère carte joué est l'excuse
+                if (player.getCurrentCard()?.isExcuse()) {
+                    return
+                }
+
                 console.log('TURN > DETERMINE THE WINNER > default mode');
                 winner = player;
                 return;
