@@ -77,5 +77,5 @@ export const cardList: { [key: number]: { sign: string; label: string; value: nu
     75 : { sign: 'A', label: '19', value: 119, points : .5 },
     76 : { sign: 'A', label: '20', value: 120, points : .5 },
     77 : { sign: 'A', label: '21', value: 121, points : 4.5 },
-    78 : { sign: 'A', label: 'E', value: 122, points : 4.5 }
+    78 : { sign: 'A', label: 'E', value: 0, points : 4.5 }
 };
