@@ -22,6 +22,8 @@ class AlertManager {
             closeWith : ['click', 'button'],
             timeout   : 3000
         })).show();
+
+        return this;
     }
 }
 

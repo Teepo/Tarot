@@ -66,7 +66,7 @@ import { gameTypeList } from '../config/gameTypeList';
 
 import { sleep } from './../utils/timing';
 
-// import { socket } from './../modules/ws.js';
+import { socket } from './../modules/ws.js';
 import { wsErrorHandler } from './../modules/wsErrorHandler.js';
 import { Alert } from './../modules/alert.js';
 
@@ -130,8 +130,8 @@ export default {
             
             this.roomName = 'oneplayer';
             
-            store.commit('setCurrentPlayer', currentPlayer);
-            store.commit('setPlayers', [
+            store.dispatch('setCurrentPlayer', currentPlayer);
+            store.dispatch('setPlayers', [
                 player1,
                 player2,
                 player3,
@@ -311,8 +311,6 @@ export default {
                 const player = store.getters.findPlayerById(currentPlayer.id);
                 player.removeCard(card);
 
-                store.commit('setRound', round);
-
                 store.dispatch('setRound', {
                     roomName : this.roomName,
                     round    : round
@@ -468,7 +466,7 @@ export default {
                     handlerClickValidateChienResolver = resolver;
                 });
 
-                Alert.add({
+                await socket.alert({
                     str : `Player ${attackerPlayer.login} make chien`,
                     type : 'success'
                 });

@@ -14,9 +14,7 @@
   </template>
   
   <script>
-  
-  import { ROOM_NAME } from './../config/ws.js';
-  
+    
   import { socket } from './../modules/ws.js';
   import { wsErrorHandler } from './../modules/wsErrorHandler.js';
   
@@ -45,8 +43,7 @@
           }
   
           socket.emit('joinRoom', {
-            roomName : ROOM_NAME,
-            login    : this.login
+            login : this.login
           });
         },
   

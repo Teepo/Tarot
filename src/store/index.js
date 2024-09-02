@@ -50,13 +50,7 @@ export const store = createStore({
             commit('setPlayers', players);
         },
 
-        async setCurrentPlayer({ commit }, { roomName, currentPlayer }) {
-
-            await socket.emit('setCurrentPlayer', {
-                roomName      : roomName,
-                currentPlayer : currentPlayer
-            });
-
+        async setCurrentPlayer({ commit }, { currentPlayer }) {
             commit('setCurrentPlayer', currentPlayer);
         },
 
