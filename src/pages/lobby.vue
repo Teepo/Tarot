@@ -103,7 +103,7 @@ export default {
     mounted() {
 
         sessionStorage.setItem('id', 'A');
-        sessionStorage.setItem('room', this.$route.params.roomId);
+        sessionStorage.setItem('room', this.$route.params.roomName);
 
         this.id    = sessionStorage.getItem('id');
         this.room  = sessionStorage.getItem('room');

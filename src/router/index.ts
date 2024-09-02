@@ -35,7 +35,7 @@ const router = createRouter({
       children : [
         {
           name: 'MultiplayerGame',
-          path: 'game',
+          path: 'game/:roomName',
           component: import('../pages/game.vue'),
           props : {
             isMultiplayerMode : true
@@ -47,7 +47,7 @@ const router = createRouter({
       name: 'CreateRoom',
       component: () => import('../pages/createRoom.vue'),
     }, {
-      path: '/lobby/:roomId',
+      path: '/lobby/:roomName',
       name: 'Lobby',
       component: () => import('../pages/lobby.vue'),
     }

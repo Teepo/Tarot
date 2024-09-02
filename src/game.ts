@@ -9,9 +9,6 @@ export class Game {
 
     rounds : Array<Round>;
 
-    isStarted: Boolean = false;
-    haveChienDone: Boolean = false;
-
     constructor() {
         this.rounds = [];
     }

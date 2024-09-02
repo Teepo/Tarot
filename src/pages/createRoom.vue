@@ -74,7 +74,7 @@ export default {
 
         const { room } = data;
 
-        this.$router.push({ name : 'Lobby', params : { roomId : room.id }});
+        this.$router.push({ name : 'Lobby', params : { roomName : room.id }});
       }
     }
   }

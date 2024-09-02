@@ -56,6 +56,8 @@
   
 <script>
 
+import { useRouter, useRoute } from 'vue-router'
+
 import { mapState } from 'vuex'
 
 import { store } from './../store';
@@ -120,18 +122,31 @@ export default {
         }
     },
 
-    mounted() {
+    async mounted() {
 
         this.game = new Game;
 
-        store.commit('setCurrentPlayer', currentPlayer);
-        store.commit('setPlayers', [
-            player1,
-            player2,
-            player3,
-            player4,
-            player5
-        ]);
+        if (this.isOneplayerMode) {
+            
+            this.roomName = 'oneplayer';
+            
+            store.commit('setCurrentPlayer', currentPlayer);
+            store.commit('setPlayers', [
+                player1,
+                player2,
+                player3,
+                player4,
+                player5
+            ]);
+        }
+        else if (this.isMultiplayerMode) {
+
+            const route = useRoute();
+
+            this.roomName = route.params.roomName;
+
+            await store.dispatch('getPlayers');
+        }
 
         this.gameLoop();
     },
@@ -156,7 +171,10 @@ export default {
                 // Fake call king
                 round.setCalledKing(new Card(42));
 
-                store.commit('setRound', round);
+                store.dispatch('setRound', {
+                    roomName : this.roomName,
+                    round    : round
+                });
 
                 this.shouldDisplayChien = true;
 
@@ -183,7 +201,10 @@ export default {
 
                 round.determineTheWinner();
 
-                store.commit('setRound', round);
+                store.dispatch('setRound', {
+                    roomName : this.roomName,
+                    round    : round
+                });
 
                 console.log('Fin du round', round);
             }
@@ -197,7 +218,10 @@ export default {
 
             turn.buildPlayersQueue();
 
-            store.commit('setRound', round);
+            store.dispatch('setRound', {
+                roomName : this.roomName,
+                round    : round
+            });
 
             await this.waitCards(turn);
 
@@ -207,7 +231,10 @@ export default {
             // Les gagnants prennent les Card
             turn.pickUpCards();
 
-            store.commit('setTurn', turn);
+            store.dispatch('setTurn', {
+                roomName : this.roomName,
+                turn     : turn
+            });
 
             console.log('Fin du turn');
 
@@ -224,7 +251,10 @@ export default {
 
                 console.log(player.login, ' turn');
 
-                store.commit('setTurn', turn);
+                store.dispatch('setTurn', {
+                    roomName : this.roomName,
+                    turn     : turn
+                });
 
                 if (round.isFirstTurn()) {
                     await this.handleMiseres(player, isCPU);
@@ -282,10 +312,19 @@ export default {
                 player.removeCard(card);
 
                 store.commit('setRound', round);
-                store.commit('setCurrentPlayer', player);
+
+                store.dispatch('setRound', {
+                    roomName : this.roomName,
+                    round    : round
+                });
+
+                store.dispatch('setCurrentPlayer', {
+                    roomName      : this.roomName,
+                    currentPlayer : player
+                });
+
                 return;
             }
-
 
             if (!Game.isOkToPlayThisCard(card)) {
                 Alert.add({

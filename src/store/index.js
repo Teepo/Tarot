@@ -1,5 +1,7 @@
 import { createStore } from 'vuex'
 
+import { socket } from './../modules/ws.js';
+
 export const store = createStore({
     state () {
         return {
@@ -36,5 +38,46 @@ export const store = createStore({
         setTurn(state, turn) {
             state.turn = turn;
         },
+    },
+    actions : {
+
+        async getPlayers({ commit }, { roomName }) {
+            
+            const players = await socket.emit('getAllPlayersFromRoom', {
+                roomName : roomName
+            });
+
+            commit('setPlayers', players);
+        },
+
+        async setCurrentPlayer({ commit }, { roomName, currentPlayer }) {
+
+            await socket.emit('setCurrentPlayer', {
+                roomName      : roomName,
+                currentPlayer : currentPlayer
+            });
+
+            commit('setCurrentPlayer', currentPlayer);
+        },
+
+        async setRound({ commit }, { roomName, round }) {
+
+            await socket.emit('setRound', {
+                roomName : roomName,
+                round    : round
+            });
+
+            commit('setRound', round);
+        },
+
+        async setTurn({ commit }, { roomName, turn }) {
+
+            await socket.emit('setTurn', {
+                roomName : roomName,
+                turn     : turn
+            });
+
+            commit('setTurn', round);
+        }
     }
 });
