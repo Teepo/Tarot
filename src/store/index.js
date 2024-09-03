@@ -1,6 +1,9 @@
 import { createStore } from 'vuex'
 
 import { socket } from './../modules/ws.js';
+import { wsErrorHandler } from './../modules/wsErrorHandler.js';
+
+import { Player } from './../player.js';
 
 export const store = createStore({
     state () {
@@ -9,7 +12,8 @@ export const store = createStore({
             players       : [],
             game          : {},
             round         : {},
-            turn          : {}
+            turn          : {},
+            room          : {}
         }
     },
     getters: {
@@ -21,6 +25,14 @@ export const store = createStore({
         
         setCurrentPlayer(state, currentPlayer) {
             state.currentPlayer = currentPlayer;
+        },
+
+        setPlayerIsReady(state, player) {
+            player.isReady = !player.isReady;
+        },
+
+        setPlayers(state, players) {
+            state.players = players;
         },
 
         setPlayers(state, players) {
@@ -38,40 +50,67 @@ export const store = createStore({
         setTurn(state, turn) {
             state.turn = turn;
         },
+
+        setRoom(state, room) {
+            state.room = room;
+        },
     },
     actions : {
 
-        async getPlayers({ commit }, { roomName }) {
+        async getPlayer({ commit }, { playerId }) {
             
-            const players = await socket.emit('getAllPlayersFromRoom', {
-                roomName : roomName
+            const data = await socket.emit('player/get', {
+                playerId : playerId,
+                roomId   : roomId
             });
+
+            const error = wsErrorHandler(data);
+            if (error) {
+                return { error};
+            }
+
+            const { player } = data;
+
+            commit('setCurrentPlayer', new Player({ player }));
+        },
+
+        async getPlayers({ commit }, { roomId }) {
+            
+            const players = await socket.emit('player/getAllFromRoom', { roomId });
 
             commit('setPlayers', players);
         },
 
-        async setCurrentPlayer({ commit }, { currentPlayer }) {
+        setCurrentPlayer({ commit }, { currentPlayer }) {
             commit('setCurrentPlayer', currentPlayer);
         },
 
-        async setRound({ commit }, { roomName, round }) {
+        togglePlayerIsReady({ commit, getters }, { playerId }) {
 
-            await socket.emit('setRound', {
-                roomName : roomName,
-                round    : round
-            });
+            const player = getters.findPlayerById(playerId);
+
+            commit('togglePlayerIsReady', player);
+        },
+
+        async setRound({ commit }, { roomId, round }) {
+
+            await socket.emit('setRound', { roomId, round });
 
             commit('setRound', round);
         },
 
-        async setTurn({ commit }, { roomName, turn }) {
+        async setTurn({ commit }, { roomId, turn }) {
 
-            await socket.emit('setTurn', {
-                roomName : roomName,
-                turn     : turn
-            });
+            await socket.emit('setTurn', { roomId, turn });
 
             commit('setTurn', round);
-        }
+        },
+
+        async setRoom({ commit }, { roomId }) {
+
+            const room = await socket.emit('room/get', { roomId });
+
+            commit('setRoom', room);
+        },
     }
 });

@@ -18,7 +18,7 @@
                             <v-col cols="4" class="player-list-status">
                                 <v-checkbox-btn
                                     v-if="this.id == player.id"
-                                    @click="setPlayerReadyHandler"
+                                    @click="togglePlayerReadyHandler"
                                     :model-value="player.isReady"
                                     label="I'm ready"
                                     ></v-checkbox-btn>
@@ -34,7 +34,7 @@
             </v-card>
 
             <v-dialog
-                v-if="player.id == this.id"
+                v-if="player.id == this.playerId"
                 v-model="this.shouldDisplayOverlayAvatars[player.id]"
                 contained
                 class="align-center justify-center"
@@ -60,14 +60,17 @@
         </v-container>
     </v-container>
 </template>
-  
+
 <script>
+
+import { mapState } from 'vuex';
+
+import { store } from './../store';
 
 import { socket } from './../modules/ws.js';
 import { wsErrorHandler } from '../modules/wsErrorHandler.js';
 
 import { getFileNameAndExtension } from './../utils/string';
-import { mergeObjectsWithPrototypes } from './../utils/object';
 
 import { Player } from './../player';
 
@@ -77,15 +80,8 @@ export default {
         return { getFileNameAndExtension };
     },
 
-    data() {
-
-        return {
-            player   : this.$props._player,
-            players  : this.$props._players ?? new Map,
-            avatars  : [],
-
-            shouldDisplayOverlayAvatars : [],
-        }
+    computed: {
+        ...mapState(['players'])
     },
 
     async created() {
@@ -100,84 +96,57 @@ export default {
         this.avatarsFiles = images;
     },
 
-    mounted() {
+    async mounted() {
 
-        sessionStorage.setItem('id', 'A');
-        sessionStorage.setItem('room', this.$route.params.roomName);
+        this.playerId = sessionStorage.getItem('playerId');
+        this.roomId   = sessionStorage.getItem('roomId');
 
-        this.id    = sessionStorage.getItem('id');
-        this.room  = sessionStorage.getItem('room');
-
-        socket.emit('createRoom', {
-            roomName : this.room
-        });
-        
-        socket.emit('joinRoom', {
-            id       : 'A',
-            roomName : this.room,
-            login    : 'A'
-        });
-
-        socket.emit('joinRoom', {
-            id       : 'B',
-            roomName : this.room,
-            login    : 'B'
-        });
-
-        socket.emit('joinRoom', {
-            id       : 'C',
-            roomName : this.room,
-            login    : 'C'
-        });
-
-        socket.emit('joinRoom', {
-            id       : 'D',
-            roomName : this.room,
-            login    : 'D'
-        });
-
-        socket.emit('joinRoom', {
-            id       : 'E',
-            roomName : this.room,
-            login    : 'E'
-        });
-
-        if (!this.id || !this.room) {
+        if (!this.playerId || !this.roomId) {
             return this.goToHome();
         }
 
-        socket
-        .emit('getPlayer', {
-            id       : this.id,
-            roomName : this.room
-        })
-        .emit('getAllPlayersFromRoom', {
-            roomName : this.room
+        socket.emit('room/join', {
+            id     : 'B',
+            login  : 'B',
+            roomId : this.roomId
+        });
+
+        socket.emit('room/join', {
+            id     : 'C',
+            login  : 'C',
+            roomId : this.roomId
+        });
+
+        socket.emit('room/join', {
+            id     : 'D',
+            login  : 'D',
+            roomId : this.roomId
+        });
+
+        socket.emit('room/join', {
+            id     : 'E',
+            login  : 'E',
+            roomId : this.roomId
+        });
+
+        const { error } = await store.dispatch('getPlayer', {
+            playerId : this.playerId,
+            roomId   : this.roomId
+        });
+        
+        if (error) {
+            return this.goToHome();
+        }
+
+        store.dispatch('setRoom', {
+            roomId : this.roomId
+        });
+
+        store.dispatch('getPlayers', {
+            roomId : this.roomId
         });
         
         socket
-        .on('getPlayer', data => {
-
-            const error = wsErrorHandler(data);
-
-            if (error) {
-                return this.goToHome();
-            }
-
-            let { player } = data;
-
-            const customPlayer = new Player({
-                avatar : 'default.png',
-            });
-
-            this.player = mergeObjectsWithPrototypes(customPlayer, player);
-            this.player.customData = customPlayer.customData;
-
-            socket.emit('updatePlayer', {
-                player   : this.player,
-                roomName : this.room
-            });
-        })
         .on('start', () => {
 
             socket.removeAllListeners();
@@ -257,14 +226,11 @@ export default {
             this.players.set(player.id, player);
         },
 
-        setPlayerReadyHandler() {
+        togglePlayerReadyHandler() {
 
-            socket.emit('setPlayerIsReady', {
-                player   : this.player,
-                roomName : this.room
+            store.dispatch('togglePlayerIsReady', {
+                playerId : this.playerId
             });
-
-            this.player.isReady = !this.player.isReady;
         },
 
         showOverlayAvatar(player) {

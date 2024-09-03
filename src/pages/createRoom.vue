@@ -2,8 +2,10 @@
 	<v-container fill-height class="d-flex align-center justify-center">
 		<v-sheet width="300" elevation="2">
 
-			<v-form @submit.prevent="handleOnSubmit" ref="form">
+			<v-form @submit.prevent="handleSubmit" ref="form">
 
+				<v-text-field label="Login" v-model="login" :rules="formRules.login" />
+				
 				<v-text-field label="Room name" v-model="roomName" :rules="formRules.roomName" />
 
 				<v-number-input label="Round" v-model="roundNumber" :min="1" :rules="formRules.roomNumber" />
@@ -25,23 +27,21 @@ import { socket } from './../modules/ws.js';
 import { wsErrorHandler } from './../modules/wsErrorHandler.js';
 
 export default {
+	
 	data: () => ({
 		roomName: '',
 		roundNumber: 10,
 
 		formRules: {
-			roomName: [noUndefinedValue],
-			roomNumber: [noUndefinedValue, noNegativeValue],
+			login      : [noUndefinedValue],
+			roomName   : [noUndefinedValue],
+			roomNumber : [noUndefinedValue, noNegativeValue],
 		},
 	}),
 
-	mounted() {
-		socket.on('createdRoom', data => { this.onCreateRoom(data); });
-	},
-
 	methods: {
 
-		async handleOnSubmit() {
+		async handleSubmit() {
 
 			const router = useRouter();
 
@@ -59,26 +59,26 @@ export default {
 			});
 
 			const error = wsErrorHandler(data);
-            if (error) {
-                return;
-            }
+            if (error) { return; }
 
 			const { room } = data;
+
+			const { player, socketId } = await socket.emit('room/join', {
+				roomId   : room.id,
+				settings : {
+					roundNumber: this.roundNumber
+				}
+			});
+
+			await socket.emit('room/setOwner', {
+				playerId : player.id,
+            	roomId   : room.id
+			});
+
+			sessionStorage.setItem('playerId', player.id);
+        	sessionStorage.setItem('roomId', roomId);
 
 			router.push({ name: 'Lobby', params: { roomId: room.id } });
-		},
-
-		onCreateRoom(data) {
-
-			const error = wsErrorHandler(data);
-
-			if (error) {
-				return;
-			}
-
-			const { room } = data;
-
-			this.$router.push({ name: 'Lobby', params: { roomName: room.id } });
 		}
 	}
 }
