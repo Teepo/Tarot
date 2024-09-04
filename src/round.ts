@@ -9,7 +9,7 @@ import { Deck } from './deck';
 
 import type { Turn } from './turn';
 
-import { store } from './store';
+import store from './store';
 
 export class Round {
 

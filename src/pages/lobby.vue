@@ -51,7 +51,7 @@
             </v-dialog>
         </v-container>
 
-        <v-container>
+        <v-container v-if="room.owner == player.id">
             <v-btn class="mt-10" color="primary" block @click="startTheRoom">START THE GAME</v-btn>
         </v-container>
 
@@ -65,7 +65,7 @@
 
 import { mapState } from 'vuex';
 
-import { store } from './../store';
+import store from './../store';
 
 import { socket } from './../modules/ws.js';
 import { wsErrorHandler } from '../modules/wsErrorHandler.js';
@@ -81,7 +81,12 @@ export default {
     },
 
     computed: {
-        ...mapState(['players'])
+        ...mapState('player', {
+            players: state => state.players
+        }),
+        ...mapState('room', {
+            room: state => state.room
+        }),
     },
 
     async created() {
@@ -105,86 +110,38 @@ export default {
             return this.goToHome();
         }
 
-        socket.emit('room/join', {
+        store.dispatch('room/join', {
             id     : 'B',
             login  : 'B',
             roomId : this.roomId
         });
 
-        socket.emit('room/join', {
+        store.dispatch('room/join', {
             id     : 'C',
             login  : 'C',
             roomId : this.roomId
         });
 
-        socket.emit('room/join', {
+        store.dispatch('room/join', {
             id     : 'D',
             login  : 'D',
             roomId : this.roomId
         });
 
-        socket.emit('room/join', {
+        store.dispatch('room/join', {
             id     : 'E',
             login  : 'E',
             roomId : this.roomId
         });
 
-        const { error } = await store.dispatch('getPlayer', {
-            playerId : this.playerId,
-            roomId   : this.roomId
+        const { error } = await store.dispatch('player/get', {
+            roomId   : this.roomId,
+            playerId : this.playerId
         });
         
         if (error) {
             return this.goToHome();
         }
-
-        store.dispatch('setRoom', {
-            roomId : this.roomId
-        });
-
-        store.dispatch('getPlayers', {
-            roomId : this.roomId
-        });
-        
-        socket
-        .on('start', () => {
-
-            socket.removeAllListeners();
-
-            this.$router.push('/game');
-        })
-        .on('getAllPlayersFromRoom', data => {
-            this.handleGetAllPlayersFromRoom(data);
-        })
-        .on('updatedPlayer', data => {
-            const { player } = data;
-            this.players.set(player.id, player);
-        })
-        .on('joinedRoom', data => {
-            this.handleJoinedRoom(data);
-        })
-        .on('setPlayerIsReady', data => {
-
-            const { player } = data;
-
-            this.players.get(player.id).isReady = player.isReady;
-        })
-        .on('leavedRoom', data => {
-            const { id } = data;
-            this.players.delete(id);
-        })
-        .on('deletedPlayer', data => {
-
-            const { id } = data;
-
-            // kick mode
-            if (this.id === id) {
-                socket.removeAllListeners();
-                return this.back();
-            }
-
-            this.players.delete(id);
-        });
     },
 
     methods: {

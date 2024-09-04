@@ -19,12 +19,12 @@
 
 <script>
 
-import { useRouter } from 'vue';
-
 import { noUndefinedValue, noNegativeValue } from './../forms/rules.js';
 
 import { socket } from './../modules/ws.js';
 import { wsErrorHandler } from './../modules/wsErrorHandler.js';
+
+import store from './../store';
 
 export default {
 	
@@ -43,42 +43,31 @@ export default {
 
 		async handleSubmit() {
 
-			const router = useRouter();
-
 			const { valid } = await this.$refs.form.validate();
 
 			if (!valid) {
 				return;
 			}
 
-			const data = await socket.emit('room/create', {
+			store.dispatch('room/create', {
 				roomName: this.roomName,
 				settings: {
 					roundNumber: this.roundNumber
 				}
 			});
 
-			const error = wsErrorHandler(data);
-            if (error) { return; }
+			const { room } = store.store;
 
-			const { room } = data;
-
-			const { player, socketId } = await socket.emit('room/join', {
-				roomId   : room.id,
-				settings : {
-					roundNumber: this.roundNumber
-				}
+			const player = await store.dispatch('room/join', {
+				roomId : room.id,
+				login  : this.login
 			});
-
-			await socket.emit('room/setOwner', {
-				playerId : player.id,
-            	roomId   : room.id
-			});
+			store.dispatch('room/setOwner', { roomId, playerId: player.id });
 
 			sessionStorage.setItem('playerId', player.id);
-        	sessionStorage.setItem('roomId', roomId);
+        	sessionStorage.setItem('roomId', room.id);
 
-			router.push({ name: 'Lobby', params: { roomId: room.id } });
+			this.$router.push({ name: 'Lobby', params: { roomId: room.id } });
 		}
 	}
 }

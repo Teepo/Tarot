@@ -3,7 +3,7 @@ import { cardList } from './config/cardList';
 import { Card } from './card';
 import { Round } from './round';
 
-import { store } from './store';
+import store from './store';
 
 export class Game {
 

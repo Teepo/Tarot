@@ -7,9 +7,23 @@ import { Alert } from './../modules/alert.js';
 export class SocketClient {
     
     constructor(url) {
+        
         this.socket = io(url);
         this.socket.on('connect', () => {
             console.log('Socket > connected');
+        });
+
+        return new Proxy(this, {
+            get(target, prop) {
+                // Si la propriété demandée existe sur this, la renvoyer
+                if (prop in target) {
+                    return target[prop];
+                }
+                // Sinon, la déléguer à this.socket
+                if (prop in target.socket) {
+                    return target.socket[prop].bind(target.socket);
+                }
+            }
         });
     }
 

@@ -60,7 +60,7 @@ import { useRouter, useRoute } from 'vue-router'
 
 import { mapState } from 'vuex'
 
-import { store } from './../store';
+import store from './../store';
 
 import { gameTypeList } from '../config/gameTypeList';
 
