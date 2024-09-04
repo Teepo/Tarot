@@ -1,6 +1,6 @@
 <template>
-    <v-container class="mt-16">
-        <v-container v-for="(player, index) in players.toArray()" :key="index">
+    <v-container class="mt-16" v-if="players.length > 0">
+        <v-container v-for="(player, index) in players" :key="index">
             <v-card :theme="player.isReady ? 'is-ready' : 'is-not-ready'" >
                 <v-card-item>
                     <v-card-text>
@@ -17,7 +17,7 @@
 
                             <v-col cols="4" class="player-list-status">
                                 <v-checkbox-btn
-                                    v-if="this.id == player.id"
+                                    v-if="currentPlayer.id == player.id"
                                     @click="togglePlayerReadyHandler"
                                     :model-value="player.isReady"
                                     label="I'm ready"
@@ -32,26 +32,9 @@
                     </v-card-text>
                 </v-card-item>
             </v-card>
-
-            <v-dialog
-                v-if="player.id == this.playerId"
-                v-model="this.shouldDisplayOverlayAvatars[player.id]"
-                contained
-                class="align-center justify-center"
-            >
-                <v-card>
-                    <v-card-item>
-                        <v-card-text>
-                            <template v-for="image in this.avatarsFiles">
-                                <img :src="image" :width="32" @click="selectavatarImage(player, getFileNameAndExtension(image))">
-                            </template>
-                        </v-card-text>
-                    </v-card-item>
-                </v-card>
-            </v-dialog>
         </v-container>
 
-        <v-container v-if="room.owner == player.id">
+        <v-container v-if="room.owner == currentPlayer.id">
             <v-btn class="mt-10" color="primary" block @click="startTheRoom">START THE GAME</v-btn>
         </v-container>
 
@@ -82,23 +65,12 @@ export default {
 
     computed: {
         ...mapState('player', {
-            players: state => state.players
+            players       : state => state.players,
+            currentPlayer : state => state.currentPlayer
         }),
         ...mapState('room', {
             room: state => state.room
         }),
-    },
-
-    async created() {
-
-        const images = [];
-
-        const avatarsFiles = import.meta.glob('./../../imgs/avatars/*');
-        for (const path in avatarsFiles) {
-            images.push(`./assets/img/avatars/${getFileNameAndExtension(path)}`);
-        }
-
-        this.avatarsFiles = images;
     },
 
     async mounted() {
@@ -107,6 +79,15 @@ export default {
         this.roomId   = sessionStorage.getItem('roomId');
 
         if (!this.playerId || !this.roomId) {
+            return this.goToHome();
+        }
+
+        const { player, error } = await store.dispatch('player/get', {
+            roomId   : this.roomId,
+            playerId : this.playerId
+        });
+        
+        if (error) {
             return this.goToHome();
         }
 
@@ -134,14 +115,6 @@ export default {
             roomId : this.roomId
         });
 
-        const { error } = await store.dispatch('player/get', {
-            roomId   : this.roomId,
-            playerId : this.playerId
-        });
-        
-        if (error) {
-            return this.goToHome();
-        }
     },
 
     methods: {
@@ -160,59 +133,15 @@ export default {
                 roomName : this.room
             });
 
-            this.goToHome();
+            return this.goToHome();
         },
 
-        handleGetAllPlayersFromRoom(data) {
-
-            const { players } = data;
-
-            players.map(player => {
-                this.players.set(player.id, player);
-            });
-        },
-
-        handleJoinedRoom(data) {
-
-            const { player, error } = data;
-			
-            if (error) {
-                return;
-            }
-            
-            this.players.set(player.id, player);
-        },
 
         togglePlayerReadyHandler() {
 
             store.dispatch('togglePlayerIsReady', {
                 playerId : this.playerId
             });
-        },
-
-        showOverlayAvatar(player) {
-
-            if (this.id !== player.id) {
-                return;
-            }
-
-            this.shouldDisplayOverlayAvatars[player.id] = true;
-         },
-
-        selectAvatarImage(player, avatarName) {
-
-            player.customData.avatar = avatarName;
-
-            if (this.id !== player.id) {
-                return;
-            }
-
-            socket.emit('updatePlayer', {
-                roomName : this.room,
-                player   : player
-            });
-
-            this.shouldDisplayOverlayAvatars[player.id] = false;
         },
 
         goToHome() {

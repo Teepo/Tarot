@@ -1,6 +1,6 @@
 import { socket } from './../../modules/ws.js';
 
-console.log(socket)
+import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
 
 const state = () => ({
     room : {}
@@ -17,16 +17,34 @@ const actions = {
 
     async create({ commit }, { roomName, settings }) {
         
-        const { room } = await socket.emit('room/create', { roomName, settings });
+        try {
+            
+            const { room } = await socket.emit('room/create', { roomName, settings });
         
-        commit('setRoom', room);
+            commit('setRoom', room);
+
+            return room;
+        }
+        catch(e) {
+            wsErrorHandler(e);
+            return e;
+        }
     },
 
     async join({ commit }, { id, roomId, login }) {
-        
-        const { player } = await socket.emit('room/join', { id, roomId, login });
+
+        try {
+            
+            const { player } = await socket.emit('room/join', { id, roomId, login });
     
-        commit('player/add', player);
+            commit('player/add', player);
+
+            return player;
+        }
+        catch(e) {
+            wsErrorHandler(e);
+            return e;
+        }
     },
 
     setOwner({ commit }, { roomId, playerId }) {

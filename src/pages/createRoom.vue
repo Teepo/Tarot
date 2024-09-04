@@ -29,8 +29,10 @@ import store from './../store';
 export default {
 	
 	data: () => ({
-		roomName: '',
-		roundNumber: 10,
+		
+		login       : '',
+		roomName    : '',
+		roundNumber : 10,
 
 		formRules: {
 			login      : [noUndefinedValue],
@@ -49,20 +51,19 @@ export default {
 				return;
 			}
 
-			store.dispatch('room/create', {
+			const room = await store.dispatch('room/create', {
 				roomName: this.roomName,
 				settings: {
 					roundNumber: this.roundNumber
 				}
 			});
 
-			const { room } = store.store;
-
 			const player = await store.dispatch('room/join', {
 				roomId : room.id,
 				login  : this.login
 			});
-			store.dispatch('room/setOwner', { roomId, playerId: player.id });
+
+			store.dispatch('room/setOwner', { roomId : room.id, playerId: player.id });
 
 			sessionStorage.setItem('playerId', player.id);
         	sessionStorage.setItem('roomId', room.id);

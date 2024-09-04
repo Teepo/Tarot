@@ -9,9 +9,6 @@ export class SocketClient {
     constructor(url) {
         
         this.socket = io(url);
-        this.socket.on('connect', () => {
-            console.log('Socket > connected');
-        });
 
         return new Proxy(this, {
             get(target, prop) {
@@ -32,7 +29,7 @@ export class SocketClient {
         return new Promise((resolve, reject) => {
             
             this.socket.emit(eventName, data, response => {
-                return response.error ? reject(response.error) : resolve(response);
+                return response.error ? reject(response) : resolve(response);
             });
         });
     }
@@ -46,7 +43,6 @@ export class SocketClient {
 
     disconnect() {
         this.socket.disconnect();
-        console.log('Socket > disconnected');
     }
 }
 

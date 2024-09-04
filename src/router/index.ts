@@ -47,7 +47,7 @@ const router = createRouter({
       name: 'CreateRoom',
       component: () => import('../pages/createRoom.vue'),
     }, {
-      path: '/lobby/:roomName',
+      path: '/lobby/:roomId',
       name: 'Lobby',
       component: () => import('../pages/lobby.vue'),
     }

@@ -1,7 +1,12 @@
 import { socket } from './../../modules/ws.js';
 
+import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
+
+import { Player } from '@/player.ts';
+
 const state = () => ({
-    players : {}
+    players : [],
+    currentPlayer : null
 });
 
 const mutations = {
@@ -26,20 +31,26 @@ const mutations = {
 const actions = {
 
     async get({ commit }, { roomId, playerId }) {
+
+        try {
             
-        const data = await socket.emit('player/get', {
-            roomId   : roomId,
-            playerId : playerId
-        });
+            const { player } = await socket.emit('player/get', {
+                roomId   : roomId,
+                playerId : playerId
+            });
 
-        const error = wsErrorHandler(data);
-        if (error) {
-            return { error };
+            const p = new Player({ ...player })
+    
+            commit('add', p);
+            commit('setCurrentPlayer', p);
+
+            return { player };
         }
-
-        const { player } = data;
-
-        commit('setCurrentPlayer', new Player({ player }));
+        catch(e) {
+            console.error(e);
+            wsErrorHandler(e);
+            return e;
+        }
     },
 
     async getPlayers({ commit }, { roomId }) {
