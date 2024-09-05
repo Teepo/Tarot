@@ -17,7 +17,7 @@
 
                             <v-col cols="4" class="player-list-status">
                                 <v-checkbox-btn
-                                    v-if="currentPlayer.id == player.id"
+                                    v-if="currentPlayer && currentPlayer.id == player.id"
                                     @click="togglePlayerReadyHandler"
                                     :model-value="player.isReady"
                                     label="I'm ready"
@@ -34,7 +34,7 @@
             </v-card>
         </v-container>
 
-        <v-container v-if="room.owner == currentPlayer.id">
+        <v-container v-if="currentPlayer && room.owner && room.owner.id == currentPlayer.id">
             <v-btn class="mt-10" color="primary" block @click="startTheRoom">START THE GAME</v-btn>
         </v-container>
 
@@ -82,7 +82,7 @@ export default {
             return this.goToHome();
         }
 
-        const { player, error } = await store.dispatch('player/get', {
+        const { error } = await store.dispatch('player/get', {
             roomId   : this.roomId,
             playerId : this.playerId
         });
@@ -91,30 +91,11 @@ export default {
             return this.goToHome();
         }
 
-        store.dispatch('room/join', {
-            id     : 'B',
-            login  : 'B',
+        store.dispatch('room/get', {
             roomId : this.roomId
         });
 
-        store.dispatch('room/join', {
-            id     : 'C',
-            login  : 'C',
-            roomId : this.roomId
-        });
-
-        store.dispatch('room/join', {
-            id     : 'D',
-            login  : 'D',
-            roomId : this.roomId
-        });
-
-        store.dispatch('room/join', {
-            id     : 'E',
-            login  : 'E',
-            roomId : this.roomId
-        });
-
+        store.dispatch('player/getPlayers', { roomId : this.roomId });
     },
 
     methods: {
@@ -128,9 +109,9 @@ export default {
 
         leaveTheRoom() {
 
-            socket.emit('leaveRoom', {
-                id       : this.id,
-                roomName : this.room
+            store.dispatch('room/leave', {
+                roomId   : this.roomId,
+                playerId : this.playerId
             });
 
             return this.goToHome();
@@ -139,7 +120,8 @@ export default {
 
         togglePlayerReadyHandler() {
 
-            store.dispatch('togglePlayerIsReady', {
+            store.dispatch('player/toggleIsReady', {
+                roomId   : this.roomId,
                 playerId : this.playerId
             });
         },

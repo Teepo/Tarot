@@ -58,7 +58,7 @@ export default {
 				}
 			});
 
-			const player = await store.dispatch('room/join', {
+			const { player } = await store.dispatch('room/join', {
 				roomId : room.id,
 				login  : this.login
 			});

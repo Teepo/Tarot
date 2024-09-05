@@ -18,13 +18,13 @@ const router = createRouter({
       path: '/oneplayer',
       name: 'oneplayer',
       component: () => import('../pages/oneplayer.vue'),
-      children : [
+      children: [
         {
           name: 'OneplayerGame',
           path: 'game',
           component: () => import('../pages/game.vue'),
-          props : {
-            isOneplayerMode : true
+          props: {
+            isOneplayerMode: true
           }
         }
       ]
@@ -32,13 +32,13 @@ const router = createRouter({
       path: '/multiplayer/',
       name: 'multiplayer',
       component: () => import('../pages/multiplayer.vue'),
-      children : [
+      children: [
         {
           name: 'MultiplayerGame',
           path: 'game/:roomName',
           component: import('../pages/game.vue'),
-          props : {
-            isMultiplayerMode : true
+          props: {
+            isMultiplayerMode: true
           }
         }
       ]
@@ -46,6 +46,10 @@ const router = createRouter({
       path: '/create-room',
       name: 'CreateRoom',
       component: () => import('../pages/createRoom.vue'),
+    }, {
+      path: '/join-room',
+      name: 'JoinRoom',
+      component: () => import('../pages/joinRoom.vue'),
     }, {
       path: '/lobby/:roomId',
       name: 'Lobby',

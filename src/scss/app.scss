@@ -7,10 +7,6 @@
 @import './modules/button.scss';
 @import './modules/icon.scss';
 
-html {
-    overflow: hidden;
-}
-
 body {
     font-family: Arial;
     @include smooth;

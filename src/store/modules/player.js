@@ -1,3 +1,5 @@
+import { mergeObjectsWithPrototypes } from '@/utils/object.js';
+
 import { socket } from './../../modules/ws.js';
 
 import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
@@ -12,20 +14,35 @@ const state = () => ({
 const mutations = {
 
     setCurrentPlayer(state, currentPlayer) {
+
+        const p = mergeObjectsWithPrototypes(new Player({...currentPlayer}), currentPlayer);
+
         state.currentPlayer = currentPlayer;
     },
 
-    togglePlayerIsReady(state, player) {
-        player.isReady = !player.isReady;
+    toggleIsReady(state, player) {
+
+        const p = state.players.find(pp => pp.getId() === player.id)
+
+        p.isReady = !p.isReady;
     },
 
     setPlayers(state, players) {
-        state.players = players;
+        state.players = players.map(p => {
+            return mergeObjectsWithPrototypes(new Player({...p}), p);
+        });
     },
 
     add(state, player) {
-        state.players.push(player);
+
+        const p = mergeObjectsWithPrototypes(new Player({...player}), player);
+
+        state.players.push(p);
     },
+
+    delete(state, playerId) {
+        state.players = state.players.filter(player => player.getId() !== playerId);
+    }
 };
 
 const actions = {
@@ -38,16 +55,13 @@ const actions = {
                 roomId   : roomId,
                 playerId : playerId
             });
-
-            const p = new Player({ ...player })
     
-            commit('add', p);
-            commit('setCurrentPlayer', p);
+            commit('add', player);
+            commit('setCurrentPlayer', player);
 
             return { player };
         }
         catch(e) {
-            console.error(e);
             wsErrorHandler(e);
             return e;
         }
@@ -57,21 +71,30 @@ const actions = {
         
         const players = await socket.emit('player/getAllFromRoom', { roomId });
 
-        commit('setPlayers', players);
+        commit('setPlayers', players.map(p => {
+            return mergeObjectsWithPrototypes(new Player({...p}), p);
+        }));
     },
 
     setCurrentPlayer({ commit }, { currentPlayer }) {
         commit('setCurrentPlayer', currentPlayer);
     },
 
-    togglePlayerIsReady({ commit, getters }, { playerId }) {
+    async toggleIsReady({ commit }, { roomId, playerId }) {
 
-        const player = getters.findPlayerById(playerId);
-
-        commit('togglePlayerIsReady', player);
+        const { player } = await socket.emit('player/toggleIsReady', {
+            roomId   : roomId,
+            playerId : playerId
+        });
+        
+        commit('toggleIsReady', player);
     },
 
     initSocketListeners({ commit }) {
+
+        socket.on('player/toggleIsReady', ({ player }) => {
+            commit('toggleIsReady', player);
+        });
     },
 
     removeSocketListeners() {

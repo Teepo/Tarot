@@ -15,6 +15,22 @@ const mutations = {
 
 const actions = {
 
+    async get({ commit }, { roomId }) {
+        
+        try {
+            
+            const { room } = await socket.emit('room/get', { roomId });
+        
+            commit('setRoom', room);
+
+            return room;
+        }
+        catch(e) {
+            wsErrorHandler(e);
+            return e;
+        }
+    },
+
     async create({ commit }, { roomName, settings }) {
         
         try {
@@ -37,9 +53,7 @@ const actions = {
             
             const { player } = await socket.emit('room/join', { id, roomId, login });
     
-            commit('player/add', player);
-
-            return player;
+            return { player };
         }
         catch(e) {
             wsErrorHandler(e);
@@ -47,11 +61,23 @@ const actions = {
         }
     },
 
+    leave({ commit }, { roomId, playerId }) {
+        socket.emit('room/leave', { roomId, playerId });
+    },
+
     setOwner({ commit }, { roomId, playerId }) {
         socket.emit('room/setOwner', { roomId, playerId });
     },
 
     initSocketListeners({ commit }) {
+        
+        socket.on('room/join', ({ player }) => {
+            commit('player/add', player, { root: true });
+        });
+
+        socket.on('room/leave', ({ playerId }) => {
+            commit('player/delete', playerId, { root: true });
+        });
     },
 
     removeSocketListeners() {

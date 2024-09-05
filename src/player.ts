@@ -5,7 +5,6 @@ export class Player {
 
     id         : number;
     login      : string;
-    isReady    : Boolean;
     customData : Object;
 
     scores       : Array<number>;
@@ -17,7 +16,6 @@ export class Player {
 
         this.id      = id;
         this.login   = login;
-        this.isReady = true;
 
         this.scores = [];
         this.cards  = [];
