@@ -82,12 +82,10 @@ const actions = {
 
     async toggleIsReady({ commit }, { roomId, playerId }) {
 
-        const { player } = await socket.emit('player/toggleIsReady', {
+        await socket.emit('player/toggleIsReady', {
             roomId   : roomId,
             playerId : playerId
         });
-        
-        commit('toggleIsReady', player);
     },
 
     initSocketListeners({ commit }) {
