@@ -1,5 +1,11 @@
 <template>
     <v-container class="mt-16" v-if="players.length > 0">
+
+        <v-container>
+            <strong class="mr-5">ROOM ID = {{ room.id }}</strong>
+            <v-icon class="cursor-pointer" icon="mdi-content-copy" @click="copyRoomIdHandler"></v-icon>
+        </v-container>
+
         <v-container v-for="(player, index) in players" :key="index">
             <v-card :theme="player.isReady ? 'is-ready' : 'is-not-ready'" >
                 <v-card-item>
@@ -124,6 +130,10 @@ export default {
                 roomId   : this.roomId,
                 playerId : this.playerId
             });
+        },
+
+        copyRoomIdHandler() {
+            navigator.clipboard.writeText(this.room.id);
         },
 
         goToHome() {
