@@ -3,7 +3,13 @@
 
         <v-container>
             <strong class="mr-5">ROOM ID = {{ room.id }}</strong>
-            <v-icon class="cursor-pointer" icon="mdi-content-copy" @click="copyRoomIdHandler"></v-icon>
+            <v-icon class="cursor-pointer" icon="mdi-content-copy" @click="copyHandler(room.id)"></v-icon>
+        </v-container>
+
+        <v-container>
+            <strong class="d-block mr-5 text-decoration-underline">Share this link to invite people = </strong>
+            <strong>{{ joinLink }}</strong>
+            <v-icon class="cursor-pointer ml-5" icon="mdi-content-copy" @click="copyHandler(joinLink)"></v-icon>
         </v-container>
 
         <v-container v-for="(player, index) in players" :key="index">
@@ -52,6 +58,8 @@
 
 <script>
 
+import { useRouter } from 'vue-router';
+
 import { mapState } from 'vuex';
 
 import store from './../store';
@@ -66,7 +74,15 @@ import { Player } from './../player';
 export default {
 
     setup() {
-        return { getFileNameAndExtension };
+
+        const roomId = sessionStorage.getItem('roomId');
+
+        const router = useRouter();
+
+        return {
+            getFileNameAndExtension,
+            joinLink : window.location.origin + router.resolve({ name : 'JoinRoom', params : { roomId }}).href
+         };
     },
 
     computed: {
@@ -132,8 +148,8 @@ export default {
             });
         },
 
-        copyRoomIdHandler() {
-            navigator.clipboard.writeText(this.room.id);
+        copyHandler(value) {
+            navigator.clipboard.writeText(value);
         },
 
         goToHome() {
