@@ -56,7 +56,7 @@
   
 <script>
 
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 
 import { mapState } from 'vuex'
 

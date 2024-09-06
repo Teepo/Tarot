@@ -47,7 +47,7 @@ const router = createRouter({
       name: 'CreateRoom',
       component: () => import('../pages/createRoom.vue'),
     }, {
-      path: '/join-room',
+      path: '/join-room/:roomId?',
       name: 'JoinRoom',
       component: () => import('../pages/joinRoom.vue'),
     }, {

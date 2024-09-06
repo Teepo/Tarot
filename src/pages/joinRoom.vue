@@ -16,6 +16,8 @@
 
 <script>
 
+import { useRoute } from 'vue-router'
+
 import { noUndefinedValue, noNegativeValue } from './../forms/rules.js';
 
 import { socket } from './../modules/ws.js';
@@ -25,16 +27,21 @@ import store from './../store';
 
 export default {
 	
-	data: () => ({
-		
-		login   : '',
-		roomId : '',
+	data: function() {
 
-		formRules: {
-			login  : [noUndefinedValue],
-			roomId : [noUndefinedValue],
-		},
-	}),
+		const route = useRoute();
+
+		return {
+		
+			login   : '',
+			roomId : route.params.roomId ?? '',
+
+			formRules: {
+				login  : [noUndefinedValue],
+				roomId : [noUndefinedValue],
+			},
+		};
+	},
 
 	methods: {
 
