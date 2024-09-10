@@ -15,10 +15,23 @@ const store = createStore({
 
     state () {
         return {
-            currentPlayer : {},
-            game          : {},
-            round         : {},
-            turn          : {},
+
+            isOneplayerMode   : false,
+            isMultiplayerMode : false,
+
+            game  : {},
+            round : {},
+            turn  : {},
+        }
+    },
+    getters : {
+
+        players(state) {
+            return state.player.players;
+        },
+
+        currentPlayer(state) {
+            return state.player.currentPlayer;
         }
     },
     mutations: {
@@ -38,24 +51,48 @@ const store = createStore({
         setRoom(state, room) {
             state.room = room;
         },
+
+        setIsOnePlayerMode(state, isOnePlayerMode) {
+            state.isOnePlayerMode = isOnePlayerMode;
+        },
+
+        setIsMultiplayerMode(state, isMultiplayerMode) {
+            state.isMultiplayerMode = isMultiplayerMode;
+        },
     },
     actions : {
 
         initSocketListeners({ commit, dispatch }) {
         },
 
-        async setRound({ commit }, { roomId, round }) {
+        async setRound({ state, commit }, { roomId, round }) {
+
+            if (state.isOnePlayerMode) {
+                return commit('setRound', round);
+            }
 
             await socket.emit('setRound', { roomId, round });
 
             commit('setRound', round);
         },
 
-        async setTurn({ commit }, { roomId, turn }) {
+        async setTurn({ state, commit }, { roomId, turn }) {
+
+            if (state.isOnePlayerMode) {
+                return commit('setTurn', turn);
+            }
 
             await socket.emit('setTurn', { roomId, turn });
 
-            commit('setTurn', round);
+            commit('setTurn', turn);
+        },
+
+        setIsOnePlayerMode({ commit }, isOnePlayerMode) {
+            commit('setIsOnePlayerMode', isOnePlayerMode);
+        },
+
+        setIsMultiplayerMode({ commit }, isMultiplayerMode) {
+            commit('setIsMultiplayerMode', isMultiplayerMode);
         },
 
         removeSocketListeners() {

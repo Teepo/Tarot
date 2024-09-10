@@ -123,10 +123,7 @@ export default {
     methods: {
 
         startTheRoom() {
-
-            socket.emit('start', {
-                roomName : this.room
-            });
+            socket.emit('room/start', { roomId : this.roomId });
         },
 
         leaveTheRoom() {

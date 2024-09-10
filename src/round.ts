@@ -91,7 +91,7 @@ export class Round {
 
     giveCardsToPlayers() {
 
-        const { players } = store.state;
+        const players = store.getters.players;
 
         this.deck.shuffle();
 
@@ -151,7 +151,7 @@ export class Round {
 
     getNextPlayerToGiver() : Player | null {
 
-        const { players } = store.state;
+        const players = store.getters.players;
 
         const giver = this.getPlayerWhoGiveCards();
 
@@ -166,7 +166,7 @@ export class Round {
 
     getNextPlayerIndexToGiver(giver : Player | null): number {
 
-        const { players } = store.state;
+        const players = store.getters.players;
 
         let indexAnchor = 0;
 
@@ -179,7 +179,7 @@ export class Round {
 
     buildPlayersQueue() {
 
-        const { players } = store.state;
+        const players = store.getters.players;
 
         const firstPlayerToBegin = this.getNextPlayerToGiver();
 
@@ -318,7 +318,7 @@ export class Round {
      */
     findPartnerByCards() : Player | Boolean {
 
-        const { players } = store.state;
+        const players = store.getters.players;
 
         const partner = players.find((player: Player) => {
             return player.getCards().find((card: Card) => {
@@ -465,7 +465,7 @@ export class Round {
      */
     findDefenderPlayers() : Array<Player> {
 
-        const { players } = store.state;
+        const players = store.getters.players;
 
         return players.filter((player: Player) => {
             return this.getAttackerPlayers().filter((aplayer: Player) => {
@@ -554,7 +554,7 @@ export class Round {
 
     checkIfThereArePetitSec() : Boolean {
 
-        const { players } = store.state;
+        const players = store.getters.players;
 
         return !!players.find((player: Player) => {
             return player.hasPetitSec();
@@ -563,7 +563,7 @@ export class Round {
 
     emptyPlayersCards() {
 
-        const { players } = store.state;
+        const players = store.getters.players;
 
         players.map((player: Player) => {
             player.setCards([]);

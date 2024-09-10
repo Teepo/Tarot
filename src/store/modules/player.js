@@ -76,8 +76,12 @@ const actions = {
         }));
     },
 
-    setCurrentPlayer({ commit }, { currentPlayer }) {
+    setCurrentPlayer({ commit }, currentPlayer) {
         commit('setCurrentPlayer', currentPlayer);
+    },
+
+    setPlayers({ commit }, players) {
+        commit('setPlayers', players);
     },
 
     async toggleIsReady({ commit }, { roomId, playerId }) {

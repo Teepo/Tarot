@@ -109,7 +109,10 @@ export default {
     },
 
     computed : {
-        ...mapState(['players', 'round'])
+        ...mapState('player', {
+            players : state => state.players,
+        }),
+        ...mapState(['round'])
     },
 
     data() {
@@ -130,8 +133,9 @@ export default {
             
             this.roomName = 'oneplayer';
             
-            store.dispatch('setCurrentPlayer', currentPlayer);
-            store.dispatch('setPlayers', [
+            store.dispatch('setIsOnePlayerMode', true);
+            store.dispatch('player/setCurrentPlayer', currentPlayer);
+            store.dispatch('player/setPlayers', [
                 player1,
                 player2,
                 player3,
@@ -141,11 +145,13 @@ export default {
         }
         else if (this.isMultiplayerMode) {
 
+            store.dispatch('setIsMultiplayerMode', true);
+
             const route = useRoute();
 
             this.roomName = route.params.roomName;
 
-            await store.dispatch('getPlayers');
+            await store.dispatch('player/getPlayers');
         }
 
         this.gameLoop();
@@ -164,7 +170,7 @@ export default {
                 // Fake game type
                 round.setGameType(1);
                 round.resetAttackerPlayers();
-                round.addAttackerPlayer(store.state.players[0]);
+                round.addAttackerPlayer(store.getters.players[0]);
                 
                 // await this.askCalledKing(round);
 
@@ -316,7 +322,7 @@ export default {
                     round    : round
                 });
 
-                store.dispatch('setCurrentPlayer', {
+                store.dispatch('player/setCurrentPlayer', {
                     roomName      : this.roomName,
                     currentPlayer : player
                 });

@@ -79,7 +79,9 @@ export class Game {
      */
     static isOkToPlayThisCard(card : Card) : Boolean {
 
-        const { currentPlayer, turn } = store.state;
+        const { turn } = store.state;
+
+        const currentPlayer = store.getters.currentPlayer;
 
         // On est le 1er a joué. C'est nous qui décidons du signe.
         if (turn.getCards().length <= 0) {
@@ -124,6 +126,8 @@ export class Game {
             // la carte joué doit être supérieur ( si possible )
             return !currentPlayer.hasBiggestCardComparedToPreviousCards(turn.getCards());
         }
+
+        console.log('isOkToPlayThisCard > all good', card.getSign(), card.getLabel());
 
         // Donc ici soit tu as monté, soit tu pisses !
         return true;

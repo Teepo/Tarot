@@ -20,7 +20,9 @@ export class Turn {
 
     getNextPlayerToGiver(): Player | null {
 
-        const { players, round } = store.state;
+        const { round } = store.state;
+
+        const players = store.getters.players;
 
         const giver = round.getPlayerWhoGiveCards();
 
@@ -37,7 +39,9 @@ export class Turn {
 
         let indexAnchor = 0;
 
-        store.state.players.map((player: Player, index: number) => {
+        const players = store.getters.players;
+
+        players.map((player: Player, index: number) => {
             indexAnchor = Object.is(player, giver) ? index : indexAnchor;
         });
 
@@ -48,7 +52,9 @@ export class Turn {
 
         let firstPlayerToBegin;
 
-        const { players, round } = store.state;
+        const { round } = store.state;
+
+        const players = store.getters.players;
 
         players.filter((player: Player) => {
             player.setCurrentCard(null);
@@ -192,13 +198,13 @@ export class Turn {
 
     resetPlayersCurrentCard() {
 
-        const { players } = store.state;
+        const players = store.getters.players;
 
         if (players.length <= 0) {
             return;
         }
 
-        store.state.players.map((player: Player) => {
+        players.map((player: Player) => {
             player.setCurrentCard(null);
         });
     }

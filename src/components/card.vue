@@ -23,7 +23,9 @@ export default {
     },
 
     computed : {
-        ...mapState(['currentPlayer'])
+        ...mapState('player', {
+            currentPlayer : state => state.currentPlayer
+        }),
     },
 
     methods: {
