@@ -20,8 +20,7 @@ export class Turn {
 
     getNextPlayerToGiver(): Player | null {
 
-        const { round } = store.state;
-
+        const round   = store.getters.round;
         const players = store.getters.players;
 
         const giver = round.getPlayerWhoGiveCards();
@@ -52,8 +51,7 @@ export class Turn {
 
         let firstPlayerToBegin;
 
-        const { round } = store.state;
-
+        const round   = store.getters.round;
         const players = store.getters.players;
 
         players.filter((player: Player) => {
@@ -186,7 +184,7 @@ export class Turn {
      */
     pickUpCards() {
 
-        const { round } = store.state;
+        const round = store.getters.round;
 
         const winner = this.getWinner();
 

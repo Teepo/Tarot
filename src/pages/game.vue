@@ -112,7 +112,9 @@ export default {
         ...mapState('player', {
             players : state => state.players,
         }),
-        ...mapState(['round'])
+        ...mapState('round', {
+            round : state => state.round,
+        })
     },
 
     data() {
@@ -282,7 +284,8 @@ export default {
 
         waitCards : async function(turn) {
 
-            const { round } = store.state;
+            const round = store.getters.round;
+            const currentPlayer = store.getters.currentPlayer;
 
             for await (const player of turn.getPlayersQueue()) {
 
@@ -333,9 +336,8 @@ export default {
 
         handleClickCard(card) {
 
-            const { round } = store.state;
-
-            const player = store.getters.currentPlayer;
+            const round  = store.getters.round;
+            const currentPlayer = store.getters.currentPlayer;
 
             if (card.playerId !== currentPlayer.id) {
                 return;
@@ -349,7 +351,7 @@ export default {
 
                 round.chiens.push(card);
                 
-                player.removeCard(card);
+                currentPlayer.removeCard(card);
 
                 store.dispatch('round/set', {
                     roomId : this.roomId,
@@ -361,7 +363,7 @@ export default {
 
             if (!Game.isOkToPlayThisCard(card)) {
                 Alert.add({
-                    str : `Player ${player.login} try to play card ${card.sign}${card.label}, but this is invalid`,
+                    str : `Player ${currentPlayer.login} try to play card ${card.sign}${card.label}, but this is invalid`,
                     type : 'error'
                 });
                 return;
@@ -372,8 +374,7 @@ export default {
 
         handleClickCardChien(card) {
 
-            const { round } = store.state;
-
+            const round = store.getters.round;;
             const currentPlayer = store.getters.currentPlayer;
 
             const attackerPlayer = round.getAttackerPlayers()[0];
@@ -389,7 +390,7 @@ export default {
 
         handleClickValidateChien() {
 
-            const { round } = store.state;
+            const round = store.getters.round;
 
             if (!Game.isChienValid(round.chiens)) {
                 return Alert.add({ str : 'Chien is invalid', type : 'warning' });
@@ -437,11 +438,6 @@ export default {
 
             // On distribute les cartes
             round.giveCardsToPlayers();
-
-            store.dispatch('round/giveCardsToPlayers', {
-                roomId : this.roomId,
-                round  : round
-            });
 
             // On check qu'il n'y a pas de petit sec
             if (round.checkIfThereArePetitSec()) {

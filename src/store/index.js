@@ -5,7 +5,7 @@ import { wsErrorHandler } from './../modules/wsErrorHandler.js';
 
 import roomModule from './modules/room';
 import playerModule from './modules/player';
-import roundModule from './modules/player';
+import roundModule from './modules/round';
 
 const store = createStore({
 
@@ -21,9 +21,8 @@ const store = createStore({
             isOneplayerMode   : false,
             isMultiplayerMode : false,
 
-            game  : {},
-            round : {},
-            turn  : {},
+            game : {},
+            turn : {},
         }
     },
     getters : {
@@ -34,6 +33,10 @@ const store = createStore({
 
         currentPlayer(state, getters, rootState, rootGetters) {
             return rootGetters['player/getCurrentPlayer'];
+        },
+
+        round(state) {
+            return state.round.round;
         },
     },
     mutations: {

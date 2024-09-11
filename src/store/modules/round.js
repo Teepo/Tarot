@@ -7,7 +7,7 @@ const state = () => ({
 const mutations = {
 
     set(state, round) {
-        state.room = round;
+        state.round = round;
     },
 
     giveCardsToPlayers(state, round) {
@@ -17,26 +17,18 @@ const mutations = {
 
 const actions = {
 
-    async set({ state, commit }, { roomId, r }) {
+    async set({ state, rootState , commit }, { roomId, round }) {
 
-        if (state.isOnePlayerMode) {
-            return commit('set', r);
+        if (rootState.isOnePlayerMode) {
+            return commit('set', round);
         }
 
-        const { round } = await socket.emit('round/set', { roomId, round : r });
+        const { r } = await socket.emit('round/set', { roomId, round });
 
-        commit('set', round);
+        commit('set', r);
     },
 
-    async giveCardsToPlayers({ state, commit }, { roomId, round }) {
-
-        if (state.isOnePlayerMode) {
-            return commit('giveCardsToPlayers', round);
-        }
-
-        const { round } = await socket.emit('round/set', { roomId, round : r });
-
-        commit('set', round);
+    async giveCardsToPlayers({ commit }) {
     },
 
     initSocketListeners({ commit }) {
