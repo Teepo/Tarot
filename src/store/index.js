@@ -5,12 +5,14 @@ import { wsErrorHandler } from './../modules/wsErrorHandler.js';
 
 import roomModule from './modules/room';
 import playerModule from './modules/player';
+import roundModule from './modules/player';
 
 const store = createStore({
 
     modules: {
         room   : roomModule,
         player : playerModule,
+        round  : roundModule,
     },
 
     state () {
@@ -30,18 +32,14 @@ const store = createStore({
             return state.player.players;
         },
 
-        currentPlayer(state) {
-            return state.player.currentPlayer;
-        }
+        currentPlayer(state, getters, rootState, rootGetters) {
+            return rootGetters['player/getCurrentPlayer'];
+        },
     },
     mutations: {
 
         setGame(state, game) {
             state.game = game;
-        },
-
-        setRound(state, round) {
-            state.round = round;
         },
 
         setTurn(state, turn) {
@@ -63,17 +61,6 @@ const store = createStore({
     actions : {
 
         initSocketListeners({ commit, dispatch }) {
-        },
-
-        async setRound({ state, commit }, { roomId, round }) {
-
-            if (state.isOnePlayerMode) {
-                return commit('setRound', round);
-            }
-
-            await socket.emit('setRound', { roomId, round });
-
-            commit('setRound', round);
         },
 
         async setTurn({ state, commit }, { roomId, turn }) {
@@ -102,6 +89,7 @@ const store = createStore({
 
 store.dispatch('room/initSocketListeners');
 store.dispatch('player/initSocketListeners');
+store.dispatch('round/initSocketListeners');
 store.dispatch('initSocketListeners');
 
 export default store;

@@ -7,18 +7,11 @@ import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
 import { Player } from '@/player.ts';
 
 const state = () => ({
-    players : [],
-    currentPlayer : null
+    currentPlayerID : null,
+    players : []
 });
 
 const mutations = {
-
-    setCurrentPlayer(state, currentPlayer) {
-
-        const p = mergeObjectsWithPrototypes(new Player({...currentPlayer}), currentPlayer);
-
-        state.currentPlayer = currentPlayer;
-    },
 
     toggleIsReady(state, player) {
 
@@ -31,6 +24,10 @@ const mutations = {
         state.players = players.map(p => {
             return mergeObjectsWithPrototypes(new Player({...p}), p);
         });
+    },
+
+    setCurrentPlayerID(state, playerId) {
+        state.currentPlayerID = playerId;
     },
 
     add(state, player) {
@@ -57,7 +54,6 @@ const actions = {
             });
     
             commit('add', player);
-            commit('setCurrentPlayer', player);
 
             return { player };
         }
@@ -69,15 +65,26 @@ const actions = {
 
     async getPlayers({ commit }, { roomId }) {
         
-        const players = await socket.emit('player/getAllFromRoom', { roomId });
+        try {
+            const players = await socket.emit('player/getAllFromRoom', { roomId });
 
-        commit('setPlayers', players.map(p => {
-            return mergeObjectsWithPrototypes(new Player({...p}), p);
-        }));
+            commit('setPlayers', players.map(p => {
+                return mergeObjectsWithPrototypes(new Player({...p}), p);
+            }));
+
+            return players;
+        }
+        catch(e) {
+            return e;
+        }
     },
 
-    setCurrentPlayer({ commit }, currentPlayer) {
-        commit('setCurrentPlayer', currentPlayer);
+    setCurrentPlayerID({ commit }, playerId) {
+        commit('setCurrentPlayerID', playerId);
+    },
+
+    setPlayers({ commit }, players) {
+        commit('setPlayers', players);
     },
 
     setPlayers({ commit }, players) {
@@ -104,9 +111,13 @@ const actions = {
 };
 
 const getters = {
-    
-    findPlayerById: (state) => (playerId) => {
-        return state.players.find(player => player.getId() === playerId);
+
+    getPlayers(state) {
+        return state.players;
+    },
+
+    getCurrentPlayer(state) {
+        return state.players.find(player => player.getId() === state.currentPlayerID);
     }
 };
 
@@ -115,5 +126,5 @@ export default {
   state,
   mutations,
   actions,
-  getters
+  getters,
 };

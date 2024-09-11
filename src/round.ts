@@ -111,6 +111,10 @@ export class Round {
             
             const player = players[playerIndex];
 
+            if (!player) {
+                continue;
+            }
+
             // On dit que ces Card appartient à ce joueur
             cards.map(card => {
                 card.setPlayerId(player.id);

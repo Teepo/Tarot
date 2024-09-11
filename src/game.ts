@@ -81,7 +81,7 @@ export class Game {
 
         const { turn } = store.state;
 
-        const currentPlayer = store.getters.currentPlayer;
+        const currentPlayer = store.getters.getCurrentPlayer;
 
         // On est le 1er a joué. C'est nous qui décidons du signe.
         if (turn.getCards().length <= 0) {

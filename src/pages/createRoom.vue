@@ -68,6 +68,8 @@ export default {
 			sessionStorage.setItem('playerId', player.id);
         	sessionStorage.setItem('roomId', room.id);
 
+			store.dispatch('player/setCurrentPlayerID', player.id);
+
 			this.$router.push({ name: 'Lobby', params: { roomId: room.id } });
 		}
 	}

@@ -11,8 +11,10 @@ export class Player {
     cards        : Array<Card>;
     gameType     : String | null;
     currentCard! : Card | null;
+    
+    isCPU        : boolean;
 
-    constructor({ id, login }: { id: number, login: string }) {
+    constructor({ id, login, isCPU = false }: { id: number, login: string, isCPU: boolean }) {
 
         this.id      = id;
         this.login   = login;
@@ -20,6 +22,8 @@ export class Player {
         this.scores = [];
         this.cards  = [];
         this.gameType = null;
+
+        this.isCPU = isCPU;
 
         this.customData = {
             avatar : ''

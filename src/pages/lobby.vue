@@ -60,7 +60,7 @@
 
 import { useRouter } from 'vue-router';
 
-import { mapState } from 'vuex';
+import { mapState, mapGetters } from 'vuex';
 
 import store from './../store';
 
@@ -86,9 +86,9 @@ export default {
     },
 
     computed: {
+        ...mapGetters(['currentPlayer']),
         ...mapState('player', {
-            players       : state => state.players,
-            currentPlayer : state => state.currentPlayer
+            players : state => state.players,
         }),
         ...mapState('room', {
             room: state => state.room
@@ -113,6 +113,8 @@ export default {
             return this.goToHome();
         }
 
+        store.dispatch('player/setCurrentPlayerID', this.playerId);
+
         store.dispatch('room/get', {
             roomId : this.roomId
         });
@@ -135,7 +137,6 @@ export default {
 
             return this.goToHome();
         },
-
 
         togglePlayerReadyHandler() {
 

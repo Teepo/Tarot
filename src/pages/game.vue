@@ -82,13 +82,13 @@ import OverlayCallKing  from './../components/overlayCallKing.vue';
 import OverlayMisere    from './../components/overlayMisere.vue';
 import OverlayPoignee   from './../components/overlayPoignee.vue';
 
-const player1 = new Player({ id : 1, login : 'HUMAN' });
-const player2 = new Player({ id : 2, login : 'CPU 1' });
-const player3 = new Player({ id : 3, login : 'CPU 2' });
-const player4 = new Player({ id : 4, login : 'CPU 3' });
-const player5 = new Player({ id : 5, login : 'CPU 4' });
+const player1 = new Player({ id : 1, login : 'HUMAN', isCPU : true });
+const player2 = new Player({ id : 2, login : 'CPU 1', isCPU : true });
+const player3 = new Player({ id : 3, login : 'CPU 2', isCPU : true });
+const player4 = new Player({ id : 4, login : 'CPU 3', isCPU : true });
+const player5 = new Player({ id : 5, login : 'CPU 4', isCPU : true });
 
-const currentPlayer = player1;
+const cpuPlayers = [player2, player3, player4, player5];
 
 let handlerClickCardResolver;
 let handlerClickValidateChienResolver;
@@ -119,8 +119,6 @@ export default {
 
         return {
             game : null,
-            currentPlayer : currentPlayer,
-
             shouldDisplayChien : false
         }
     },
@@ -130,11 +128,13 @@ export default {
         this.game = new Game;
 
         if (this.isOneplayerMode) {
+
+            const currentPlayer = player1;
             
             this.roomName = 'oneplayer';
             
             store.dispatch('setIsOnePlayerMode', true);
-            store.dispatch('player/setCurrentPlayer', currentPlayer);
+            store.dispatch('player/setCurrentPlayerID', currentPlayer.id);
             store.dispatch('player/setPlayers', [
                 player1,
                 player2,
@@ -149,9 +149,42 @@ export default {
 
             const route = useRoute();
 
-            this.roomName = route.params.roomName;
+            this.playerId = sessionStorage.getItem('playerId');
+            this.roomId   = sessionStorage.getItem('roomId');
 
-            await store.dispatch('player/getPlayers');
+            if (!this.playerId || !this.roomId) {
+                return this.goToHome();
+            }
+
+            const { error } = await store.dispatch('player/getPlayers', { roomId : route.params.roomId });
+            
+            if (error) {
+                // return this.goToHome();
+            }
+
+            store.dispatch('player/setCurrentPlayerID', this.playerId);
+
+            // Si pas assez de joueurs, on complète avec des CPU
+            if (store.getters.players.length < 5) {
+
+                let players = store.getters.players;
+                
+                players.push(...cpuPlayers.slice(players.length-1, 5));
+
+                let i = 0;
+                players = players.map(p => {
+                    
+                    if (!p.isCPU) {
+                        return p;
+                    }
+
+                    p.login = `CPU ${++i}`;
+
+                    return p;
+                });
+
+                store.dispatch('player/setPlayers', players);
+            }
         }
 
         this.gameLoop();
@@ -177,9 +210,9 @@ export default {
                 // Fake call king
                 round.setCalledKing(new Card(42));
 
-                store.dispatch('setRound', {
-                    roomName : this.roomName,
-                    round    : round
+                store.dispatch('round/set', {
+                    roomId : this.roomId,
+                    round  : round
                 });
 
                 this.shouldDisplayChien = true;
@@ -207,9 +240,9 @@ export default {
 
                 round.determineTheWinner();
 
-                store.dispatch('setRound', {
-                    roomName : this.roomName,
-                    round    : round
+                store.dispatch('round/set', {
+                    roomId : this.roomId,
+                    round  : round
                 });
 
                 console.log('Fin du round', round);
@@ -224,9 +257,9 @@ export default {
 
             turn.buildPlayersQueue();
 
-            store.dispatch('setRound', {
-                roomName : this.roomName,
-                round    : round
+            store.dispatch('round/set', {
+                roomId : this.roomId,
+                round  : round
             });
 
             await this.waitCards(turn);
@@ -253,7 +286,7 @@ export default {
 
             for await (const player of turn.getPlayersQueue()) {
 
-                const isCPU = this.isOneplayerMode && player.id !== currentPlayer.id;
+                const isCPU = player.isCPU;
 
                 console.log(player.login, ' turn');
 
@@ -302,6 +335,8 @@ export default {
 
             const { round } = store.state;
 
+            const player = store.getters.currentPlayer;
+
             if (card.playerId !== currentPlayer.id) {
                 return;
             }
@@ -313,18 +348,12 @@ export default {
                 card.setPlayerId(null);
 
                 round.chiens.push(card);
-
-                const player = store.getters.findPlayerById(currentPlayer.id);
+                
                 player.removeCard(card);
 
-                store.dispatch('setRound', {
-                    roomName : this.roomName,
-                    round    : round
-                });
-
-                store.dispatch('player/setCurrentPlayer', {
-                    roomName      : this.roomName,
-                    currentPlayer : player
+                store.dispatch('round/set', {
+                    roomId : this.roomId,
+                    round  : round
                 });
 
                 return;
@@ -332,7 +361,7 @@ export default {
 
             if (!Game.isOkToPlayThisCard(card)) {
                 Alert.add({
-                    str : `Player ${currentPlayer.login} try to play card ${card.sign}${card.label}, but this is invalid`,
+                    str : `Player ${player.login} try to play card ${card.sign}${card.label}, but this is invalid`,
                     type : 'error'
                 });
                 return;
@@ -343,7 +372,9 @@ export default {
 
         handleClickCardChien(card) {
 
-            const { round, currentPlayer } = store.state;
+            const { round } = store.state;
+
+            const currentPlayer = store.getters.currentPlayer;
 
             const attackerPlayer = round.getAttackerPlayers()[0];
 
@@ -391,7 +422,12 @@ export default {
             round.setPlayerWhoGiveCards((() => {
 
                 if (!(this.game.getCurrentRound() instanceof Round)) {
-                    return player1;
+                    if (this.isOneplayerMode) {
+                        return player1;
+                    }
+                    else if (this.isMultiplayerMode) {
+                        return store.getters.players[0];
+                    }
                 }
 
                 return this.game.getCurrentRound().getNextPlayerToGiver();
@@ -401,6 +437,11 @@ export default {
 
             // On distribute les cartes
             round.giveCardsToPlayers();
+
+            store.dispatch('round/giveCardsToPlayers', {
+                roomId : this.roomId,
+                round  : round
+            });
 
             // On check qu'il n'y a pas de petit sec
             if (round.checkIfThereArePetitSec()) {
@@ -432,9 +473,15 @@ export default {
 
         askGameType : async function(round) {
 
+            const currentPlayer = store.getters.currentPlayer;
+
             while (!round.gameTypeIsChoosen()) {
 
                 for await (const player of round.getPlayersQueue()) {
+
+                    if (this.isMultiplayerMode && player.id !== currentPlayer.id) {
+                         return await sleep(1000);
+                    }
 
                     const type = await this.renderOverlayGameType(player, round);
 
@@ -616,6 +663,12 @@ export default {
 
         destroyOverlayMisere : function() {
             this.$refs.refOverlayMisere.destroy();
+        },
+
+        goToHome() {
+            sessionStorage.clear();
+            socket.removeAllListeners();
+            this.$router.push({ name : 'index' });
         }
     }
 }

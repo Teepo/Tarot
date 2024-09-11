@@ -13,7 +13,7 @@
 
 <script>
 
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default {
 
@@ -23,9 +23,7 @@ export default {
     },
 
     computed : {
-        ...mapState('player', {
-            currentPlayer : state => state.currentPlayer
-        }),
+        ...mapGetters(['currentPlayer']),
     },
 
     methods: {

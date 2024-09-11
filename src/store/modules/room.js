@@ -76,7 +76,6 @@ const actions = {
     initSocketListeners({ commit }) {
 
         socket.on('room/start', ({ playerId }) => {
-
             router.push({ name: 'MultiplayerGame', params: { roomId: this.roomId } });
         });
         
