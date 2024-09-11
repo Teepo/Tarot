@@ -1,4 +1,4 @@
-import { socket } from './../../modules/ws.js';
+import { socket } from '@/modules/ws.js';
 
 const state = () => ({
     round : {}

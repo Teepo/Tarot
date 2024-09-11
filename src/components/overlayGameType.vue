@@ -20,7 +20,7 @@
 
 <script>
 
-import { gameTypeList } from '../config/gameTypeList';
+import { gameTypeList } from '@/config/gameTypeList';
 
 export default {
 

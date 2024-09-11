@@ -19,12 +19,12 @@
 
 <script>
 
-import { noUndefinedValue, noNegativeValue } from './../forms/rules.js';
+import { noUndefinedValue, noNegativeValue } from '@/forms/rules.js';
 
-import { socket } from './../modules/ws.js';
-import { wsErrorHandler } from './../modules/wsErrorHandler.js';
+import { socket } from '@/modules/ws.js';
+import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
 
-import store from './../store';
+import store from '@/store';
 
 export default {
 	

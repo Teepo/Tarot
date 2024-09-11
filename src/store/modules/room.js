@@ -1,10 +1,10 @@
 import { useRouter } from 'vue-router'
 
-import { socket } from './../../modules/ws.js';
+import { socket } from '@/modules/ws.js';
 
 import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
 
-import router from './../../router/index';
+import router from '@/router/index';
 
 const state = () => ({
     room : {}

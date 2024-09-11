@@ -15,8 +15,8 @@
   
   <script>
     
-  import { socket } from './../modules/ws.js';
-  import { wsErrorHandler } from './../modules/wsErrorHandler.js';
+  import { socket } from '@/modules/ws.js';
+  import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
   
   export default {
       data: () => ({

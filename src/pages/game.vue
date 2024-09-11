@@ -60,27 +60,27 @@ import { useRoute } from 'vue-router'
 
 import { mapState } from 'vuex'
 
-import store from './../store';
+import store from '@/store';
 
-import { gameTypeList } from '../config/gameTypeList';
+import { gameTypeList } from '@/config/gameTypeList';
 
-import { sleep } from './../utils/timing';
+import { sleep } from '@/utils/timing';
 
-import { socket } from './../modules/ws.js';
-import { wsErrorHandler } from './../modules/wsErrorHandler.js';
-import { Alert } from './../modules/alert.js';
+import { socket } from '@/modules/ws.js';
+import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
+import { Alert } from '@/modules/alert.js';
 
-import { Player } from './../player';
-import { Game }   from './../game';
-import { Round }  from './../round';
-import { Turn }   from './../turn';
-import { Card }   from './../card';
+import { Player } from '@/models/player';
+import { Game }   from '@/models/game';
+import { Round }  from '@/models/round';
+import { Turn }   from '@/models/turn';
+import { Card }   from '@/models/card';
 
-import DynamicComponent from './../components/dynamicComponent.vue';
-import OverlayGameType  from './../components/overlayGameType.vue';
-import OverlayCallKing  from './../components/overlayCallKing.vue';
-import OverlayMisere    from './../components/overlayMisere.vue';
-import OverlayPoignee   from './../components/overlayPoignee.vue';
+import DynamicComponent from '@/components/dynamicComponent.vue';
+import OverlayGameType  from '@/components/overlayGameType.vue';
+import OverlayCallKing  from '@/components/overlayCallKing.vue';
+import OverlayMisere    from '@/components/overlayMisere.vue';
+import OverlayPoignee   from '@/components/overlayPoignee.vue';
 
 const player1 = new Player({ id : 1, login : 'HUMAN', isCPU : true });
 const player2 = new Player({ id : 2, login : 'CPU 1', isCPU : true });

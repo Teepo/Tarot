@@ -1,11 +1,11 @@
 import { createStore } from 'vuex'
 
-import { socket } from './../modules/ws.js';
-import { wsErrorHandler } from './../modules/wsErrorHandler.js';
+import { socket } from '@/modules/ws.js';
+import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
 
-import roomModule from './modules/room';
-import playerModule from './modules/player';
-import roundModule from './modules/round';
+import roomModule from '@/store/modules/room.js';
+import playerModule from '@/store/modules/player.js';
+import roundModule from '@/store/modules/round.js';
 
 const store = createStore({
 

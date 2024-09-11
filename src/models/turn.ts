@@ -1,7 +1,7 @@
-import { Player } from './player';
-import { Card } from './card';
+import { Player } from '@/models/player';
+import { Card } from '@/models/card';
 
-import store from './store';
+import store from '@/store';
 
 export class Turn {
 

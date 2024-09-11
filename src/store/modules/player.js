@@ -1,10 +1,10 @@
 import { mergeObjectsWithPrototypes } from '@/utils/object.js';
 
-import { socket } from './../../modules/ws.js';
+import { socket } from '@/modules/ws.js';
 
 import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
 
-import { Player } from '@/player.ts';
+import { Player } from '@/models/player.ts';
 
 const state = () => ({
     currentPlayerID : null,

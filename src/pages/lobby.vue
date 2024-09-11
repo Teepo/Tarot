@@ -62,14 +62,14 @@ import { useRouter } from 'vue-router';
 
 import { mapState, mapGetters } from 'vuex';
 
-import store from './../store';
+import store from '@/store';
 
-import { socket } from './../modules/ws.js';
-import { wsErrorHandler } from '../modules/wsErrorHandler.js';
+import { socket } from '@/modules/ws.js';
+import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
 
-import { getFileNameAndExtension } from './../utils/string';
+import { getFileNameAndExtension } from '@/utils/string';
 
-import { Player } from './../player';
+import { Player } from '@/player';
 
 export default {
 

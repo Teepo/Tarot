@@ -1,9 +1,9 @@
-import { cardList } from './config/cardList';
+import { cardList } from '@/config/cardList';
 
-import { Card } from './card';
-import { Round } from './round';
+import { Card } from '@/models/card';
+import { Round } from '@/models/round';
 
-import store from './store';
+import store from '@/store';
 
 export class Game {
 

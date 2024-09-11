@@ -1,4 +1,4 @@
-import { cardList } from './config/cardList';
+import { cardList } from '@/config/cardList';
 
 export class Card {
 
