@@ -2,7 +2,7 @@
   "name": "@teepo/tarot",
   "version": "0.0.0",
   "publishConfig": {
-    "@Teepo:registry": "https://npm.pkg.github.com"
+    "@teepo:registry": "https://npm.pkg.github.com"
   },
   "scripts": {
     "dev": "vite",
