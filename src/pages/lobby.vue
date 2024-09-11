@@ -69,7 +69,7 @@ import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
 
 import { getFileNameAndExtension } from '@/utils/string';
 
-import { Player } from '@/player';
+import { Player } from '@/models/player';
 
 export default {
 
