@@ -2,7 +2,7 @@
   "name": "@teepo/tarot",
   "version": "1.0.0",
   "publishConfig": {
-    "@teepo:registry": "https://yarn.pkg.github.com"
+    "@teepo:registry": "https://npm.pkg.github.comm"
   },
   "scripts": {
     "dev": "vite",
@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@mdi/font": "7.4.47",
-    "@teepo/tarot-core": "^1.0.0",
+    "@teepo/tarot-core": "^1.0",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "base64-to-image": "^1.0.2",
     "noty": "^3.2.0-beta",
@@ -34,5 +34,6 @@
     "vite-plugin-vuetify": "^2.0.4",
     "vue-router": "^4.4.3",
     "vue-tsc": "^2.1.4"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

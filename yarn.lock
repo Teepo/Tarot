@@ -273,10 +273,10 @@
   resolved "https://registry.yarnpkg.com/@socket.io/component-emitter/-/component-emitter-3.1.2.tgz#821f8442f4175d8f0467b9daf26e3a18e2d02af2"
   integrity sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==
 
-"@teepo/tarot-core@^1.0.0":
-  version "1.0.0"
-  resolved "https://npm.pkg.github.com/download/@teepo/tarot-core/1.0.0/f4d117d3fa263603852c0a94d530fc84e07af1ef#f4d117d3fa263603852c0a94d530fc84e07af1ef"
-  integrity sha512-bvXWC4Cza/h3vLXmwmO07GaSBFCdUjPsEFpNMO/iJYqs96TVAbGXhtVvO3a97ar0xxnmjJ38nxOWSg0LfE/HUw==
+"@teepo/tarot-core@^1.0":
+  version "1.0.2"
+  resolved "https://npm.pkg.github.com/download/@teepo/tarot-core/1.0.2/7b492c4599ed6c7074feed55ed04d187b84b2119#7b492c4599ed6c7074feed55ed04d187b84b2119"
+  integrity sha512-QF6smkJ88oF3oaA3SxUBj7oyIaVqpiYOLMxsmsoNR/wUTAmVdaUA1V+THNYUTVzcm+GIGyVWvr+c7RvEbRsYLg==
 
 "@types/estree@1.0.5", "@types/estree@^1.0.0":
   version "1.0.5"
