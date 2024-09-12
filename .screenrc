@@ -14,5 +14,5 @@ screen -t SASS 5
 screen -t JS 6
 screen -t null 7
 screen -t null 8
-screen -t DOCKER 9
-screen -t MYSQL 10
+screen -t VITE 9
+screen -t WS 10

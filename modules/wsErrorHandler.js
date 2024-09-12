@@ -1,4 +1,4 @@
-import { Alert } from '@/modules/alert.js';
+import { Alert } from './../modules/alert.js';
 
 export const wsErrorHandler = data => {
 

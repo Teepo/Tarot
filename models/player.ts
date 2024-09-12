@@ -1,37 +1,42 @@
-import { Turn } from '@/models/turn';
-import { Card } from '@/models/card.ts';
+import { Turn } from './turn';
+import { Card } from './card';
 
 export class Player {
 
-    id         : number;
-    login      : string;
-    customData : Object;
+    id    : number;
+    login : string;
+
+    roomId : string;
 
     scores       : Array<number>;
     cards        : Array<Card>;
     gameType     : String | null;
     currentCard! : Card | null;
     
-    isCPU        : boolean;
+    isCPU : boolean;
 
-    constructor({ id, login, isCPU = false }: { id: number, login: string, isCPU: boolean }) {
+    avatar : string | undefined;
 
-        this.id      = id;
-        this.login   = login;
+    constructor({ id, login, isCPU = false, roomId }: { id: number, login: string, isCPU: boolean, roomId: string }) {
 
-        this.scores = [];
-        this.cards  = [];
+        this.id    = id;
+        this.login = login;
+
+        this.roomId = roomId;
+
+        this.scores   = [];
+        this.cards    = [];
         this.gameType = null;
 
         this.isCPU = isCPU;
-
-        this.customData = {
-            avatar : ''
-        };
     }
 
-    getId() : number {
+    getId(): number {
         return this.id;
+    }
+
+    getLogin(): string {
+        return this.login;
     }
 
     addScore(points : number) {
@@ -73,12 +78,18 @@ export class Player {
     }
 
     setCards(cards: Array<Card>) {
+        
         this.cards = cards;
 
         // On s'assure que les Cards nous sont attribués
         cards.map(card => {
             card.setPlayerId(this.getId());
         });
+    }
+
+    emptyCards() {
+
+        this.cards = [];
     }
 
     removeCard(card: Card) {

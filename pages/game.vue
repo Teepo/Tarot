@@ -60,27 +60,27 @@ import { useRoute } from 'vue-router'
 
 import { mapState } from 'vuex'
 
-import store from '@/store';
+import store from './../store';
 
-import { gameTypeList } from '@/config/gameTypeList';
+import { gameTypeList } from './../config/gameTypeList';
 
-import { sleep } from '@/utils/timing';
+import { sleep } from './../utils/timing';
 
-import { socket } from '@/modules/ws.js';
-import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
-import { Alert } from '@/modules/alert.js';
+import { socket } from './../modules/ws.js';
+import { wsErrorHandler } from './../modules/wsErrorHandler.js';
+import { Alert } from './../modules/alert.js';
 
-import { Player } from '@/models/player.ts';
-import { Game }   from '@/models/game.ts';
-import { Round }  from '@/models/round.ts';
-import { Turn }   from '@/models/turn.ts';
-import { Card }   from '@/models/card.ts';
+import { Player } from './../models/player.ts';
+import { Game }   from './../models/game.ts';
+import { Round }  from './../models/round.ts';
+import { Turn }   from './../models/turn.ts';
+import { Card }   from './../models/card.ts';
 
-import DynamicComponent from '@/components/dynamicComponent.vue';
-import OverlayGameType  from '@/components/overlayGameType.vue';
-import OverlayCallKing  from '@/components/overlayCallKing.vue';
-import OverlayMisere    from '@/components/overlayMisere.vue';
-import OverlayPoignee   from '@/components/overlayPoignee.vue';
+import DynamicComponent from './../components/dynamicComponent.vue';
+import OverlayGameType  from './../components/overlayGameType.vue';
+import OverlayCallKing  from './../components/overlayCallKing.vue';
+import OverlayMisere    from './../components/overlayMisere.vue';
+import OverlayPoignee   from './../components/overlayPoignee.vue';
 
 const player1 = new Player({ id : 1, login : 'HUMAN', isCPU : true });
 const player2 = new Player({ id : 2, login : 'CPU 1', isCPU : true });
@@ -158,10 +158,14 @@ export default {
                 return this.goToHome();
             }
 
-            const { error } = await store.dispatch('player/getPlayers', { roomId : route.params.roomId });
-            
+            await store.dispatch('player/getPlayers', { roomId : route.params.roomId });
+
+            const { error } = await store.dispatch('room/get', {
+                roomId : this.roomId
+            });
+
             if (error) {
-                // return this.goToHome();
+                return this.goToHome();
             }
 
             store.dispatch('player/setCurrentPlayerID', this.playerId);
@@ -201,6 +205,10 @@ export default {
                 const round = this.newRound();
 
                 // await this.askGameType(round);
+
+                await store.dispatch('round/askGameType', {
+                    roomId : this.roomId
+                });
                 
                 // Fake game type
                 round.setGameType(1);
@@ -353,6 +361,9 @@ export default {
                 
                 currentPlayer.removeCard(card);
 
+                // @TODO
+                // Update chiens and currentPlayer
+
                 store.dispatch('round/set', {
                     roomId : this.roomId,
                     round  : round
@@ -414,11 +425,22 @@ export default {
             });
         },
 
-        newRound : function() {
+        newRound : async function() {
+
+            if (this.isMultiplayerMode) {
+                
+                const { round } = await store.dispatch('round/get', {
+                    roomId : this.roomId
+                });
+
+                return round;
+            }
 
             const round = new Round;
 
-            round.emptyPlayersCards();
+            store.dispatch('player/emptyPlayersCards', {
+                roomId : this.roomId
+            });
 
             round.setPlayerWhoGiveCards((() => {
 
@@ -475,8 +497,12 @@ export default {
 
                 for await (const player of round.getPlayersQueue()) {
 
-                    if (this.isMultiplayerMode && player.id !== currentPlayer.id) {
-                         return await sleep(1000);
+                    if (this.isMultiplayerMode) {
+
+                        // C'est pas notre tour de choisir, on attends
+                        if (player.id !== currentPlayer.id) {
+                            return await sleep(1000);
+                        }
                     }
 
                     const type = await this.renderOverlayGameType(player, round);

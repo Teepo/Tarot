@@ -20,7 +20,7 @@
 
                             <v-col cols="8">
                                 <v-row class="align-center">
-                                    <img :src="`assets/img/avatars/${player.customData.avatar}`" class="mr-4" :width="32" @click="showOverlayAvatar(player)">
+                                    <img :src="`assets/img/avatars/${player.avatar}`" class="mr-4" :width="32" @click="showOverlayAvatar(player)">
                                     <strong class="font-weight-bold">
                                         {{ player.login }}
                                     </strong>
@@ -62,14 +62,14 @@ import { useRouter } from 'vue-router';
 
 import { mapState, mapGetters } from 'vuex';
 
-import store from '@/store';
+import store from './../store';
 
-import { socket } from '@/modules/ws.js';
-import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
+import { socket } from './../modules/ws.js';
+import { wsErrorHandler } from './../modules/wsErrorHandler.js';
 
-import { getFileNameAndExtension } from '@/utils/string';
+import { getFileNameAndExtension } from './../utils/string';
 
-import { Player } from '@/models/player';
+import { Player } from './../models/player';
 
 export default {
 
@@ -124,8 +124,9 @@ export default {
 
     methods: {
 
-        startTheRoom() {
-            socket.emit('room/start', { roomId : this.roomId });
+        async startTheRoom() {
+            await socket.emit('room/start', { roomId : this.roomId });
+            await socket.emit('round/init', { roomId : this.roomId });
         },
 
         leaveTheRoom() {

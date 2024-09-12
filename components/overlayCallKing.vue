@@ -15,9 +15,9 @@
 
 <script>
 
-import { gameTypeList } from '@/config/gameTypeList';
+import { gameTypeList } from './../config/gameTypeList';
 
-import { Game } from '@/models/game';
+import { Game } from './../models/game';
 
 export default {
 

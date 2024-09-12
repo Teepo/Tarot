@@ -1,10 +1,10 @@
-import { mergeObjectsWithPrototypes } from '@/utils/object.js';
+import { mergeObjectsWithPrototypes } from './../../utils/object.js';
 
-import { socket } from '@/modules/ws.js';
+import { socket } from './../../modules/ws.js';
 
-import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
+import { wsErrorHandler } from './../../modules/wsErrorHandler.js';
 
-import { Player } from '@/models/player.ts';
+import { Player } from './../../models/player.ts';
 
 const state = () => ({
     currentPlayerID : null,
@@ -87,16 +87,23 @@ const actions = {
         commit('setPlayers', players);
     },
 
-    setPlayers({ commit }, players) {
-        commit('setPlayers', players);
-    },
-
     async toggleIsReady({ commit }, { roomId, playerId }) {
 
         await socket.emit('player/toggleIsReady', {
             roomId   : roomId,
             playerId : playerId
         });
+    },
+
+    async emptyPlayersCards({ commit }) {
+
+        if (rootState.isOnePlayerMode) {
+            return commit('emptyPlayersCards');
+        }
+
+        const { players } = await socket.emit('player/emptyPlayersCards', { roomId });
+
+        commit('setPlayers', players);
     },
 
     initSocketListeners({ commit }) {

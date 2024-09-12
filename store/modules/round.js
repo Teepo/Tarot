@@ -1,4 +1,6 @@
-import { socket } from '@/modules/ws.js';
+import router from './../../router/index';
+
+import { socket } from './../../modules/ws.js';
 
 const state = () => ({
     round : {}
@@ -8,30 +10,30 @@ const mutations = {
 
     set(state, round) {
         state.round = round;
-    },
-
-    giveCardsToPlayers(state, round) {
-        round.giveCardsToPlayers();
     }
 };
 
 const actions = {
 
-    async set({ state, rootState , commit }, { roomId, round }) {
+    async get({ commit }, { roomId }) {
+            
+        const { round } = await socket.emit('round/get', { roomId });
 
-        if (rootState.isOnePlayerMode) {
-            return commit('set', round);
-        }
-
-        const { r } = await socket.emit('round/set', { roomId, round });
-
-        commit('set', r);
+        return { round };
     },
 
-    async giveCardsToPlayers({ commit }) {
-    },
+    async askGameType({ commit }, { roomId }) {
+        await socket.emit('round/askGameType', { roomId });
+    }
 
     initSocketListeners({ commit }) {
+
+        socket.on('round/init', ({ roomId, round }) => {
+
+            commit('set', round);
+
+            router.push({ name: 'MultiplayerGame', params: { roomId } });
+        });
     },
 
     removeSocketListeners() {

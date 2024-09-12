@@ -1,6 +1,7 @@
 {
   "name": "@teepo/tarot",
   "version": "1.0.0",
+  "type": "module",
   "publishConfig": {
     "@teepo:registry": "https://npm.pkg.github.comm"
   },

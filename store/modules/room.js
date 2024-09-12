@@ -1,10 +1,6 @@
-import { useRouter } from 'vue-router'
+import { socket } from './../../modules/ws.js';
 
-import { socket } from '@/modules/ws.js';
-
-import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
-
-import router from '@/router/index';
+import { wsErrorHandler } from './../../modules/wsErrorHandler.js';
 
 const state = () => ({
     room : {}
@@ -27,7 +23,7 @@ const actions = {
         
             commit('setRoom', room);
 
-            return room;
+            return { room };
         }
         catch(e) {
             wsErrorHandler(e);
@@ -74,10 +70,6 @@ const actions = {
     },
 
     initSocketListeners({ commit }) {
-
-        socket.on('room/start', ({ playerId }) => {
-            router.push({ name: 'MultiplayerGame', params: { roomId: this.roomId } });
-        });
         
         socket.on('room/join', ({ player }) => {
             commit('player/add', player, { root: true });

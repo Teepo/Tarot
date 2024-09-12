@@ -1,8 +1,8 @@
-import { WS_PROTOCOL, WS_HOST, WS_PORT } from '@/config/ws.js';
+import { WS_PROTOCOL, WS_HOST, WS_PORT } from './../config/ws.js';
 
 import { io } from 'socket.io-client';
 
-import { Alert } from '@/modules/alert.js';
+import { Alert } from './../modules/alert.js';
 
 export class SocketClient {
     

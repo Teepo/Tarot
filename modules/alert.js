@@ -11,7 +11,7 @@ class AlertManager {
     add({ str, type = 'info', player }) {
 
         if (player) {
-            str = `<img src="assets/img/balls/${player.customData.ball}" width="32"> ${str}`;
+            str = `<img src="assets/img/avatars/${player.avatar}" width="32"> ${str}`;
         }
 
         (new Noty({

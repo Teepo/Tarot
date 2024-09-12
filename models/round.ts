@@ -1,14 +1,15 @@
-import { cardList    } from '@/config/cardList';
-import { gameTypeList } from '@/config/gameTypeList';
-import { pointToReachByBout } from '@/config/pointsToReachByBout';
-import { ratioByGameType    } from '@/config/ratioByGameType';
+import { cardList    } from './../config/cardList';
+import { gameTypeList } from './../config/gameTypeList';
+import { pointToReachByBout } from './../config/pointsToReachByBout';
+import { ratioByGameType    } from './../config/ratioByGameType';
 
-import { Player } from '@/models/player';
-import { Card } from '@/models/card.ts';
-import { Deck } from '@/models/deck';
-import type { Turn } from '@/models/turn';
+import { Room } from './room';
+import { Player } from './player';
+import { Card } from './card';
+import { Deck } from './deck';
+import type { Turn } from './turn';
 
-import store from '@/store';
+import store from './../store';
 
 export class Round {
 
@@ -59,6 +60,30 @@ export class Round {
         this.deck = new Deck;
 
         this.chiens = [];
+    }
+
+    init(room: Room): Round {
+
+        this.setPlayerWhoGiveCards((() => {
+
+            if (!(room.getCurrentRound() instanceof Round)) {
+                return store.getters.players[0];
+            }
+    
+            return room.getCurrentRound().getNextPlayerToGiver();
+        })());
+    
+        this.buildPlayersQueue();
+    
+        // On distribute les cartes
+        this.giveCardsToPlayers();
+    
+        // On check qu'il n'y a pas de petit sec
+        if (this.checkIfThereArePetitSec()) {    
+            return this.init(room);
+        }
+
+        return this;
     }
 
     /**

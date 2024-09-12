@@ -22,7 +22,7 @@
     
   <script>
   
-  import { noUndefinedValue, noNegativeValue } from '@/forms/rules.js';
+  import { noUndefinedValue, noNegativeValue } from './../forms/rules.js';
     
   export default {
       data: () => ({

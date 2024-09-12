@@ -1,41 +1,10 @@
-import { cardList } from '@/config/cardList';
+import { cardList } from './../config/cardList';
 
-import { Card } from '@/models/card.ts';
-import { Round } from '@/models/round';
+import { Card } from './card';
 
-import store from '@/store';
+import store from './../store';
 
 export class Game {
-
-    rounds : Array<Round>;
-
-    constructor() {
-        this.rounds = [];
-    }
-
-    addRound(round : Round) {
-        this.rounds.push(round);
-    }
-
-    getRounds() : Array<Round> {
-        return this.rounds;
-    }
-
-    /**
-     * @description Retourne le dernier élément de getRounds(), donc le courant.
-     *
-     */
-    getCurrentRound() : Round {
-        return this.getRounds().slice(-1)[0];
-    }
-
-    /**
-     * @description Retourne l'avant dernier élément de getRound(), donc le précédent.
-     *
-     */
-    getPreviousRound() : Round {
-        return this.getRounds().slice(-2, -1)[0];
-    }
 
     static getKingCards() : Array<Card> {
 
