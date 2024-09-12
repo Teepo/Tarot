@@ -3,10 +3,10 @@ import { gameTypeList } from '@/config/gameTypeList';
 import { pointToReachByBout } from '@/config/pointsToReachByBout';
 import { ratioByGameType    } from '@/config/ratioByGameType';
 
-import { Player } from '@/models/player';
-import { Card } from '@/models/card';
-import { Deck } from '@/models/deck';
-import type { Turn } from '@/models/turn';
+import { Player } from '@core/models/player';
+import { Card } from '@core/models/card';
+import { Deck } from '@core/models/deck';
+import type { Turn } from '@core/models/turn';
 
 import store from '@/store';
 

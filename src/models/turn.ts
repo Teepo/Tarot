@@ -1,5 +1,5 @@
-import { Player } from '@/models/player';
-import { Card } from '@/models/card';
+import { Player } from '@core/models/player';
+import { Card } from '@core/models/card';
 
 import store from '@/store';
 

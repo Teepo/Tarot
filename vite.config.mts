@@ -33,6 +33,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@core': path.resolve(__dirname, 'node_modules/@teepo/tarot-core/'),
       '~noty': path.resolve(__dirname, 'node_modules/noty'),
     },
     extensions: [
