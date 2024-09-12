@@ -4,7 +4,7 @@ import { pointToReachByBout } from '@/config/pointsToReachByBout';
 import { ratioByGameType    } from '@/config/ratioByGameType';
 
 import { Player } from '@/models/player';
-import { Card } from '@/models/card';
+import { Card } from '@/models/card.ts';
 import { Deck } from '@/models/deck';
 import type { Turn } from '@/models/turn';
 

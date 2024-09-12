@@ -1,5 +1,5 @@
 import { Turn } from '@/models/turn';
-import { Card } from '@/models/card';
+import { Card } from '@/models/card.ts';
 
 export class Player {
 

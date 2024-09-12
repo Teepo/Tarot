@@ -1,6 +1,6 @@
 import { cardList } from '@/config/cardList';
 
-import { Card } from '@/models/card';
+import { Card } from '@/models/card.ts';
 import { Round } from '@/models/round';
 
 import store from '@/store';

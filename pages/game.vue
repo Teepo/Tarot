@@ -70,11 +70,11 @@ import { socket } from '@/modules/ws.js';
 import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
 import { Alert } from '@/modules/alert.js';
 
-import { Player } from '@/models/player';
-import { Game }   from '@/models/game';
-import { Round }  from '@/models/round';
-import { Turn }   from '@/models/turn';
-import { Card }   from '@/models/card';
+import { Player } from '@/models/player.ts';
+import { Game }   from '@/models/game.ts';
+import { Round }  from '@/models/round.ts';
+import { Turn }   from '@/models/turn.ts';
+import { Card }   from '@/models/card.ts';
 
 import DynamicComponent from '@/components/dynamicComponent.vue';
 import OverlayGameType  from '@/components/overlayGameType.vue';

@@ -7,12 +7,12 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    Card: typeof import('./src/components/card.vue')['default']
-    DynamicComponent: typeof import('./src/components/dynamicComponent.vue')['default']
-    OverlayCallKing: typeof import('./src/components/overlayCallKing.vue')['default']
-    OverlayGameType: typeof import('./src/components/overlayGameType.vue')['default']
-    OverlayMisere: typeof import('./src/components/overlayMisere.vue')['default']
-    OverlayPoignee: typeof import('./src/components/overlayPoignee.vue')['default']
+    Card: typeof import('./components/card.vue')['default']
+    DynamicComponent: typeof import('./components/dynamicComponent.vue')['default']
+    OverlayCallKing: typeof import('./components/overlayCallKing.vue')['default']
+    OverlayGameType: typeof import('./components/overlayGameType.vue')['default']
+    OverlayMisere: typeof import('./components/overlayMisere.vue')['default']
+    OverlayPoignee: typeof import('./components/overlayPoignee.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
   }

@@ -7,7 +7,7 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["*"]
     },
     "resolveJsonModule": true,
     "types": [
@@ -23,8 +23,8 @@
     "skipLibCheck": true
   },
   "include": [
-    "src/**/*",
-    "src/**/*.vue"
+    "**/*",
+    "**/*.vue"
   ],
   "exclude": ["dist", "node_modules", "cypress"],
   "references": [{ "path": "./tsconfig.node.json" }],

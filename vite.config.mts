@@ -23,16 +23,18 @@ export default defineConfig({
     Vuetify({
       autoImport: true,
       styles: {
-        configFile: 'src/styles/settings.scss',
+        configFile: 'styles/settings.scss',
       },
     }),
-    Components(),
+    Components({
+      dirs: ['./components'],
+    }),
     basicSsl()
   ],
   define: { 'process.env': {} },
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      '@': fileURLToPath(new URL('./', import.meta.url)),
       '~noty': path.resolve(__dirname, 'node_modules/noty'),
     },
     extensions: [

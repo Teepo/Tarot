@@ -1,7 +1,7 @@
 /**
  * router/index.ts
  *
- * Automatic routes for `./src/pages/*.vue`
+ * Automatic routes for `./pages/*.vue`
  */
 
 // Composables

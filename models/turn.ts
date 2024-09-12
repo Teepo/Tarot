@@ -1,5 +1,5 @@
 import { Player } from '@/models/player';
-import { Card } from '@/models/card';
+import { Card } from '@/models/card.ts';
 
 import store from '@/store';
 
