@@ -1,6 +1,6 @@
 import { shuffle } from '@/utils/array';
 
-import { Card } from '@core/models/card.ts';
+import { Card } from '@/models/card.ts';
 
 export class Deck {
 

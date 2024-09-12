@@ -1,7 +1,7 @@
 import { cardList } from '@/config/cardList';
 
-import { Card } from '@core/models/card';
-import { Round } from '@core/models/round';
+import { Card } from '@/models/card';
+import { Round } from '@/models/round';
 
 import store from '@/store';
 

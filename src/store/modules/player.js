@@ -4,7 +4,7 @@ import { socket } from '@/modules/ws.js';
 
 import { wsErrorHandler } from '@/modules/wsErrorHandler.js';
 
-import { Player } from '@core/models/player.ts';
+import { Player } from '@/models/player.ts';
 
 const state = () => ({
     currentPlayerID : null,
