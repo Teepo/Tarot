@@ -23,6 +23,7 @@ export class Round {
     defenderPoints : number;
 
     playersQueue: Array<Player>;
+    playersQueueForAskGameType: Array<Player>;
 
     playerWhoGiveCards : Player | null;
 
@@ -50,6 +51,7 @@ export class Round {
         this.defenderPoints = 0;
 
         this.playersQueue = [];
+        this.playersQueueForAskGameType = [];
 
         this.playerWhoGiveCards = null;
 
@@ -62,6 +64,9 @@ export class Round {
         this.chiens = [];
     }
 
+    /**
+     * /!\ Server only
+     */
     init(room: Room): Round {
 
         this.setPlayerWhoGiveCards((() => {
@@ -84,6 +89,10 @@ export class Round {
         }
 
         return this;
+    }
+
+    getNextPlayerIntoPlayersQueueForAskGameType() : Player | undefined {
+        return this.playersQueueForAskGameType.shift();
     }
 
     /**
@@ -248,6 +257,8 @@ export class Round {
                 this.addPlayerInQueue(playersWithoutTheBeginner.splice(0, 1)[0]);
             }
         }
+
+        this.playersQueueForAskGameType = this.playersQueue;
     }
 
     isFinished() : Boolean {

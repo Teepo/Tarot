@@ -204,11 +204,7 @@ export default {
                 
                 const round = this.newRound();
 
-                // await this.askGameType(round);
-
-                await store.dispatch('round/askGameType', {
-                    roomId : this.roomId
-                });
+                await this.askGameType(round);
                 
                 // Fake game type
                 round.setGameType(1);
@@ -491,41 +487,49 @@ export default {
 
         askGameType : async function(round) {
 
-            const currentPlayer = store.getters.currentPlayer;
+            if (this.isMultiplayerMode) {
+                
+                await store.dispatch('round/waitMyTurnToTellGameType');
 
-            while (!round.gameTypeIsChoosen()) {
+                const type = await this.renderOverlayGameType(player, round);
 
-                for await (const player of round.getPlayersQueue()) {
+                this.destroyOverlayGameType();
 
-                    if (this.isMultiplayerMode) {
+                store.dispatch('round/tellGameType', {
+                    roomId : this.roomId,
+                    type
+                });
+            }
+            else if (this.isOneplayerMode) {
+                
+                const currentPlayer = store.getters.currentPlayer;
 
-                        // C'est pas notre tour de choisir, on attends
-                        if (player.id !== currentPlayer.id) {
-                            return await sleep(1000);
+                while (!round.gameTypeIsChoosen()) {
+
+                    for await (const player of round.getPlayersQueue()) {
+
+                        const type = await this.renderOverlayGameType(player, round);
+
+                        this.destroyOverlayGameType();
+
+                        // Si le joueur ne passe pas, on ajoute le joueur à la liste des attaquants
+                        if (type) {
+                            
+                            round.setGameType(parseInt(type));
+                            round.resetAttackerPlayers();
+                            round.addAttackerPlayer(player);
+
+                            Alert.add({
+                                str : `Player ${player.login} take ${gameTypeList[type]}`,
+                                type : 'success'
+                            });
                         }
-                    }
-
-                    const type = await this.renderOverlayGameType(player, round);
-
-                    this.destroyOverlayGameType();
-
-                    // Si le joueur ne passe pas, on ajoute le joueur à la liste des attaquants
-                    if (type) {
-                        
-                        round.setGameType(parseInt(type));
-                        round.resetAttackerPlayers();
-                        round.addAttackerPlayer(player);
-
-                        Alert.add({
-                            str : `Player ${player.login} take ${gameTypeList[type]}`,
-                            type : 'success'
-                        });
-                    }
-                    else {
-                        Alert.add({
-                            str : `Player ${player.login} pass`,
-                            type : 'warning'
-                        });
+                        else {
+                            Alert.add({
+                                str : `Player ${player.login} pass`,
+                                type : 'warning'
+                            });
+                        }
                     }
                 }
             }

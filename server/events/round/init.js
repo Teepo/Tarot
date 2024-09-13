@@ -24,13 +24,16 @@ export default function(socket, data, callback) {
         player.emptyCards()
     });
 
-    const round = (new Round(room.id)).init(room);
-    
+    const round = new Round(room);
+
     room.addRound(round);
 
-    const response = { roomId : room.id, round };
+    round.init(room);
 
-    socket.emit('round/init', response);
-    socket.broadcast.emit('round/init', response);
-    return callback(response);
+    const player = round.getNextPlayerIntoPlayersQueueForAskGameType();
+    socket.broadcast.emit('round/askGameType', { playerId : player.id });
+
+    console.log('round init > ask game type to ', player.login);
+
+    socket.broadcast.emit('round/init', { roomId : room.id, round });
 };

@@ -7,6 +7,8 @@ import roomModule from './../store/modules/room.js';
 import playerModule from './../store/modules/player.js';
 import roundModule from './../store/modules/round.js';
 
+import { Alert } from './../modules/alert.js';
+
 const store = createStore({
 
     modules: {
@@ -63,7 +65,11 @@ const store = createStore({
     },
     actions : {
 
-        initSocketListeners({ commit, dispatch }) {
+        initSocketListeners() {
+
+            socket.on('alert', data => {
+                Alert(data);
+            });
         },
 
         async setTurn({ state, commit }, { roomId, turn }) {
@@ -86,6 +92,7 @@ const store = createStore({
         },
 
         removeSocketListeners() {
+            socket.off('alert');
         },
     }
 });

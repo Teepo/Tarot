@@ -22,13 +22,34 @@ const actions = {
         return { round };
     },
 
-    async askGameType({ commit }, { roomId }) {
-        await socket.emit('round/askGameType', { roomId });
-    }
+    async waitMyTurnToTellGameType() {
 
-    initSocketListeners({ commit }) {
+        socket.on('round/askGameType', ({ playerId }) => {
+
+            const currentPlayerID = rootState.player.currentPlayerID;
+
+            console.log('askGameType', playerId);
+
+            if (currentPlayerID !== playerId) {
+                return;
+            }
+
+            return Promise.resolve();
+        });
+    },
+
+    async tellGameType({ commit }, { roomId, type }) {
+
+        console.log('tellGameType', type);
+
+        socket.emit('round/tellGameType', { roomId, type });
+    },
+
+    initSocketListeners({ commit, rootState }) {
 
         socket.on('round/init', ({ roomId, round }) => {
+
+            console.log('round init', round);
 
             commit('set', round);
 
