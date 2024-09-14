@@ -22,6 +22,10 @@ const actions = {
         return { round };
     },
 
+    set({ commit }, round) {
+        commit('set', round);
+    },
+
     async waitMyTurnToTellGameType() {
 
         socket.on('round/askGameType', ({ playerId }) => {
@@ -45,16 +49,7 @@ const actions = {
         socket.emit('round/tellGameType', { roomId, type });
     },
 
-    initSocketListeners({ commit, rootState }) {
-
-        socket.on('round/init', ({ roomId, round }) => {
-
-            console.log('round init', round);
-
-            commit('set', round);
-
-            router.push({ name: 'MultiplayerGame', params: { roomId } });
-        });
+    initSocketListeners({ commit }) {
     },
 
     removeSocketListeners() {

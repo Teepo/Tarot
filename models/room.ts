@@ -16,28 +16,32 @@ export class Room {
     isStarted : boolean;
     owner: Player | null;
 
+    model: string;
+
     constructor({ id, name, settings }: { id: number, name: string, settings: Object }) {
 	    
         this.id        = id;
         this.name      = name;
         this.isStarted = false;
         
-        this.#players  = new Map;
+        this.#players  = [];
 
         this.owner     = null
 
 	    this.settings  = settings;
 
         this.rounds = [];
+
+        this.model = 'Room';
     }
 
     addPlayer(player: Player) {
 
-        if (this.#players.toArray().find(p => p.login === player.login)) {
+        if (this.#players.find(p => p.login === player.login)) {
             throw new UserAlreadyExistError;
         }
 
-        this.#players.set(player.id, player);
+        this.#players.push(player);
     }
 
     getPlayers() {
@@ -45,19 +49,15 @@ export class Room {
     }
 
     getPlayerById(id: number) {
-        return this.#players.get(id);
-    }
-
-    updatePlayer(id: number, player: Player) {
-        this.#players.set(id, player);
+        return this.#players.find(p => p.id === id)
     }
 
     deletePlayer(id: number) {
-        this.#players.delete(id);
+        this.#players = this.#players.filter(p => p.id !== id)
     }
 
     deletePlayers() {
-        this.#players.clear()
+        this.#players = [];
     }
 
     getSettings() {

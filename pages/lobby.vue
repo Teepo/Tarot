@@ -125,8 +125,13 @@ export default {
     methods: {
 
         async startTheRoom() {
+            
             await socket.emit('room/start', { roomId : this.roomId });
-            await socket.emit('round/init', { roomId : this.roomId });
+            const { round, roomId } = await socket.emit('round/init', { roomId : this.roomId });
+
+            store.dispatch('round/set', round);
+
+            this.$router.push({ name: 'MultiplayerGame', params: { roomId } });
         },
 
         leaveTheRoom() {

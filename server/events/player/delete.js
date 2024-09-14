@@ -13,7 +13,7 @@ export default function(socket, data, callback) {
     socket.broadcast.emit('deletedPlayer', {
         id : id
     });
-    
+
     socket.emit('deletedPlayer', {
         id : id
     });

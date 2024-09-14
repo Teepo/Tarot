@@ -158,6 +158,8 @@ export default {
                 return this.goToHome();
             }
 
+            store.dispatch('player/setCurrentPlayerID', this.playerId);
+
             await store.dispatch('player/getPlayers', { roomId : route.params.roomId });
 
             const { error } = await store.dispatch('room/get', {
@@ -167,8 +169,6 @@ export default {
             if (error) {
                 return this.goToHome();
             }
-
-            store.dispatch('player/setCurrentPlayerID', this.playerId);
 
             // Si pas assez de joueurs, on complète avec des CPU
             if (store.getters.players.length < 5) {
@@ -202,7 +202,7 @@ export default {
 
             while (true) {
                 
-                const round = this.newRound();
+                const round = await this.newRound();
 
                 await this.askGameType(round);
                 
@@ -214,7 +214,7 @@ export default {
                 // await this.askCalledKing(round);
 
                 // Fake call king
-                round.setCalledKing(new Card(42));
+                round.setCalledKing(new Card({ index : 42 }));
 
                 store.dispatch('round/set', {
                     roomId : this.roomId,
@@ -449,13 +449,13 @@ export default {
                     }
                 }
 
-                return this.game.getCurrentRound().getNextPlayerToGiver();
+                return round.getNextPlayerToGiver(store.getters.players);
             })());
 
-            round.buildPlayersQueue();
+            round.buildPlayersQueue(store.getters.players);
 
             // On distribute les cartes
-            round.giveCardsToPlayers();
+            round.giveCardsToPlayers(store.getters.players);
 
             // On check qu'il n'y a pas de petit sec
             if (round.checkIfThereArePetitSec()) {
@@ -487,11 +487,15 @@ export default {
 
         askGameType : async function(round) {
 
+            console.log(round);
+
             if (this.isMultiplayerMode) {
+
+                const currentPlayer = store.getters.currentPlayer;
                 
                 await store.dispatch('round/waitMyTurnToTellGameType');
 
-                const type = await this.renderOverlayGameType(player, round);
+                const type = await this.renderOverlayGameType(currentPlayer, round);
 
                 this.destroyOverlayGameType();
 
@@ -501,8 +505,6 @@ export default {
                 });
             }
             else if (this.isOneplayerMode) {
-                
-                const currentPlayer = store.getters.currentPlayer;
 
                 while (!round.gameTypeIsChoosen()) {
 

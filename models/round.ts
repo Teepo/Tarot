@@ -9,7 +9,9 @@ import { Card } from './card';
 import { Deck } from './deck';
 import type { Turn } from './turn';
 
-import store from './../store';
+import { isNode } from './../utils/env';
+
+import { useStore } from 'vuex';
 
 export class Round {
 
@@ -21,7 +23,7 @@ export class Round {
 
     attackerPoints : number;
     defenderPoints : number;
-
+    
     playersQueue: Array<Player>;
     playersQueueForAskGameType: Array<Player>;
 
@@ -39,6 +41,11 @@ export class Round {
 
     started : Boolean = false;
 
+    // usefull only in server context
+    players: Array<Player>;
+
+    model: string;
+
     constructor() {
 
         this.attackerPlayers = [];
@@ -50,6 +57,7 @@ export class Round {
         this.attackerPoints = 0;
         this.defenderPoints = 0;
 
+        this.players = [];
         this.playersQueue = [];
         this.playersQueueForAskGameType = [];
 
@@ -62,6 +70,8 @@ export class Round {
         this.deck = new Deck;
 
         this.chiens = [];
+
+        this.model = 'Round';
     }
 
     /**
@@ -72,16 +82,16 @@ export class Round {
         this.setPlayerWhoGiveCards((() => {
 
             if (!(room.getCurrentRound() instanceof Round)) {
-                return store.getters.players[0];
+                return room.getPlayers()[0];
             }
     
-            return room.getCurrentRound().getNextPlayerToGiver();
+            return room.getCurrentRound().getNextPlayerToGiver(room.getPlayers());
         })());
     
-        this.buildPlayersQueue();
+        this.buildPlayersQueue(room.getPlayers());
     
         // On distribute les cartes
-        this.giveCardsToPlayers();
+        this.giveCardsToPlayers(room.getPlayers());
     
         // On check qu'il n'y a pas de petit sec
         if (this.checkIfThereArePetitSec()) {    
@@ -122,9 +132,7 @@ export class Round {
         return this.chiens;
     }
 
-    giveCardsToPlayers() {
-
-        const players = store.getters.players;
+    giveCardsToPlayers(players: Array<Player>) {
 
         this.deck.shuffle();
 
@@ -186,9 +194,7 @@ export class Round {
         return this.getTurns().slice(-2)[0];
     }
 
-    getNextPlayerToGiver() : Player | null {
-
-        const players = store.getters.players;
+    getNextPlayerToGiver(players: Array<Player>) : Player | null {
 
         const giver = this.getPlayerWhoGiveCards();
 
@@ -196,14 +202,12 @@ export class Round {
             return null;
         }
 
-        const index = this.getNextPlayerIndexToGiver(giver) + 1;
+        const index = this.getNextPlayerIndexToGiver(players, giver) + 1;
 
         return players[index];
     }
 
-    getNextPlayerIndexToGiver(giver : Player | null): number {
-
-        const players = store.getters.players;
+    getNextPlayerIndexToGiver(players: Array<Player>, giver : Player | null): number {
 
         let indexAnchor = 0;
 
@@ -214,11 +218,9 @@ export class Round {
         return indexAnchor;
     }
 
-    buildPlayersQueue() {
+    buildPlayersQueue(players: Array<Player>) {
 
-        const players = store.getters.players;
-
-        const firstPlayerToBegin = this.getNextPlayerToGiver();
+        const firstPlayerToBegin = this.getNextPlayerToGiver(players);
 
         this.addPlayerInQueue(firstPlayerToBegin);
 
@@ -226,7 +228,7 @@ export class Round {
             return !Object.is(player, firstPlayerToBegin);
         });
 
-        let indexAnchor = this.getNextPlayerIndexToGiver(firstPlayerToBegin);
+        let indexAnchor = this.getNextPlayerIndexToGiver(players, firstPlayerToBegin);
 
         // 1. Tant qu'on a pas vidé la liste des joueurs restants
         //    on va construite la queue.
@@ -357,7 +359,7 @@ export class Round {
      */
     findPartnerByCards() : Player | Boolean {
 
-        const players = store.getters.players;
+        const players = this.getPlayers();
 
         const partner = players.find((player: Player) => {
             return player.getCards().find((card: Card) => {
@@ -415,6 +417,17 @@ export class Round {
         }
 
         this.playersQueue.push(player);
+    }
+
+    getPlayers() {
+
+        const store = useStore();
+
+        return isNode ? this.players : store.getters.players;
+    }
+
+    setPlayers(players: Array<Player>) {
+        this.players = players;
     }
 
     setPoints() {
@@ -504,7 +517,7 @@ export class Round {
      */
     findDefenderPlayers() : Array<Player> {
 
-        const players = store.getters.players;
+        const players = this.getPlayers();
 
         return players.filter((player: Player) => {
             return this.getAttackerPlayers().filter((aplayer: Player) => {
@@ -593,7 +606,7 @@ export class Round {
 
     checkIfThereArePetitSec() : Boolean {
 
-        const players = store.getters.players;
+        const players = this.getPlayers();
 
         return !!players.find((player: Player) => {
             return player.hasPetitSec();
@@ -602,7 +615,7 @@ export class Round {
 
     emptyPlayersCards() {
 
-        const players = store.getters.players;
+        const players = this.getPlayers();
 
         players.map((player: Player) => {
             player.setCards([]);

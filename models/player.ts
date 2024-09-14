@@ -17,6 +17,8 @@ export class Player {
 
     avatar : string | undefined;
 
+    model: string;
+
     constructor({ id, login, isCPU = false, roomId }: { id: number, login: string, isCPU: boolean, roomId: string }) {
 
         this.id    = id;
@@ -29,6 +31,8 @@ export class Player {
         this.gameType = null;
 
         this.isCPU = isCPU;
+
+        this.model = 'Player';
     }
 
     getId(): number {

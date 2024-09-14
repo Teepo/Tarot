@@ -1,5 +1,5 @@
 import { Player } from './player';
-import { Card } from './card.ts';
+import { Card } from './card';
 
 import store from './../store';
 
@@ -11,11 +11,15 @@ export class Turn {
 
     cards: Array<Card>;
 
+    model: string;
+
     constructor() {
 
         this.playersQueue = [];
 
         this.cards = [];
+
+        this.model = 'Turn';
     }
 
     getNextPlayerToGiver(): Player | null {

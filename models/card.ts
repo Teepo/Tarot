@@ -11,8 +11,10 @@ export class Card {
     playerId! : number;
 
     active: Boolean = false;
+    
+    model: string;
 
-    constructor(index : number) {
+    constructor({ index }: { index: number }) {
 
         const { sign, label, value, points } = cardList[index];
 
@@ -21,6 +23,8 @@ export class Card {
         this.label  = label;
         this.value  = value;
         this.points = points;
+
+        this.model = 'Card';
     }
 
     getIndex() : number {

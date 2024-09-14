@@ -1,17 +1,21 @@
 import { shuffle } from './../utils/array';
 
-import { Card } from './card.ts';
+import { Card } from './card';
 
 export class Deck {
 
     cards : Array<Card>
 
+    model: string;
+
     constructor() {
 
         this.cards = [];
 
+        this.model = 'Deck';
+
         for (let i = 1; i <= 78; i++) {
-            this.cards.push(new Card(i));
+            this.cards.push(new Card({ index: i }));
         }
     }
 

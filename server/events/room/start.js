@@ -1,10 +1,12 @@
-import { game, rooms, round } from './../../store/index.js';
+import { rooms } from './../../store/index.js';
 
 import { RoomNotExistError } from './../../../errors/index.js';
 
 import { Round } from './../../../models/round.js';
 
 export default function(socket, data, callback) {
+
+    console.log('room start > begin');
 
     const { roomId } = data;
 
@@ -21,6 +23,8 @@ export default function(socket, data, callback) {
     room.isStarted = true;
 
     const response = { room };
+
+    console.log('room start > done');
 
     socket.emit('room/start', response);
     socket.broadcast.emit('room/start', response);

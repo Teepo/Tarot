@@ -11,7 +11,7 @@ export class Game {
         return Object.keys(cardList).filter(cardID => {
             return [14, 28, 42, 56].indexOf(parseInt(cardID)) >= 0;
         }).map(index => {
-            return new Card(parseInt(index));
+            return new Card({ index: parseInt(index) });
         });
     }
 
@@ -20,7 +20,7 @@ export class Game {
         return Object.keys(cardList).filter(cardID => {
             return [13, 27, 41, 55].indexOf(parseInt(cardID)) >= 0;
         }).map(index => {
-            return new Card(parseInt(index));
+            return new Card({ index: parseInt(index) });
         });
     }
 
@@ -29,7 +29,7 @@ export class Game {
         return Object.keys(cardList).filter(cardID => {
             return [12, 26, 40, 54].indexOf(parseInt(cardID)) >= 0;
         }).map(index => {
-            return new Card(parseInt(index));
+            return new Card({ index: parseInt(index) });
         });
     }
 
@@ -38,7 +38,7 @@ export class Game {
         return Object.keys(cardList).filter(cardID => {
             return [11, 25, 39, 53].indexOf(parseInt(cardID)) >= 0;
         }).map(index => {
-            return new Card(parseInt(index));
+            return new Card({ index: parseInt(index) });
         });
     }
 

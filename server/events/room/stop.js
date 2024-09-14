@@ -14,7 +14,7 @@ export default function(socket, data, callback) {
 
     room.isStarted = false;
 
-    room.getPlayers().toArray().map(player => {
+    room.getPlayers().forEach(player => {
 
         try {
             player.isReady = false;

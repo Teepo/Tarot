@@ -16,7 +16,7 @@ export default function(socket, data, callback) {
         return callback(response);
     }
 
-    const response = room.getPlayers().toArray();
+    const response = room.getPlayers();
 
     socket.emit('player/getAllFromRoom', response);
     return callback(response);

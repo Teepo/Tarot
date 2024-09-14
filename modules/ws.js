@@ -4,6 +4,8 @@ import { io } from 'socket.io-client';
 
 import { Alert } from './../modules/alert.js';
 
+import { unserialize } from './../utils/object.js';
+
 export class SocketClient {
     
     constructor(url) {
@@ -29,7 +31,8 @@ export class SocketClient {
         return new Promise((resolve, reject) => {
             
             this.socket.emit(eventName, data, response => {
-                return response.error ? reject(response) : resolve(response);
+                return response.error ?
+                reject(unserialize(response)) : resolve(unserialize(response));
             });
         });
     }

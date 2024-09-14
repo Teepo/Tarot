@@ -1,5 +1,3 @@
-import { mergeObjectsWithPrototypes } from './../../utils/object.js';
-
 import { socket } from './../../modules/ws.js';
 
 import { wsErrorHandler } from './../../modules/wsErrorHandler.js';
@@ -21,9 +19,7 @@ const mutations = {
     },
 
     setPlayers(state, players) {
-        state.players = players.map(p => {
-            return mergeObjectsWithPrototypes(new Player({...p}), p);
-        });
+        state.players = players;
     },
 
     setCurrentPlayerID(state, playerId) {
@@ -31,10 +27,7 @@ const mutations = {
     },
 
     add(state, player) {
-
-        const p = mergeObjectsWithPrototypes(new Player({...player}), player);
-
-        state.players.push(p);
+        state.players.push(player);
     },
 
     delete(state, playerId) {
@@ -68,9 +61,7 @@ const actions = {
         try {
             const players = await socket.emit('player/getAllFromRoom', { roomId });
 
-            commit('setPlayers', players.map(p => {
-                return mergeObjectsWithPrototypes(new Player({...p}), p);
-            }));
+            commit('setPlayers', players);
 
             return players;
         }

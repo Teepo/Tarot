@@ -23,7 +23,7 @@ export default function(socket, data, callback) {
     socket.emit('updatedPlayer', {
         player : player
     });
-    
+
     socket.broadcast.emit('updatedPlayer', {
         player : player
     });
