@@ -1,7 +1,7 @@
 <template>
 
     <div class="gameboard">
-        <div :class="['gameboard-player', `gameboard-player__${key}`]" v-for="player, key in this.players" :key="player.id">
+        <div :class="['gameboard-player', `gameboard-player__${key}`]" v-for="player, key in this.getPlayersWithCurrentPlayerInFirst()" :key="player.id">
 
             <span class="gameboard-player-name text-center">
                 {{ player.login }}
@@ -175,7 +175,7 @@ export default {
 
                 let players = store.getters.players;
                 
-                players.push(...cpuPlayers.slice(players.length-1, 5));
+                players.push(...cpuPlayers.slice(players.length - 1, store.getters.players.length));
 
                 let i = 0;
                 players = players.map(p => {
@@ -487,19 +487,28 @@ export default {
 
         askGameType : async function(round) {
 
-            console.log(round);
+            console.log('askGameType', round);
 
             if (this.isMultiplayerMode) {
 
                 const currentPlayer = store.getters.currentPlayer;
                 
-                await store.dispatch('round/waitMyTurnToTellGameType');
+                await store.dispatch('round/waitMyTurnToTellGameType', {
+                    roomId : this.roomId
+                });
 
                 const type = await this.renderOverlayGameType(currentPlayer, round);
 
                 this.destroyOverlayGameType();
 
+                console.log({
+                    playerId : currentPlayer.id,
+                    roomId : this.roomId,
+                    type
+                });
+
                 store.dispatch('round/tellGameType', {
+                    playerId : currentPlayer.id,
                     roomId : this.roomId,
                     type
                 });
@@ -565,6 +574,11 @@ export default {
                 // On mets le chien direct dans la stack de carte des defenseurs
                 round.addDefenderStackCards(round.getChiens());
             }
+        },
+
+        getPlayersWithCurrentPlayerInFirst: function() {
+            const index = this.players.indexOf(store.getters.currentPlayer);
+            return [...this.players.slice(index), ...this.players.slice(0, index)];
         },
 
         handleMiseres : async function(player, isCPU) {

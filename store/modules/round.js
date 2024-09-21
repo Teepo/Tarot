@@ -1,6 +1,6 @@
-import router from './../../router/index';
-
 import { socket } from './../../modules/ws.js';
+
+let waitMyTurnToTellGameTypeResolver = null;
 
 const state = () => ({
     round : {}
@@ -26,33 +26,42 @@ const actions = {
         commit('set', round);
     },
 
-    async waitMyTurnToTellGameType() {
+    async waitMyTurnToTellGameType({ commit, state, rootGetters }, { roomId }) {
 
-        socket.on('round/askGameType', ({ playerId }) => {
+        return new Promise(async (resolve, reject) => {
 
-            const currentPlayerID = rootState.player.currentPlayerID;
+            const { player } = await socket.emit('round/getPlayerWhoMustGiveHisGametype', { roomId });
 
-            console.log('askGameType', playerId);
+            console.log('waitMyTurnToTellGameType', player?.login, rootGetters.currentPlayer.id === player?.id);
 
-            if (currentPlayerID !== playerId) {
+            waitMyTurnToTellGameTypeResolver = resolve;
+
+            if (rootGetters.currentPlayer.id !== player?.id) {
                 return;
             }
 
-            return Promise.resolve();
+            waitMyTurnToTellGameTypeResolver();
         });
     },
 
-    async tellGameType({ commit }, { roomId, type }) {
-
-        console.log('tellGameType', type);
-
-        socket.emit('round/tellGameType', { roomId, type });
+    async tellGameType({ commit }, { playerId, roomId, type }) {
+        await socket.emit('round/tellGameType', { playerId, roomId, type });
     },
 
-    initSocketListeners({ commit }) {
+    initSocketListeners({ commit, rootGetters }) {
+
+        socket.on('round/tellToPlayerToGiveHisGameType', ({ player }) => {
+
+            if (rootGetters.currentPlayer.id !== player?.id) {
+                return;
+            }
+
+            waitMyTurnToTellGameTypeResolver();
+        });
     },
 
     removeSocketListeners() {
+        socket.off('round/askGameType');
     },
 };
 

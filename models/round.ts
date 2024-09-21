@@ -101,6 +101,10 @@ export class Round {
         return this;
     }
 
+    getCurrentPlayerIntoPlayersQueueForAskGameType() : Player {
+        return this.playersQueueForAskGameType[0];
+    }
+
     getNextPlayerIntoPlayersQueueForAskGameType() : Player | undefined {
         return this.playersQueueForAskGameType.shift();
     }

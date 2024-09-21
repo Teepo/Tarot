@@ -16,6 +16,8 @@ export default function(socket, data, callback) {
 
     const players = room.getPlayers();
 
+    console.log('players > emptyPlayersCards');
+
     players.forEach(player => {
         player.emptyCards()
     });

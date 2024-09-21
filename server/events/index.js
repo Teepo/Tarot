@@ -22,6 +22,9 @@ const eventHandlers = {
     'room/add': (socket, data, callback) => import('./round/add.js').then(module => module.default(socket, data, callback)),
 
     'round/init': (socket, data, callback) => import('./round/init.js').then(module => module.default(socket, data, callback)),
+    'round/get': (socket, data, callback) => import('./round/get.js').then(module => module.default(socket, data, callback)),
+    'round/tellGameType': (socket, data, callback) => import('./round/tellGameType.js').then(module => module.default(socket, data, callback)),
+    'round/getPlayerWhoMustGiveHisGametype': (socket, data, callback) => import('./round/getPlayerWhoMustGiveHisGametype.js').then(module => module.default(socket, data, callback)),
 };
 
 export default eventHandlers;

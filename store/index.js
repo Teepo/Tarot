@@ -68,7 +68,7 @@ const store = createStore({
         initSocketListeners() {
 
             socket.on('alert', data => {
-                Alert(data);
+                Alert.add(data);
             });
         },
 

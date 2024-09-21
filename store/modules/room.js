@@ -1,3 +1,5 @@
+import router from './../../router/index';
+
 import { socket } from './../../modules/ws.js';
 
 import { wsErrorHandler } from './../../modules/wsErrorHandler.js';
@@ -70,6 +72,10 @@ const actions = {
     },
 
     initSocketListeners({ commit }) {
+
+        socket.on('room/start', ({ room }) => {
+            router.push({ name: 'MultiplayerGame', params: { roomId : room.id } });
+        });
         
         socket.on('room/join', ({ player }) => {
             commit('player/add', player, { root: true });

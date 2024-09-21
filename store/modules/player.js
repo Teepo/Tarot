@@ -114,6 +114,11 @@ const getters = {
         return state.players;
     },
 
+    getPlayersWithCurrentPlayerInFirst(state) {
+        const index = state.players.indexOf(player);
+        return [...state.players.slice(index), ...state.players.slice(0, index)];
+    },
+
     getCurrentPlayer(state) {
         return state.players.find(player => player.getId() === state.currentPlayerID);
     }

@@ -64,10 +64,5 @@ export default function(socket, data, callback) {
 
     console.log('round init > done');
 
-    const player = round.getNextPlayerIntoPlayersQueueForAskGameType();
-    socket.broadcast.emit('round/askGameType', { playerId : player.id });
-
-    console.log('round init > ask game type to ', player.login);
-
     return callback({ roomId : room.id, round });
 };
