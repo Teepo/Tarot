@@ -37,11 +37,11 @@ export class SocketClient {
         });
     }
 
-    async alert(options) {
-        
-        await this.socket.emit('alert', options);
-
-        Alert.add(options);
+    on(eventName, callback) {
+        this.socket.on(eventName, (...args) => {
+            const unserializedArgs = args.map(arg => unserialize(arg));
+            callback(...unserializedArgs);
+        });
     }
 
     disconnect() {
