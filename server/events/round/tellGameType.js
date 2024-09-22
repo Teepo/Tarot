@@ -53,13 +53,20 @@ export default function(socket, data, callback) {
 
     // Tous les joueurs on passé
     // On recrée un round
-    if (!p) {
+    if (!p || p.isCPU) {
 
         console.log('tellGameType > all players pass > restart');
+
+        socket.broadcast.emit('alert', {
+            str : `Everyone pass, restart !`,
+            type : 'warning'
+        });
         
         round.init(room);
 
-        p = round.getNextPlayerIntoPlayersQueueForAskGameType();
+        p = round.getCurrentPlayerIntoPlayersQueueForAskGameType();
+
+        console.log('new player to give his game type after restart', p.login);
     }
 
     console.log('tellGameType next player to give his game type', p.login);

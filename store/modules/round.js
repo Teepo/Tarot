@@ -52,11 +52,15 @@ const actions = {
 
         socket.on('round/tellToPlayerToGiveHisGameType', ({ player }) => {
 
+            console.log('round/tellToPlayerToGiveHisGameType', player);
+
             if (rootGetters.currentPlayer.id !== player?.id) {
                 return;
             }
 
-            waitMyTurnToTellGameTypeResolver();
+            console.log('waitMyTurnToTellGameTypeResolver', waitMyTurnToTellGameTypeResolver, waitMyTurnToTellGameTypeResolver());
+
+            // waitMyTurnToTellGameTypeResolver();
         });
     },
 

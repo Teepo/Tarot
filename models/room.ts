@@ -5,7 +5,7 @@ import { Round } from './round';
 
 export class Room {
 
-    #players;
+    #players: Array<Player>;
     
     rounds : Array<Round>;
 

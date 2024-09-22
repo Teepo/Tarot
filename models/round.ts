@@ -224,6 +224,8 @@ export class Round {
 
     buildPlayersQueue(players: Array<Player>) {
 
+        this.playersQueue = [];
+
         const firstPlayerToBegin = this.getNextPlayerToGiver(players);
 
         this.addPlayerInQueue(firstPlayerToBegin);

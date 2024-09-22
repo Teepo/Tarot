@@ -169,28 +169,6 @@ export default {
             if (error) {
                 return this.goToHome();
             }
-
-            // Si pas assez de joueurs, on complète avec des CPU
-            if (store.getters.players.length < 5) {
-
-                let players = store.getters.players;
-                
-                players.push(...cpuPlayers.slice(players.length - 1, store.getters.players.length));
-
-                let i = 0;
-                players = players.map(p => {
-                    
-                    if (!p.isCPU) {
-                        return p;
-                    }
-
-                    p.login = `CPU ${++i}`;
-
-                    return p;
-                });
-
-                store.dispatch('player/setPlayers', players);
-            }
         }
 
         this.gameLoop();
