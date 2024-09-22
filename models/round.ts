@@ -67,7 +67,7 @@ export class Round {
 
         this.turns = [];
 
-        this.deck = new Deck;
+        this.deck = new Deck();
 
         this.chiens = [];
 
@@ -78,6 +78,10 @@ export class Round {
      * /!\ Server only
      */
     init(room: Room): Round {
+
+        this.emptyPlayersCards();
+
+        this.createNewDeck();
 
         this.setPlayerWhoGiveCards((() => {
 
@@ -617,6 +621,10 @@ export class Round {
         return !!players.find((player: Player) => {
             return player.hasPetitSec();
         });
+    }
+
+    createNewDeck() {
+        this.deck = new Deck;
     }
 
     emptyPlayersCards() {

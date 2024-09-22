@@ -19,6 +19,8 @@ const actions = {
             
         const { round } = await socket.emit('round/get', { roomId });
 
+        commit('set', round);
+
         return { round };
     },
 
@@ -52,15 +54,11 @@ const actions = {
 
         socket.on('round/tellToPlayerToGiveHisGameType', ({ player }) => {
 
-            console.log('round/tellToPlayerToGiveHisGameType', player);
-
             if (rootGetters.currentPlayer.id !== player?.id) {
                 return;
             }
 
-            console.log('waitMyTurnToTellGameTypeResolver', waitMyTurnToTellGameTypeResolver, waitMyTurnToTellGameTypeResolver());
-
-            // waitMyTurnToTellGameTypeResolver();
+            waitMyTurnToTellGameTypeResolver();
         });
     },
 

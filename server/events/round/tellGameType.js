@@ -66,6 +66,9 @@ export default function(socket, data, callback) {
 
         p = round.getCurrentPlayerIntoPlayersQueueForAskGameType();
 
+        socket.emit('player/refresh', { players : room.getPlayers() });
+        socket.broadcast.emit('player/refresh', { players : room.getPlayers() });
+
         console.log('new player to give his game type after restart', p.login);
     }
 

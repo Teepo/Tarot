@@ -470,26 +470,29 @@ export default {
             if (this.isMultiplayerMode) {
 
                 const currentPlayer = store.getters.currentPlayer;
+
+                while (!round.gameTypeIsChoosen()) {
                 
-                await store.dispatch('round/waitMyTurnToTellGameType', {
-                    roomId : this.roomId
-                });
+                    await store.dispatch('round/waitMyTurnToTellGameType', {
+                        roomId : this.roomId
+                    });
 
-                const type = await this.renderOverlayGameType(currentPlayer, round);
+                    const type = await this.renderOverlayGameType(currentPlayer, round);
 
-                this.destroyOverlayGameType();
+                    this.destroyOverlayGameType();
 
-                console.log({
-                    playerId : currentPlayer.id,
-                    roomId : this.roomId,
-                    type
-                });
+                    console.log({
+                        playerId : currentPlayer.id,
+                        roomId : this.roomId,
+                        type
+                    });
 
-                store.dispatch('round/tellGameType', {
-                    playerId : currentPlayer.id,
-                    roomId : this.roomId,
-                    type
-                });
+                    store.dispatch('round/tellGameType', {
+                        playerId : currentPlayer.id,
+                        roomId : this.roomId,
+                        type
+                    });
+                }
             }
             else if (this.isOneplayerMode) {
 

@@ -102,6 +102,10 @@ const actions = {
         socket.on('player/toggleIsReady', ({ player }) => {
             commit('toggleIsReady', player);
         });
+
+        socket.on('player/refresh', ({ players }) => {
+            commit('setPlayers', players);
+        });
     },
 
     removeSocketListeners() {
