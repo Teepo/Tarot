@@ -33,7 +33,7 @@ export default {
 
 		return {
 		
-			login   : '',
+			login   : 'b',
 			roomId : route.params.roomId ?? '',
 
 			formRules: {

@@ -22,6 +22,11 @@ export default function(socket, data, callback) {
 
     const player = round.getCurrentPlayerIntoPlayersQueueForAskGameType();
 
+    if (!player || player.isCPU) {
+        console.log('round/getPlayerWhoMustGiveHisGametype, no player or player is cpu');
+        return;
+    }
+
     console.log('round/getPlayerWhoMustGiveHisGametype', player.login);
 
     const response = { player };

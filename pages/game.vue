@@ -182,14 +182,15 @@ export default {
                 
                 const round = await this.newRound();
 
-                await this.askGameType(round);
+                store.dispatch('round/set', round);
+
+                await this.askGameType();
                 
-                // Fake game type
-                round.setGameType(1);
-                round.resetAttackerPlayers();
-                round.addAttackerPlayer(store.getters.players[0]);
+                await store.dispatch('round/waitGameTypeIsChoosen', {
+                    roomId : this.roomId
+                });
                 
-                // await this.askCalledKing(round);
+                await this.askCalledKing();
 
                 // Fake call king
                 round.setCalledKing(new Card({ index : 42 }));
@@ -449,9 +450,28 @@ export default {
             return round;
         },
 
-        askCalledKing : async function(round) {
+        askCalledKing : async function() {
 
+            const round = store.getters.round;
+
+            const currentPlayer = store.getters.currentPlayer;
             const player = round.getAttackerPlayers()[0];
+
+            if (this.isMultiplayerMode) {
+
+                if (currentPlayer.id !== player.id) {
+
+                    Alert.add({
+                        str : `Waiting Player ${player.login} to call his king...`
+                    });
+
+                    await store.dispatch('round/waitCalledKing', {
+                        roomId : this.roomId
+                    });
+
+                    return;
+                }
+            }
 
             const card = await this.renderOverlayCallKing(player);
 
@@ -460,24 +480,29 @@ export default {
                 type : 'success'
             });
 
+            store.dispatch('round/setCalledKing', {
+                roomId : this.roomId,
+                card   : card
+            });
+
             round.setCalledKing(card);
         },
 
-        askGameType : async function(round) {
+        askGameType : async function() {
 
-            console.log('askGameType', round);
+            const round = store.getters.round;
 
             if (this.isMultiplayerMode) {
 
                 const currentPlayer = store.getters.currentPlayer;
 
-                while (!round.gameTypeIsChoosen()) {
+                while (!round.gameTypeIsChoosen() || !round.hasPlayersQueueForAskGameTypeEmpty()) {
                 
                     await store.dispatch('round/waitMyTurnToTellGameType', {
                         roomId : this.roomId
                     });
 
-                    const type = await this.renderOverlayGameType(currentPlayer, round);
+                    const type = await this.renderOverlayGameType(currentPlayer);
 
                     this.destroyOverlayGameType();
 
@@ -492,6 +517,10 @@ export default {
                         roomId : this.roomId,
                         type
                     });
+
+                    if (type) {
+                        return Promise.resolve();
+                    }
                 }
             }
             else if (this.isOneplayerMode) {
@@ -642,7 +671,9 @@ export default {
             this.$refs.refOverlayPoignee.destroy();
         },
 
-        renderOverlayGameType : async function(player, round) {
+        renderOverlayGameType : async function(player) {
+
+            const round = store.getters.round;
 
             return new Promise(resolver => {
                 this.$refs.refOverlayGameType.render(OverlayGameType, {

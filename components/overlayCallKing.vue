@@ -38,7 +38,9 @@ export default {
             cards = Game.getKnightCards();
         }
 
-        // cards = Game.getJackCards();
+        if (this.player.hasAllKnightCards()) {
+            cards = Game.getJackCards();
+        }
 
         return {
             cards : cards,

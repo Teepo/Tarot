@@ -1,15 +1,25 @@
 import { socket } from './../../modules/ws.js';
 
 let waitMyTurnToTellGameTypeResolver = null;
+let waitGameTypeIsChoosenResolver = null;
+let waitCalledKingResolver = null;
 
 const state = () => ({
-    round : {}
+    round : null
 });
 
 const mutations = {
 
     set(state, round) {
         state.round = round;
+    },
+
+    setCalledKing(state, card) {
+        state.round.setCalledKing(card);
+    },
+
+    setGameType(state, type) {
+        state.round.setGameType(parseInt(type));
     }
 };
 
@@ -28,9 +38,18 @@ const actions = {
         commit('set', round);
     },
 
-    async waitMyTurnToTellGameType({ commit, state, rootGetters }, { roomId }) {
+    async setCalledKing({ commit, rootState }, { roomId, card }) {
 
-        return new Promise(async (resolve, reject) => {
+        if (rootState.isOnePlayerMode) {
+            return commit('setCalledKing', card);
+        }
+
+        socket.emit('round/setCalledKing', { roomId, card });
+    },
+
+    async waitMyTurnToTellGameType({ rootGetters }, { roomId }) {
+
+        return new Promise(async (resolve) => {
 
             const { player } = await socket.emit('round/getPlayerWhoMustGiveHisGametype', { roomId });
 
@@ -46,24 +65,83 @@ const actions = {
         });
     },
 
+    async waitGameTypeIsChoosen({ state, rootGetters }, { roomId }) {
+
+        return new Promise(async (resolve) => {
+
+            if (rootGetters.currentPlayer.roomId !== roomId) {
+                return;
+            }
+
+            waitGameTypeIsChoosenResolver = resolve;
+
+            if (state.round.gameTypeIsChoosen()) {
+                waitGameTypeIsChoosenResolver();
+            }
+        });
+    },
+
+    async waitCalledKing({ state }) {
+
+        return new Promise(async (resolve) => {
+            waitCalledKingResolver = resolve;
+        });
+    },
+
     async tellGameType({ commit }, { playerId, roomId, type }) {
         await socket.emit('round/tellGameType', { playerId, roomId, type });
     },
 
     initSocketListeners({ commit, rootGetters }) {
 
-        socket.on('round/tellToPlayerToGiveHisGameType', ({ player }) => {
+        socket.on('round/tellToPlayerToGiveHisGameType', ({ round, player }) => {
 
             if (rootGetters.currentPlayer.id !== player?.id) {
                 return;
             }
 
+            commit('set', round);
+
             waitMyTurnToTellGameTypeResolver();
+        });
+
+        socket.on('round/gameTypeIsChoosen', ({ round, roomId }) => {
+
+            if (rootGetters.currentPlayer.roomId !== roomId) {
+                return;
+            }
+
+            commit('set', round);
+
+            waitGameTypeIsChoosenResolver();
+        });
+
+        socket.on('round/setGameType', ({ type }) => {
+            commit('setGameType', type);
+        });
+
+        socket.on('round/setCalledKing', ({ roomId, card }) => {
+
+            if (rootGetters.currentPlayer.roomId !== roomId) {
+                return;
+            }
+
+            commit('setCalledKing', card);
+
+            waitCalledKingResolver();
+        });
+
+        socket.on('round/set', ({ round }) => {
+            commit('set', round);
         });
     },
 
     removeSocketListeners() {
-        socket.off('round/askGameType');
+        socket.off('round/tellToPlayerToGiveHisGameType');
+        socket.off('round/gameTypeIsChoosen');
+        socket.off('round/setGameType');
+        socket.off('round/setCalledKing');
+        socket.off('round/set');
     },
 };
 

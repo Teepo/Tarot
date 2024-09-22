@@ -25,6 +25,7 @@ const eventHandlers = {
     'round/get': (socket, data, callback) => import('./round/get.js').then(module => module.default(socket, data, callback)),
     'round/tellGameType': (socket, data, callback) => import('./round/tellGameType.js').then(module => module.default(socket, data, callback)),
     'round/getPlayerWhoMustGiveHisGametype': (socket, data, callback) => import('./round/getPlayerWhoMustGiveHisGametype.js').then(module => module.default(socket, data, callback)),
+    'round/setCalledKing': (socket, data, callback) => import('./round/setCalledKing.js').then(module => module.default(socket, data, callback)),
 };
 
 export default eventHandlers;

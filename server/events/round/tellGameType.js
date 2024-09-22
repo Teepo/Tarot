@@ -37,44 +37,55 @@ export default function(socket, data, callback) {
             type : 'success'
         });
 
-        return;
+        socket.broadcast.emit('round/set', { round });
+        socket.broadcast.emit('round/setGameType', { type });
     }
+    else {
 
-    console.log('tellGameType', player.login, 'pass');
+        console.log('tellGameType', player.login, 'pass');
 
-    socket.broadcast.emit('alert', {
-        str : `Player ${player.login} pass`,
-        type : 'warning'
-    });
+        socket.broadcast.emit('alert', {
+            str : `Player ${player.login} pass`,
+            type : 'warning'
+        });
+    }
 
     round.getNextPlayerIntoPlayersQueueForAskGameType();
 
     let p = round.getCurrentPlayerIntoPlayersQueueForAskGameType();
 
-    // Tous les joueurs on passé
-    // On recrée un round
     if (!p || p.isCPU) {
 
-        console.log('tellGameType > all players pass > restart');
+        if (round.gameTypeIsChoosen()) {
 
-        socket.broadcast.emit('alert', {
-            str : `Everyone pass, restart !`,
-            type : 'warning'
-        });
+            round.emptyPlayersQueueForAskGameType();
+
+            console.log('tellGameType > all players spoke, and game type is choosen');
+
+            socket.broadcast.emit('round/set', { round });
+            socket.broadcast.emit('round/gameTypeIsChoosen', { roomId : room.id });
+            return;
+        }
+
+        console.log('tellGameType > all players pass > restart');
         
         round.init(room);
 
         p = round.getCurrentPlayerIntoPlayersQueueForAskGameType();
 
+        socket.broadcast.emit('round/set', { round });
         socket.emit('player/refresh', { players : room.getPlayers() });
         socket.broadcast.emit('player/refresh', { players : room.getPlayers() });
 
-        console.log('new player to give his game type after restart', p.login);
+        socket.broadcast.emit('alert', {
+            str : `Everyone pass, restart !`,
+            type : 'warning'
+        });
     }
 
-    console.log('tellGameType next player to give his game type', p.login);
+    console.log('tellGameType > next player to give his game type', p.login);
 
-    const response = { player : p };
+    const response = { round, player : p };
 
     socket.broadcast.emit('round/tellToPlayerToGiveHisGameType', response);
     socket.emit('round/tellToPlayerToGiveHisGameType', response);

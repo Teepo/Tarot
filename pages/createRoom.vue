@@ -30,8 +30,8 @@ export default {
 	
 	data: () => ({
 		
-		login       : '',
-		roomName    : '',
+		login       : 'a',
+		roomName    : 'a',
 		roundNumber : 10,
 
 		formRules: {

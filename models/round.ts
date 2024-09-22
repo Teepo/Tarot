@@ -105,6 +105,18 @@ export class Round {
         return this;
     }
 
+    getPlayersQueueForAskGameType() : Array<Player> {
+        return this.playersQueueForAskGameType;
+    }
+
+    emptyPlayersQueueForAskGameType() {
+        this.playersQueueForAskGameType = [];
+    }
+
+    hasPlayersQueueForAskGameTypeEmpty(): boolean {
+        return this.getPlayersQueueForAskGameType().length <= 0;
+    }
+
     getCurrentPlayerIntoPlayersQueueForAskGameType() : Player {
         return this.playersQueueForAskGameType[0];
     }
@@ -335,7 +347,7 @@ export class Round {
 
         // Type de jeu non présent dans la configuration
         if (!isRegularType) {
-            throw new Error('[ROUND] setGameType() > type must be an integer');
+            throw new Error('[ROUND] setGameType() > type is unknown', type);
         }
 
         this.gameType = type;

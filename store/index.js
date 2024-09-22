@@ -40,6 +40,10 @@ const store = createStore({
         round(state) {
             return state.round.round;
         },
+
+        room(state) {
+            return state.room.room;
+        },
     },
     mutations: {
 
