@@ -15,6 +15,7 @@ const mutations = {
     },
 
     setCalledKing(state, card) {
+        console.log('setCalledKing', state.round);
         state.round.setCalledKing(card);
     },
 
@@ -128,7 +129,7 @@ const actions = {
 
             commit('setCalledKing', card);
 
-            waitCalledKingResolver();
+            waitCalledKingResolver(card);
         });
 
         socket.on('round/set', ({ round }) => {

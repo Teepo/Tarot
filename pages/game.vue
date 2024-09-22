@@ -193,12 +193,7 @@ export default {
                 await this.askCalledKing();
 
                 // Fake call king
-                round.setCalledKing(new Card({ index : 42 }));
-
-                store.dispatch('round/set', {
-                    roomId : this.roomId,
-                    round  : round
-                });
+                // round.setCalledKing(new Card({ index : 42 }));
 
                 this.shouldDisplayChien = true;
 
@@ -457,6 +452,10 @@ export default {
             const currentPlayer = store.getters.currentPlayer;
             const player = round.getAttackerPlayers()[0];
 
+            if (round.hasCalledKing()) {
+                return;
+            }
+
             if (this.isMultiplayerMode) {
 
                 if (currentPlayer.id !== player.id) {
@@ -475,6 +474,8 @@ export default {
 
             const card = await this.renderOverlayCallKing(player);
 
+            this.destroyOverlayCallKing();
+
             Alert.add({
                 str : `Player ${player.login} call ${card.value}`,
                 type : 'success'
@@ -484,8 +485,6 @@ export default {
                 roomId : this.roomId,
                 card   : card
             });
-
-            round.setCalledKing(card);
         },
 
         askGameType : async function() {

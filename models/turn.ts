@@ -1,7 +1,7 @@
 import { Player } from './player';
 import { Card } from './card';
 
-import store from './../store';
+import { useStore } from 'vuex';
 
 export class Turn {
 
@@ -24,6 +24,8 @@ export class Turn {
 
     getNextPlayerToGiver(): Player | null {
 
+        const store = useStore();
+
         const round   = store.getters.round;
         const players = store.getters.players;
 
@@ -40,6 +42,8 @@ export class Turn {
 
     getNextPlayerIndexToGiver(giver: Player | null): number {
 
+        const store = useStore();
+
         let indexAnchor = 0;
 
         const players = store.getters.players;
@@ -52,6 +56,8 @@ export class Turn {
     }
 
     buildPlayersQueue() {
+
+        const store = useStore();
 
         let firstPlayerToBegin;
 
@@ -188,6 +194,8 @@ export class Turn {
      */
     pickUpCards() {
 
+        const store = useStore();
+
         const round = store.getters.round;
 
         const winner = this.getWinner();
@@ -199,6 +207,8 @@ export class Turn {
     }
 
     resetPlayersCurrentCard() {
+
+        const store = useStore();
 
         const players = store.getters.players;
 

@@ -2,7 +2,7 @@ import { cardList } from './../config/cardList';
 
 import { Card } from './card';
 
-import store from './../store';
+import { useStore } from 'vuex';
 
 export class Game {
 
@@ -47,6 +47,8 @@ export class Game {
      *
      */
     static isOkToPlayThisCard(card : Card) : Boolean {
+
+        const store = useStore();
 
         const { turn } = store.state;
 

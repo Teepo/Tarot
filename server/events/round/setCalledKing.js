@@ -1,8 +1,10 @@
 import { rooms } from '../../store/index.js';
 
+import { unserialize } from './../../../utils/object';
+
 export default function(socket, data, callback) {
 
-    const { roomId, card } = data;
+    let { roomId, card } = data;
 
     const room = rooms.get(roomId);
 
@@ -12,12 +14,13 @@ export default function(socket, data, callback) {
     
     const round  = room.getCurrentRound();
 
-    round.setCalledKing(card);
+    round.setCalledKing(unserialize(card));
 
     console.log('round/setCalledKing', card.sign, card.label);
 
     const response = { roomId : room.id, card };
 
     socket.emit('round/setCalledKing', response);
+    socket.broadcast.emit('round/setCalledKing', response);
     return callback(response);
 };

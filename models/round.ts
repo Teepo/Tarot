@@ -375,6 +375,10 @@ export class Round {
         return this.calledKing;
     }
 
+    hasCalledKing(): boolean {
+        return !!this.getCalledKing();
+    }
+
     /**
      * @description En fonction du roi appellé, retourne le second attaquant ( s'il y en a réellement un ).
      *
