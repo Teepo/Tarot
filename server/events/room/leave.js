@@ -18,8 +18,5 @@ export default function(socket, data, callback) {
 
     console.log(`player ${playerId} leave room ${roomName}`);
 
-    const response = { playerId };
-
-    socket.broadcast.emit('room/leave', response);
-    socket.emit('room/leave', response);
+    socket.in(roomId).emit('room/leave', { playerId });
 };

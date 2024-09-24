@@ -4,7 +4,6 @@ const eventHandlers = {
     'close': (socket, data, callback) => import('./close.js').then(module => module.default(socket, data, callback)),
    
     'room/start': (socket, data, callback) => import('./room/start.js').then(module => module.default(socket, data, callback)),
-    'room/stop': (socket, data, callback) => import('./room/stop.js').then(module => module.default(socket, data, callback)),
     'room/join': (socket, data, callback) => import('./room/join.js').then(module => module.default(socket, data, callback)),
     'room/leave': (socket, data, callback) => import('./room/leave.js').then(module => module.default(socket, data, callback)),
     'room/create': (socket, data, callback) => import('./room/create.js').then(module => module.default(socket, data, callback)),

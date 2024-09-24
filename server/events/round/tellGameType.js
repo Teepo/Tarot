@@ -37,14 +37,14 @@ export default function(socket, data, callback) {
             type : 'success'
         });
 
-        socket.broadcast.emit('round/set', { round });
-        socket.broadcast.emit('round/setGameType', { type });
+        socket.in(roomId).emit('round/set', { round });
+        socket.in(roomId).emit('round/setGameType', { type });
     }
     else {
 
         console.log('tellGameType', player.login, 'pass');
 
-        socket.broadcast.emit('alert', {
+        socket.in(roomId).emit('alert', {
             str : `Player ${player.login} pass`,
             type : 'warning'
         });
@@ -62,8 +62,8 @@ export default function(socket, data, callback) {
 
             console.log('tellGameType > all players spoke, and game type is choosen');
 
-            socket.broadcast.emit('round/set', { round });
-            socket.broadcast.emit('round/gameTypeIsChoosen', { roomId : room.id });
+            socket.in(roomId).emit('round/set', { round });
+            socket.in(roomId).emit('round/gameTypeIsChoosenAndEveryoneHasSpoke', { roomId : room.id });
             return;
         }
 
@@ -73,9 +73,8 @@ export default function(socket, data, callback) {
 
         p = round.getCurrentPlayerIntoPlayersQueueForAskGameType();
 
-        socket.broadcast.emit('round/set', { round });
-        socket.emit('player/refresh', { players : room.getPlayers() });
-        socket.broadcast.emit('player/refresh', { players : room.getPlayers() });
+        socket.in(roomId).emit('round/set', { round });
+        socket.in(roomId).emit('player/refresh', { players : room.getPlayers() });
 
         socket.broadcast.emit('alert', {
             str : `Everyone pass, restart !`,
@@ -87,7 +86,6 @@ export default function(socket, data, callback) {
 
     const response = { round, player : p };
 
-    socket.broadcast.emit('round/tellToPlayerToGiveHisGameType', response);
-    socket.emit('round/tellToPlayerToGiveHisGameType', response);
+    socket.in(roomId).emit('round/tellToPlayerToGiveHisGameType', response);
     return callback(response);
 };

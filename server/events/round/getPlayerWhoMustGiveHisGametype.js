@@ -23,7 +23,15 @@ export default function(socket, data, callback) {
     const player = round.getCurrentPlayerIntoPlayersQueueForAskGameType();
 
     if (!player || player.isCPU) {
+
         console.log('round/getPlayerWhoMustGiveHisGametype, no player or player is cpu');
+
+        if (round.gameTypeIsChoosen()) {
+            console.log('round/getPlayerWhoMustGiveHisGametype, game type is choosen');
+            socket.in(roomId).emit('round/gameTypeIsChoosenAndEveryoneHasSpoke', { roomId : room.id });
+            return;
+        }
+        
         return;
     }
 

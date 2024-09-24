@@ -19,8 +19,7 @@ export default function(socket, data, callback) {
         };
 
         socket.emit('room/join', response);
-        callback(response);
-        return;
+        return callback(response);
     }
 
     const player = new Player({
@@ -40,8 +39,9 @@ export default function(socket, data, callback) {
             player   : player
         };
 
-        socket.broadcast.emit('room/join', response);
-        socket.emit('room/join', response);
+        socket.join(room.id);
+
+        socket.in(room.id).emit('room/join', response);
         callback(response);
     }
     catch(e) {

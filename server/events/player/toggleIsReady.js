@@ -25,7 +25,6 @@ export default function(socket, data, callback) {
 
     const response = { player };
 
-    socket.emit('player/toggleIsReady', response);
-    socket.broadcast.emit('player/toggleIsReady', response);
+    socket.in(roomId).emit('player/toggleIsReady', response);
     return callback(response);
 };

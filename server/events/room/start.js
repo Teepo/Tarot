@@ -26,7 +26,6 @@ export default function(socket, data, callback) {
 
     console.log('room start > done');
 
-    socket.emit('room/start', response);
-    socket.broadcast.emit('room/start', response);
+    socket.in(roomId).emit('room/start', response);
     return callback(response);
 };

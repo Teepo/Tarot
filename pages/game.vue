@@ -186,14 +186,11 @@ export default {
 
                 await this.askGameType();
                 
-                await store.dispatch('round/waitGameTypeIsChoosen', {
+                await store.dispatch('round/waitGameTypeIsChoosenAndEveryoneHasSpoke', {
                     roomId : this.roomId
                 });
                 
                 await this.askCalledKing();
-
-                // Fake call king
-                // round.setCalledKing(new Card({ index : 42 }));
 
                 this.shouldDisplayChien = true;
 
@@ -476,7 +473,7 @@ export default {
 
             this.destroyOverlayCallKing();
 
-            Alert.add({
+            this.isOneplayerMode && Alert.add({
                 str : `Player ${player.login} call ${card.value}`,
                 type : 'success'
             });

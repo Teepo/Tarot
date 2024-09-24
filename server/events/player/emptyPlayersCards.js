@@ -22,7 +22,5 @@ export default function(socket, data, callback) {
         player.emptyCards()
     });
 
-    const response = { players };
-
-    return callback(response);
+    return callback({ players });
 };

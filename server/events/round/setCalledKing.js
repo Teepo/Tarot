@@ -13,6 +13,7 @@ export default function(socket, data, callback) {
     }
     
     const round  = room.getCurrentRound();
+    const player = round.getAttackerPlayers()[0];
 
     round.setCalledKing(unserialize(card));
 
@@ -20,7 +21,10 @@ export default function(socket, data, callback) {
 
     const response = { roomId : room.id, card };
 
-    socket.emit('round/setCalledKing', response);
-    socket.broadcast.emit('round/setCalledKing', response);
-    return callback(response);
+    socket.in(roomId).emit('alert', {
+        str : `Player ${player.login} call ${card.value}`,
+        type : 'success'
+    });
+
+    socket.in(roomIn).emit('round/setCalledKing', response);
 };

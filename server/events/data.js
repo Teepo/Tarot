@@ -16,7 +16,7 @@ export default function(socket, data, callback) {
         return callback({ error : new UserNotExistError });
     }
 
-    socket.broadcast.emit(eventType, data);
+    socket.in(roomId).emit(eventType, data);
 
     callback(data);
 };

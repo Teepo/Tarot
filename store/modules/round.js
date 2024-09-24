@@ -2,6 +2,7 @@ import { socket } from './../../modules/ws.js';
 
 let waitMyTurnToTellGameTypeResolver = null;
 let waitGameTypeIsChoosenResolver = null;
+let waitGameTypeIsChoosenAndEveryoneHasSpokeResolver = null;
 let waitCalledKingResolver = null;
 
 const state = () => ({
@@ -15,7 +16,6 @@ const mutations = {
     },
 
     setCalledKing(state, card) {
-        console.log('setCalledKing', state.round);
         state.round.setCalledKing(card);
     },
 
@@ -63,6 +63,16 @@ const actions = {
             }
 
             waitMyTurnToTellGameTypeResolver();
+        });
+    },
+
+    async waitGameTypeIsChoosenAndEveryoneHasSpoke({ rootGetters }, { roomId }) {
+
+        return new Promise(resolve => {
+
+            socket.emit('round/getPlayerWhoMustGiveHisGametype', { roomId });
+
+            waitGameTypeIsChoosenAndEveryoneHasSpokeResolver = resolve;
         });
     },
 
@@ -121,6 +131,15 @@ const actions = {
             commit('setGameType', type);
         });
 
+        socket.on('round/gameTypeIsChoosenAndEveryoneHasSpoke', ({ roomId }) => {
+
+            if (rootGetters.currentPlayer.roomId !== roomId) {
+                return;
+            }
+
+            waitGameTypeIsChoosenAndEveryoneHasSpokeResolver();
+        });
+
         socket.on('round/setCalledKing', ({ roomId, card }) => {
 
             if (rootGetters.currentPlayer.roomId !== roomId) {
@@ -138,11 +157,6 @@ const actions = {
     },
 
     removeSocketListeners() {
-        socket.off('round/tellToPlayerToGiveHisGameType');
-        socket.off('round/gameTypeIsChoosen');
-        socket.off('round/setGameType');
-        socket.off('round/setCalledKing');
-        socket.off('round/set');
     },
 };
 

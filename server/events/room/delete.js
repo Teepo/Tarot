@@ -8,11 +8,7 @@ export default function(socket, data, callback) {
 
     console.log(`room ${roomId} deleted`);
 
-    socket.broadcast.emit('deletedRoom', {
-        roomId : roomId
-    });
-    
-    socket.emit('deletedRoom', {
+    socket.in(roomId).emit('deletedRoom', {
         roomId : roomId
     });
 };

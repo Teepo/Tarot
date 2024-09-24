@@ -22,7 +22,6 @@ export default function(socket, data, callback) {
 
     const response = { round };
 
-    socket.emit('round/get', response);
-    socket.broadcast.emit('round/get', response);
+    socket.in(roomId).emit('round/get', response);
     return callback(response);
 };

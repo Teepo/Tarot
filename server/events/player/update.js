@@ -7,24 +7,16 @@ export default function(socket, data, callback) {
     const room = rooms.get(roomId);
 
     if (!room) {
-        return socket.emit('updatedPlayer', {
-            error : new RoomNotExistError
-        });
+        return;
     }
 
     if (!room.getPlayerById(player.id)) {
-        return socket.emit('updatedPlayer', {
+        return socket.emit('player/update', {
             error : new UserNotExistError
         });
     }
 
     room.updatePlayer(player.id, player);
 
-    socket.emit('updatedPlayer', {
-        player : player
-    });
-
-    socket.broadcast.emit('updatedPlayer', {
-        player : player
-    });
+    socket.in(roomId).emit('player/update', { player });
 };

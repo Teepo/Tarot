@@ -6,7 +6,7 @@ export default function(socket, data, callback) {
         return room.getPlayers();
     });
 
-    socket.emit('getAllPlayers', {
+    socket.emit('player/getAll', {
         players : players.flat()
     });
 };
