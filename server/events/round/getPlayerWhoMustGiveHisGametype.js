@@ -4,7 +4,7 @@ import { RoomNotExistError } from '../../../errors/index.js';
 
 import { Round } from '../../../models/round.js';
 
-export default function(socket, data, callback) {
+export default async function(io, socket, data, callback) {
 
     const { roomId } = data;
 
@@ -27,8 +27,8 @@ export default function(socket, data, callback) {
         console.log('round/getPlayerWhoMustGiveHisGametype, no player or player is cpu');
 
         if (round.gameTypeIsChoosen()) {
-            console.log('round/getPlayerWhoMustGiveHisGametype, game type is choosen');
-            socket.in(roomId).emit('round/gameTypeIsChoosenAndEveryoneHasSpoke', { roomId : room.id });
+            console.log('round/getPlayerWhoMustGiveHisGametype, game type is choosen', room.id);
+            io.to(room.id).emit('round/gameTypeIsChoosenAndEveryoneHasSpoke', { roomId : room.id });
             return;
         }
         

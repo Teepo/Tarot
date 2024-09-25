@@ -6,7 +6,7 @@ import { RoomNotExistError, UserAlreadyExistError } from './../../../errors/inde
 
 import { Player } from './../../../models/player.ts';
 
-export default function(socket, data, callback) {
+export default function(io, socket, data, callback) {
 
     const { roomId, id, login } = data;
 
@@ -39,7 +39,15 @@ export default function(socket, data, callback) {
             player   : player
         };
 
-        socket.join(room.id);
+        socket.join(room.id, () => {
+            console.log(`socket ${socket.id} join room ${room.name}`);
+        });
+
+        if (socket.rooms.has(room.id)) {
+            console.log(`Client ${socket.id} is in room ${room.id}`);
+        } else {
+            console.log(`Client ${socket.id} is NOT in room ${room.id}`);
+        }
 
         socket.in(room.id).emit('room/join', response);
         callback(response);

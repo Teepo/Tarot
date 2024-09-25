@@ -53,7 +53,7 @@ export default class GameServer {
                     return console.log(`Unhandled event: ${eventName}`, data);
                 }
 
-                eventHandlers[eventName](socket, data, callback);
+                eventHandlers[eventName](this.ws, socket, data, callback);
             });
         });
     }

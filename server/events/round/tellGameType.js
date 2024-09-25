@@ -6,7 +6,7 @@ import { Round } from '../../../models/round.js';
 
 import { gameTypeList } from '../../../config/gameTypeList.js';
 
-export default function(socket, data, callback) {
+export default function(io, socket, data, callback) {
 
     const { roomId, playerId, type } = data;
 

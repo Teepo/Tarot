@@ -1,6 +1,6 @@
 import { rooms } from './../store/index';
 
-export default function(socket, data, callback) {
+export default function(io, socket, data, callback) {
 
     const { roomId } = data;
 

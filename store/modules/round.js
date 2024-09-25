@@ -70,6 +70,7 @@ const actions = {
 
         return new Promise(resolve => {
 
+            console.log('emit round/getPlayerWhoMustGiveHisGametype', roomId);
             socket.emit('round/getPlayerWhoMustGiveHisGametype', { roomId });
 
             waitGameTypeIsChoosenAndEveryoneHasSpokeResolver = resolve;
@@ -132,19 +133,10 @@ const actions = {
         });
 
         socket.on('round/gameTypeIsChoosenAndEveryoneHasSpoke', ({ roomId }) => {
-
-            if (rootGetters.currentPlayer.roomId !== roomId) {
-                return;
-            }
-
             waitGameTypeIsChoosenAndEveryoneHasSpokeResolver();
         });
 
-        socket.on('round/setCalledKing', ({ roomId, card }) => {
-
-            if (rootGetters.currentPlayer.roomId !== roomId) {
-                return;
-            }
+        socket.on('round/setCalledKing', ({ card }) => {
 
             commit('setCalledKing', card);
 

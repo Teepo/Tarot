@@ -63,6 +63,10 @@ const actions = {
         }
     },
 
+    simpleJoin({ commit }, { id, roomId }) {
+        socket.emit('room/simple-join', { id, roomId });
+    },
+
     leave({ commit }, { roomId, playerId }) {
         socket.emit('room/leave', { roomId, playerId });
     },

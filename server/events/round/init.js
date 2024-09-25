@@ -5,7 +5,7 @@ import { RoomNotExistError } from './../../../errors/index.js';
 import { Player } from './../../../models/player.ts';
 import { Round } from './../../../models/round.ts';
 
-export default function(socket, data, callback) {
+export default function(io, socket, data, callback) {
     
     console.log('round init > begin');
 

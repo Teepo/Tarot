@@ -2,7 +2,7 @@ import { rooms } from '../../store/index.js';
 
 import { unserialize } from './../../../utils/object';
 
-export default function(socket, data, callback) {
+export default function(io, socket, data, callback) {
 
     let { roomId, card } = data;
 

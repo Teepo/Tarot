@@ -6,7 +6,7 @@ import { RoomAlreadyExistError } from './../../../errors/index.js';
 
 import { Room } from './../../../models/room.ts';
 
-export default function(socket, data, callback) {
+export default function(io, socket, data, callback) {
 
     const { id, roomName, settings } = data;
 
@@ -21,6 +21,16 @@ export default function(socket, data, callback) {
         rooms.set(room.id, room);
 
         console.log(`room ${roomName} created`);
+
+        socket.join(room.id, () => {
+            console.log(`socket ${socket.id} join room ${room.name}`);
+        });
+
+        if (socket.rooms.has(room.id)) {
+            console.log(`Client ${socket.id} is in room ${room.id}`);
+        } else {
+            console.log(`Client ${socket.id} is NOT in room ${room.id}`);
+        }
 
         socket.emit('createdRoom', { room });
 

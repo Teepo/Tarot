@@ -158,6 +158,11 @@ export default {
                 return this.goToHome();
             }
 
+            await store.dispatch('room/simpleJoin', {
+				id     : this.playerId,
+				roomId : this.roomId,
+			})
+
             store.dispatch('player/setCurrentPlayerID', this.playerId);
 
             await store.dispatch('player/getPlayers', { roomId : route.params.roomId });
@@ -185,12 +190,18 @@ export default {
                 store.dispatch('round/set', round);
 
                 await this.askGameType();
+
+                console.log('after ask game type');
                 
                 await store.dispatch('round/waitGameTypeIsChoosenAndEveryoneHasSpoke', {
                     roomId : this.roomId
                 });
+
+                console.log('after waitGameTypeIsChoosenAndEveryoneHasSpoke');
                 
                 await this.askCalledKing();
+
+                console.log('ask called king');
 
                 this.shouldDisplayChien = true;
 

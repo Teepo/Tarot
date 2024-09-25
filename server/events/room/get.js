@@ -2,7 +2,7 @@ import { rooms } from './../../store/index.js';
 
 import { RoomNotExistError } from './../../../errors/index.js';
 
-export default function(socket, data, callback) {
+export default function(io, socket, data, callback) {
 
     const { roomId } = data;
 

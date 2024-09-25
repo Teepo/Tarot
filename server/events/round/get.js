@@ -4,7 +4,7 @@ import { RoomNotExistError } from './../../../errors/index.js';
 
 import { Round } from './../../../models/round.js';
 
-export default function(socket, data, callback) {
+export default function(io, socket, data, callback) {
 
     const { roomId } = data;
 
