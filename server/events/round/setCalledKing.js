@@ -26,5 +26,5 @@ export default function(io, socket, data, callback) {
         type : 'success'
     });
 
-    socket.in(roomIn).emit('round/setCalledKing', response);
+    socket.in(roomId).emit('round/setCalledKing', response);
 };

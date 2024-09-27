@@ -21,7 +21,7 @@ const mutations = {
 
     setGameType(state, type) {
         state.round.setGameType(parseInt(type));
-    }
+    },
 };
 
 const actions = {
@@ -73,6 +73,8 @@ const actions = {
             console.log('emit round/getPlayerWhoMustGiveHisGametype', roomId);
             socket.emit('round/getPlayerWhoMustGiveHisGametype', { roomId });
 
+            console.log('set wait game type resolver');
+
             waitGameTypeIsChoosenAndEveryoneHasSpokeResolver = resolve;
         });
     },
@@ -104,6 +106,15 @@ const actions = {
         await socket.emit('round/tellGameType', { playerId, roomId, type });
     },
 
+    async updateAfterMakingChien({ commit, rootState}, { chiens }) {
+
+        if (rootState.isMultiPlayerMode) {
+            socket.emit('round/updateAfterMakingChien', { chiens })
+        }
+
+        commit('updateAfterMakingChien', chiens);
+    },
+
     initSocketListeners({ commit, rootGetters }) {
 
         socket.on('round/tellToPlayerToGiveHisGameType', ({ round, player }) => {
@@ -133,6 +144,7 @@ const actions = {
         });
 
         socket.on('round/gameTypeIsChoosenAndEveryoneHasSpoke', ({ roomId }) => {
+            console.log('round/gameTypeIsChoosenAndEveryoneHasSpoke');
             waitGameTypeIsChoosenAndEveryoneHasSpokeResolver();
         });
 

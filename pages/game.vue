@@ -41,7 +41,7 @@
                     </div>
                 </v-card-text>
 
-                <v-card-actions>
+                <v-card-actions v-if="round.getAttackerPlayers()[0].id === currentPlayer.id">
                     <v-btn color="success" variant="flat" @click="handleClickValidateChien()">Validate</v-btn>
                 </v-card-actions>
             </v-card>
@@ -58,7 +58,7 @@
 
 import { useRoute } from 'vue-router'
 
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import store from './../store';
 
@@ -109,6 +109,7 @@ export default {
     },
 
     computed : {
+        ...mapGetters(['currentPlayer']),
         ...mapState('player', {
             players : state => state.players,
         }),
@@ -339,14 +340,6 @@ export default {
                 
                 currentPlayer.removeCard(card);
 
-                // @TODO
-                // Update chiens and currentPlayer
-
-                store.dispatch('round/set', {
-                    roomId : this.roomId,
-                    round  : round
-                });
-
                 return;
             }
 
@@ -363,7 +356,7 @@ export default {
 
         handleClickCardChien(card) {
 
-            const round = store.getters.round;;
+            const round = store.getters.round;
             const currentPlayer = store.getters.currentPlayer;
 
             const attackerPlayer = round.getAttackerPlayers()[0];
@@ -371,7 +364,10 @@ export default {
             card.setActive(true);
             card.setPlayerId(currentPlayer.getId());
 
-            attackerPlayer.addCards([card]);
+            store.dispatch('player/addCard', {
+                player : attackerPlayer,
+                card
+            });
 
             const index = round.chiens.findIndex(c => c.getIndex() === card.getIndex());
             round.chiens.splice(index, 1);
@@ -385,7 +381,7 @@ export default {
                 return Alert.add({ str : 'Chien is invalid', type : 'warning' });
             }
 
-            handlerClickValidateChienResolver()
+            handlerClickValidateChienResolver();
         },
 
         activateCardsForPlayer(player) {
@@ -525,9 +521,7 @@ export default {
                         type
                     });
 
-                    if (type) {
-                        return Promise.resolve();
-                    }
+                    return;
                 }
             }
             else if (this.isOneplayerMode) {
@@ -579,7 +573,11 @@ export default {
                 });
 
                 // On mets les cartes selectionnés dans le chien
-                round.addAttackerStackCards(round.chiens);
+                // round.addAttackerStackCards(round.chiens);
+
+                store.dispatch('round/updateAfterMakingChien', {
+                    chiens : round.chiens
+                });
             }
             else if (round.isGardeSans()) {
 

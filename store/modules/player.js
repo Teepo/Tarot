@@ -32,6 +32,13 @@ const mutations = {
 
     delete(state, playerId) {
         state.players = state.players.filter(player => player.getId() !== playerId);
+    },
+
+    addCard(state, { player, card }) {
+        
+        const p = state.players.find(p => p.getId() === player.getId());
+
+        p.addCards([card]);
     }
 };
 
@@ -95,6 +102,10 @@ const actions = {
         const { players } = await socket.emit('player/emptyPlayersCards', { roomId });
 
         commit('setPlayers', players);
+    },
+
+    addCard({ commit }, { player, card }) {
+        commit('addCard', { player, card });
     },
 
     initSocketListeners({ commit }) {
